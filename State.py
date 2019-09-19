@@ -62,7 +62,7 @@ class State:
     def getTimes(self,col):
         times = Timelist.Timelist()
         for i in range(1,len(self.completeCsv)):
-            times.insert(Time.Time(2,timestring=self.completeCsv[i][col]))
+            times.insert(Time.Time(5,timestring=self.completeCsv[i][col]))
         return times
 
     def InitGui(self):
@@ -80,9 +80,9 @@ class State:
     def InitTimes(self):
         for i in range(self.windowStart,self.app.pbstart-self.app.splitstart-2):
             self.app.labels[self.app.splitstart+i][0].configure(text=self.splitnames[i-self.windowStart])
-            self.app.labels[self.app.splitstart+i][2].configure(text=self.compares[self.currentCompare].get(i-self.windowStart))
+            self.app.labels[self.app.splitstart+i][2].configure(text=self.compares[self.currentCompare].get(i-self.windowStart).__str__(precision=2))
         self.app.labels[self.app.pbstart-2][0].configure(text=self.splitnames[-1])
-        self.app.labels[self.app.pbstart-2][2].configure(text=self.compares[self.currentCompare].get(-1))
+        self.app.labels[self.app.pbstart-2][2].configure(text=self.compares[self.currentCompare].get(-1).__str__(precision=2))
 
     def InitInfo(self):
         self.app.labels[self.app.pbstart][0].configure(text="PB Split:")
@@ -92,7 +92,7 @@ class State:
         self.app.labels[self.app.bptstart+1][0].configure(text="Last Split (vs Best):")
         self.app.labels[self.app.bptstart+2][0].configure(text="Best Possible Time:")
         self.app.labels[self.app.bptstart+3][0].configure(text="Personal Best:")
-        self.app.labels[self.app.bptstart+3][1].configure(text=self.compares[2].get(-1).__str__())
+        self.app.labels[self.app.bptstart+3][1].configure(text=self.compares[2].get(-1).__str__(precision=2))
         self.updateInfo()
 
     def startRun(self,start):
@@ -101,18 +101,18 @@ class State:
     def onSplitEnd(self,splitEnd,splitTime):
         if self.reset:
             return
-        totalTime = Time.Time(2,floattime=splitEnd-self.start)
+        totalTime = Time.Time(5,floattime=splitEnd-self.start)
         if self.skip:
-            self.currentSplits.insert(Time.Time(2,timestring='-'))
-            self.currentTotals.insert(Time.Time(2,timestring='-'))
+            self.currentSplits.insert(Time.Time(5,timestring='-'))
+            self.currentTotals.insert(Time.Time(5,timestring='-'))
         else:
-            self.currentSplits.insert(Time.Time(2,floattime=splitTime))
-            self.bptList.replace(Time.Time(2,floattime=splitTime),self.splitnum)
-            self.currentTotals.insert(Time.Time(2,floattime=splitEnd-self.start))
+            self.currentSplits.insert(Time.Time(5,floattime=splitTime))
+            self.bptList.replace(Time.Time(5,floattime=splitTime),self.splitnum)
+            self.currentTotals.insert(Time.Time(5,floattime=splitEnd-self.start))
         for i in range(4):
             if self.skip:
-                self.diffs[i].insert(Time.Time(2,timestring='-'))
-                self.diffSplits[i].insert(Time.Time(2,timestring='-'))
+                self.diffs[i].insert(Time.Time(5,timestring='-'))
+                self.diffSplits[i].insert(Time.Time(5,timestring='-'))
             else:
                 self.diffs[i].insert(totalTime.subtract(self.compares[i].get(self.splitnum)))
                 self.diffSplits[i].insert(self.currentSplits.get(self.splitnum).subtract(self.compareSplits[i].get(self.splitnum)))
@@ -136,44 +136,44 @@ class State:
         for i in range(self.windowStart,self.app.pbstart-self.app.splitstart-2):
             self.app.labels[self.app.splitstart+i][0].configure(text=self.splitnames[i+lowIndex-self.windowStart])
             if self.currentSplits.length > i + lowIndex - self.windowStart:
-                if not self.compareSplits[self.currentCompare].get(i+lowIndex-self.windowStart).equal(Time.Time(2,timestring='-')):
-                    self.app.labels[self.app.splitstart+i][1].configure(text=self.diffs[self.currentCompare].get(i+lowIndex-self.windowStart).__str__(1))
+                if not self.compareSplits[self.currentCompare].get(i+lowIndex-self.windowStart).equal(Time.Time(5,timestring='-')):
+                    self.app.labels[self.app.splitstart+i][1].configure(text=self.diffs[self.currentCompare].get(i+lowIndex-self.windowStart).__str__(1,precision=2))
                 else:
                     self.app.labels[self.app.splitstart+i][1].configure(text='-')
-                self.app.labels[self.app.splitstart+i][2].configure(text=self.currentTotals.get(i+lowIndex-self.windowStart).__str__())
-                if self.diffSplits[0].get(i+lowIndex-self.windowStart).greater(Time.Time(2,timestring='-')) == -1:
+                self.app.labels[self.app.splitstart+i][2].configure(text=self.currentTotals.get(i+lowIndex-self.windowStart).__str__(precision=2))
+                if self.diffSplits[0].get(i+lowIndex-self.windowStart).greater(Time.Time(5,timestring='-')) == -1:
                     self.app.labels[self.app.splitstart+i][1].configure(fg='gold')
-                elif (self.diffs[self.currentCompare].get(i+lowIndex-self.windowStart).greater(Time.Time(2,timestring='-')) == -1) or (self.compareSplits[self.currentCompare].get(i+lowIndex-self.windowStart).equal(Time.Time(2,timestring='-'))):
+                elif (self.diffs[self.currentCompare].get(i+lowIndex-self.windowStart).greater(Time.Time(5,timestring='-')) == -1) or (self.compareSplits[self.currentCompare].get(i+lowIndex-self.windowStart).equal(Time.Time(2,timestring='-'))):
                     self.app.labels[self.app.splitstart+i][1].configure(fg='green')
                 else:
                     self.app.labels[self.app.splitstart+i][1].configure(fg='red')
             else:
                 self.app.labels[self.app.splitstart+i][1].configure(text="")
-                self.app.labels[self.app.splitstart+i][2].configure(text=self.compares[self.currentCompare].get(i+lowIndex-self.windowStart).__str__())
+                self.app.labels[self.app.splitstart+i][2].configure(text=self.compares[self.currentCompare].get(i+lowIndex-self.windowStart).__str__(precision=2))
         if self.splitnum >= len(self.splitnames):
-            self.app.labels[self.app.pbstart-2][1].configure(text=self.diffs[self.currentCompare].get(-1).__str__(1))
-            self.app.labels[self.app.pbstart-2][2].configure(text=self.currentTotals.get(-1).__str__())
-            if self.diffs[0].get(-1).greater(Time.Time(2,timestring='-')) == -1:
+            self.app.labels[self.app.pbstart-2][1].configure(text=self.diffs[self.currentCompare].get(-1).__str__(1,precision=2))
+            self.app.labels[self.app.pbstart-2][2].configure(text=self.currentTotals.get(-1).__str__(precision=2))
+            if self.diffs[0].get(-1).greater(Time.Time(5,timestring='-')) == -1:
                 self.app.labels[self.app.pbstart-2][1].configure(fg='gold')
-            elif self.diffs[self.currentCompare].get(-1).greater(Time.Time(2,timestring='-')) == -1:
+            elif self.diffs[self.currentCompare].get(-1).greater(Time.Time(5,timestring='-')) == -1:
                 self.app.labels[self.app.pbstart-2][1].configure(fg='green')
             else:
                 self.app.labels[self.app.pbstart-2][1].configure(fg='red')
 
     def updateInfo(self):
-        self.app.labels[self.app.pbstart][1].configure(text=self.compareSplits[self.currentCompare].get(self.splitnum).__str__())
-        self.app.labels[self.app.pbstart+1][1].configure(text=self.compareSplits[0].get(self.splitnum).__str__())
-        self.app.labels[self.app.bptstart][1].configure(text=self.compareSplits[self.currentCompare].get(self.splitnum).subtract(self.compareSplits[0].get(self.splitnum)).__str__())
+        self.app.labels[self.app.pbstart][1].configure(text=self.compareSplits[self.currentCompare].get(self.splitnum).__str__(precision=2))
+        self.app.labels[self.app.pbstart+1][1].configure(text=self.compareSplits[0].get(self.splitnum).__str__(precision=2))
+        self.app.labels[self.app.bptstart][1].configure(text=self.compareSplits[self.currentCompare].get(self.splitnum).subtract(self.compareSplits[0].get(self.splitnum)).__str__(precision=2))
         if self.splitnum:
-            self.app.labels[self.app.bptstart+1][1].configure(text=self.currentSplits.get(-1).subtract(self.compareSplits[0].get(self.splitnum-1)).__str__(1))
+            self.app.labels[self.app.bptstart+1][1].configure(text=self.currentSplits.get(-1).subtract(self.compareSplits[0].get(self.splitnum-1)).__str__(1,precision=2))
         if not self.skip:
-            self.app.labels[self.app.bptstart+2][1].configure(text=self.bptList.sum().__str__())
+            self.app.labels[self.app.bptstart+2][1].configure(text=self.bptList.sum().__str__(precision=2))
 
     def updateCompare(self):
         self.currentCompare = config.choice
         self.app.labels[0][3].configure(text=self.compareHeaders[self.currentCompare])
         self.updateTimes(self.getWindowStart())
-        self.app.labels[self.app.pbstart-2][2].configure(text=self.compares[self.currentCompare].get(-1).__str__())
+        self.app.labels[self.app.pbstart-2][2].configure(text=self.compares[self.currentCompare].get(-1).__str__(precision=2))
 
     def updateCurrentColour(self):
         for i in range(0,self.app.pbstart-self.app.splitstart-1):
@@ -189,7 +189,7 @@ class State:
     def getBests(self):
         bests = Timelist.Timelist()
         for i in range(self.currentSplits.length):
-            if (self.currentSplits.get(i).greater(self.compareSplits[0].get(i)) > 0 and not self.compareSplits[0].get(i).equal(Time.Time(2,timestring='-'))) or self.currentSplits.get(i).equal(Time.Time(2,timestring='-')):
+            if (self.currentSplits.get(i).greater(self.compareSplits[0].get(i)) > 0 and not self.compareSplits[0].get(i).equal(Time.Time(2,timestring='-'))) or self.currentSplits.get(i).equal(Time.Time(5,timestring='-')):
                 bests.insert(self.compareSplits[0].get(i))
             else:
                 bests.insert(self.currentSplits.get(i))
@@ -200,7 +200,7 @@ class State:
         for i in range(self.currentSplits.length):
             average = Timelist.Timelist()
             for j in range((len(self.completeCsv[0])-7)/2):
-                average.insert(Time.Time(2,timestring=self.completeCsv[i+1][2*j+7]))
+                average.insert(Time.Time(5,timestring=self.completeCsv[i+1][2*j+7]))
             average.insert(self.currentSplits.get(i))
             averages.insert(average.average())
         return averages
@@ -217,7 +217,7 @@ class State:
     def fillTimes(self,times):
         n = times.length
         for i in range(n+1,len(self.completeCsv)):
-            times.insert(Time.Time(2,timestring='-'))
+            times.insert(Time.Time(5,timestring='-'))
 
     def replaceCsvLines(self,lines,start):
         for i in range(1,len(self.completeCsv)):
