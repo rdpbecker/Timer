@@ -224,6 +224,11 @@ class State:
             for j in range(len(lines)):
                 self.completeCsv[i][start+j]=lines[j][i-1]
 
+    def insertCsvLines(self,lines,startIndex):
+        for i in range(1,len(self.completeCsv)):
+            for j in range(len(lines)):
+                self.completeCsv[i].insert(startIndex+j,lines[j][i-1])
+
     def appendCsvLines(self,lines):
         for i in range(1,len(self.completeCsv)):
             for j in range(len(lines)):
@@ -241,13 +246,13 @@ class State:
         bestSplits = [bests.toStringList(), bests.getSums().toStringList()]
         averageSplits = [averages.toStringList(), averages.getSums().toStringList()]
         lastRun = [self.currentSplits.toStringList(),self.currentTotals.toStringList()]
-        self.completeCsv[0].append("Run #"+str((len(self.completeCsv[1])-5)/2))
-        self.completeCsv[0].append("Totals")
+        self.completeCsv[0].insert(7,"Run #"+str((len(self.completeCsv[1])-5)/2))
+        self.completeCsv[0].insert(8,"Totals")
         self.replaceCsvLines([self.splitnames],0)
         self.replaceCsvLines(bestSplits,1)
         self.replaceCsvLines(averageSplits,3)
         self.replaceCsvLines(pbSplits,5)
-        self.appendCsvLines(lastRun)
+        self.insertCsvLines(lastRun,7)
         fileio.writeCSV(self.game,self.category,self.completeCsv)
 
     def setFlags(self,skip,reset):
