@@ -15,9 +15,6 @@ class Gui(threading.Thread):
     timer = 12
     bptstart = 14
     buttonstart = 18
-    starttime = 0
-    splitstarttime = 0
-    splitcount = -1
     state = None
 
     def __init__(self):
@@ -82,8 +79,8 @@ class Gui(threading.Thread):
 
         button1 = tk.Button(self.root, bg='steel blue', text="Change Compare", fg='black', width=15, command=self.guiSwitchCompare)
         button1.grid(row=self.buttonstart,column=6,columnspan=3)
-        button2 = tk.Button(self.root, bg='steel blue', text="Split", fg='black', width=10, command=self.guiSplit)
-        self.root.bind('<Return>', self.guiSplit)
+        button2 = tk.Button(self.root, bg='steel blue', text="Split", fg='black', width=10, command=self.onSplitEnd)
+        self.root.bind('<Return>', self.onSplitEnd)
         button2.grid(row=self.buttonstart,column=4,columnspan=2)
         button3 = tk.Button(self.root, bg='steel blue', text="Reset", fg='black', width=10, command=self.reset)
         self.root.bind('<space>', self.reset)
@@ -108,10 +105,13 @@ class Gui(threading.Thread):
     ## Set the timer to update every time this is called
     ##########################################################
     def update(self):
-        if self.splitcount > -1:
-            self.labels[self.timer][0].configure(text=str(Time.Time(2,floattime=timer()-self.starttime)))
-            self.labels[self.timer+1][0].configure(text=str(Time.Time(2,floattime=timer()-self.splitstarttime)))
-        self.root.after(17,self.update)
+        if self.state.started:
+            self.labels[self.timer+1][0].configure(text=str(Time.Time(2,floattime=timer()-self.state.starttime)))
+            self.labels[self.timer][0].configure(text=str(Time.Time(0,floattime=timer()-self.state.splitstarttime)))
+        if self.state.splitnum < len(self.state.splitnames):
+            self.root.after(17,self.update)
+        else:
+            self.root.doEnd(1,self.doEnd)
 
     ##########################################################
     ## Caller to all the functions that initialize text before
@@ -179,10 +179,11 @@ class Gui(threading.Thread):
     ## current split
     ##########################################################
     def updateInfo(self):
+        print self.state.splitnum
         self.labels[self.pbstart][1].configure(text=self.state.compareSplits[self.state.currentCompare].get(self.state.splitnum).__str__(precision=2))
         self.labels[self.pbstart+1][1].configure(text=self.state.compareSplits[0].get(self.state.splitnum).__str__(precision=2))
         self.labels[self.bptstart][1].configure(text=self.state.compareSplits[self.state.currentCompare].get(self.state.splitnum).subtract(self.state.compareSplits[0].get(self.state.splitnum)).__str__(precision=2))
-        if self.state.splitnum:
+        if self.state.splitnum > 0:
             self.labels[self.bptstart+1][1].configure(text=self.state.currentSplits.get(-1).subtract(self.state.compareSplits[0].get(self.state.splitnum-1)).__str__(1,precision=2))
         if not self.state.skip:
             self.labels[self.bptstart+2][1].configure(text=self.state.bptList.sum().__str__(precision=2))
@@ -192,9 +193,69 @@ class Gui(threading.Thread):
     ## starts
     ##########################################################
     def start(self):
-        self.starttime = timer()
-        self.splitstarttime = timer()
-        self.splitcount = 0
+        self.state.starttime = timer()
+        self.state.splitstarttime = timer()
+        self.state.started = True
+
+    def onSplitEnd(self,event=None):
+        splitEnd = timer()
+        totalTime = Time.Time(5,floattime=splitEnd-self.state.starttime)
+        splitTime = Time.Time(5,floattime=splitEnd-self.state.splitstarttime)
+        self.state.currentSplits.insert(splitTime)
+        self.state.currentTotals.insert(totalTime)
+
+        self.state.bptList.replace(Time.Time(5,floattime=splitEnd-self.state.splitstarttime),self.state.splitnum)
+        for i in range(4):
+            self.state.diffs[i].insert(totalTime.subtract(self.state.compares[i].get(self.state.splitnum)))
+            self.state.diffSplits[i].insert(self.state.currentSplits.get(self.state.splitnum).subtract(self.state.compareSplits[i].get(self.state.splitnum)))
+        lowIndex = self.state.getWindowStart()
+        self.state.splitnum = self.state.splitnum + 1
+        self.updateTimes(lowIndex)
+        self.updateCurrentColour()
+        if self.state.splitnum < len(self.state.splitnames):
+            self.updateInfo()
+        self.state.splitstarttime = splitEnd
+
+    def updateTimes(self,lowIndex):
+        ## i is the number from the top of the list of splits. For the 
+        ## top entry i=0, the next one down has i=1, and so on
+        ##
+        ## lowIndex is the index in the list of splits of the top split
+        ## in the gui - if split #5 is at the top of the view area in
+        ## the gui, then lowIndex=5
+        ## 
+        ## windowStart is the index at which the window in the GUI starts
+        ## This is determined only by the total number of splits, and
+        ## for categories with more than 7 splits windowStart=0
+        for i in range(self.state.windowStart,self.pbstart-self.splitstart-2):
+            ## The index of the split we're looking at currently
+            subjectSplitIndex = i+lowIndex-self.state.windowStart
+            self.labels[self.splitstart+i][0].configure(text=self.state.splitnames[i+lowIndex-self.state.windowStart])
+            if self.state.splitnum > i + lowIndex - self.state.windowStart:
+                if not self.state.compareSplits[self.state.currentCompare].get(i+lowIndex-self.state.windowStart).equal(Time.Time(5,timestring='-')):
+                    self.labels[self.splitstart+i][1].configure(text=self.state.diffs[self.state.currentCompare].get(i+lowIndex-self.state.windowStart).__str__(1,precision=2))
+                else:
+                    self.labels[self.splitstart+i][1].configure(text='-')
+                self.labels[self.splitstart+i][2].configure(text=self.state.currentTotals.get(i+lowIndex-self.state.windowStart).__str__(precision=2))
+                if self.state.diffSplits[0].get(i+lowIndex-self.state.windowStart).greater(Time.Time(5,timestring='-')) == -1:
+                    self.labels[self.splitstart+i][1].configure(fg='gold')
+                elif (self.state.diffs[self.state.currentCompare].get(i+lowIndex-self.state.windowStart).greater(Time.Time(5,timestring='-')) == -1) or (self.state.compareSplits[self.state.currentCompare].get(i+lowIndex-self.state.windowStart).equal(Time.Time(2,timestring='-'))):
+                    self.labels[self.splitstart+i][1].configure(fg='green')
+                else:
+                    self.labels[self.splitstart+i][1].configure(fg='red')
+            else:
+                self.labels[self.splitstart+i][1].configure(text="")
+                self.labels[self.splitstart+i][2].configure(text=self.state.compares[self.state.currentCompare].get(i+lowIndex-self.state.windowStart).__str__(precision=2))
+        if self.state.splitnum >= len(self.state.splitnames):
+            self.labels[self.pbstart-2][1].configure(text=self.state.diffs[self.state.currentCompare].get(-1).__str__(1,precision=2))
+            self.labels[self.pbstart-2][2].configure(text=self.state.currentTotals.get(-1).__str__(precision=2))
+            if self.state.diffs[0].get(-1).greater(Time.Time(5,timestring='-')) == -1:
+                self.labels[self.pbstart-2][1].configure(fg='gold')
+            elif self.state.diffs[self.state.currentCompare].get(-1).greater(Time.Time(5,timestring='-')) == -1:
+                self.labels[self.pbstart-2][1].configure(fg='green')
+            else:
+                self.labels[self.pbstart-2][1].configure(fg='red')
+
 
     def guiSwitchCompare(self):
         config.choice = (config.choice+1)%4

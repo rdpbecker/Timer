@@ -3,7 +3,9 @@ import Time, Timelist, gui, categorySelection as cate, fileio, config
 guiComplete=0
 
 class State:
-    startTime = 0
+    started = False
+    starttime = 0
+    splitstarttime = 0
     splitnum = 0
     splitnames = []
     game = ""
