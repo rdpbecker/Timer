@@ -4,7 +4,7 @@ import Time
 import Tkinter as tk
 import threading
 from timeit import default_timer as timer
-import State, test, config 
+import State, test, config, fileio 
 import userInput as user
 
 class Gui(threading.Thread):
@@ -106,12 +106,12 @@ class Gui(threading.Thread):
     ##########################################################
     def update(self):
         if self.state.started:
-            self.labels[self.timer+1][0].configure(text=str(Time.Time(2,floattime=timer()-self.state.starttime)))
-            self.labels[self.timer][0].configure(text=str(Time.Time(0,floattime=timer()-self.state.splitstarttime)))
+            self.labels[self.timer+1][0].configure(text=Time.Time(2,floattime=timer()-self.state.starttime).__str__(flag2=0))
+            self.labels[self.timer][0].configure(text=Time.Time(0,floattime=timer()-self.state.splitstarttime).__str__(flag2=0))
         if self.state.splitnum < len(self.state.splitnames):
             self.root.after(17,self.update)
         else:
-            self.root.doEnd(1,self.doEnd)
+            self.root.after(1,self.doEnd)
 
     ##########################################################
     ## Caller to all the functions that initialize text before
@@ -179,7 +179,6 @@ class Gui(threading.Thread):
     ## current split
     ##########################################################
     def updateInfo(self):
-        print self.state.splitnum
         self.labels[self.pbstart][1].configure(text=self.state.compareSplits[self.state.currentCompare].get(self.state.splitnum).__str__(precision=2))
         self.labels[self.pbstart+1][1].configure(text=self.state.compareSplits[0].get(self.state.splitnum).__str__(precision=2))
         self.labels[self.bptstart][1].configure(text=self.state.compareSplits[self.state.currentCompare].get(self.state.splitnum).subtract(self.state.compareSplits[0].get(self.state.splitnum)).__str__(precision=2))
@@ -256,6 +255,27 @@ class Gui(threading.Thread):
             else:
                 self.labels[self.pbstart-2][1].configure(fg='red')
 
+
+    def doEnd(self):
+        self.state.fillTimes(self.state.currentSplits)
+        self.state.fillTimes(self.state.currentTotals)
+        bests = self.state.getBests()
+        averages = self.state.getAverages()
+        if self.state.isPB():
+            pbSplits = [self.state.currentSplits.toStringList(),self.state.currentTotals.toStringList()]
+        else:
+            pbSplits = [self.state.compareSplits[2].toStringList(),self.state.compares[2].toStringList()]
+        bestSplits = [bests.toStringList(), bests.getSums().toStringList()]
+        averageSplits = [averages.toStringList(), averages.getSums().toStringList()]
+        lastRun = [self.state.currentSplits.toStringList(),self.state.currentTotals.toStringList()]
+        self.state.completeCsv[0].insert(7,"Run #"+str((len(self.state.completeCsv[1])-5)/2))
+        self.state.completeCsv[0].insert(8,"Totals")
+        self.state.replaceCsvLines([self.state.splitnames],0)
+        self.state.replaceCsvLines(bestSplits,1)
+        self.state.replaceCsvLines(averageSplits,3)
+        self.state.replaceCsvLines(pbSplits,5)
+        self.state.insertCsvLines(lastRun,7)
+        fileio.writeCSV(self.state.game,self.state.category,self.state.completeCsv)
 
     def guiSwitchCompare(self):
         config.choice = (config.choice+1)%4
