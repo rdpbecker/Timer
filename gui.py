@@ -28,11 +28,15 @@ class Gui(threading.Thread):
         self.root.quit()
 
     def run(self):
+        ## Initialize the state. This picks the game and category
         self.state = State.State(self.pbstart,self.splitstart)
         self.root = tk.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.callback)
         self.root.configure(background='black')
 
+        ## Initialize the format of the gui and store references to all
+        ## the labels so we can change them. References are stored in
+        ## a grid
         for i in range(self.splitstart):
             label = tk.Label(self.root, bg='black', text="", fg="white", width=7, anchor="w")
             label.grid(row=i,column=0,columnspan=2)
@@ -93,29 +97,46 @@ class Gui(threading.Thread):
 
         State.guiComplete=1
 
+        ## Initialize the text in the gui and set the timer to update 
+        ## at 60ish FPS
         self.initialize()
         self.root.after(17,self.update)
 
         self.root.mainloop()
 
+    ##########################################################
+    ## Set the timer to update every time this is called
+    ##########################################################
     def update(self):
         if self.splitcount > -1:
             self.labels[self.timer][0].configure(text=str(Time.Time(2,floattime=timer()-self.starttime)))
             self.labels[self.timer+1][0].configure(text=str(Time.Time(2,floattime=timer()-self.splitstarttime)))
         self.root.after(17,self.update)
 
+    ##########################################################
+    ## Caller to all the functions that initialize text before
+    ## the run is started
+    ##########################################################
     def initialize(self):
         self.initHeader()
         self.initTimes()
         self.initInfo()
         self.updateCurrentColour()
 
+    ##########################################################
+    ## Initialize the header with game, category, and
+    ## comparison name
+    ##########################################################
     def initHeader(self):
         self.labels[0][0].configure(text=self.state.game)
         self.labels[0][1].configure(text=self.state.category)
         self.labels[0][2].configure(text="Comparing Against")
         self.labels[0][3].configure(text="Personal Best")
 
+    ##########################################################
+    ## Initialize the split names and times for the first few
+    ## splits and the last one. This is based on the PB time
+    ##########################################################
     def initTimes(self):
         for i in range(self.state.windowStart,self.pbstart-self.splitstart-2):
             self.labels[self.splitstart+i][0].configure(text=self.state.splitnames[i-self.state.windowStart])
@@ -123,6 +144,10 @@ class Gui(threading.Thread):
         self.labels[self.pbstart-2][0].configure(text=self.state.splitnames[-1])
         self.labels[self.pbstart-2][2].configure(text=self.state.compares[self.state.currentCompare].get(-1).__str__(precision=2))
 
+    ##########################################################
+    ## Initialize all the info on the bottom, including split
+    ## comparisons, time save, BPT, and PB
+    ##########################################################
     def initInfo(self):
         self.labels[self.pbstart][0].configure(text="PB Split:")
         self.labels[self.pbstart+1][0].configure(text="Best Split:")
@@ -134,6 +159,10 @@ class Gui(threading.Thread):
         self.labels[self.bptstart+3][1].configure(text=self.state.compares[2].get(-1).__str__(precision=2))
         self.updateInfo()
 
+    ##########################################################
+    ## Set the colours for the current and last splits based
+    ## on the current split number
+    ##########################################################
     def updateCurrentColour(self):
         for i in range(0,self.pbstart-self.splitstart-1):
             if i == self.state.splitnum-self.state.getWindowStart()+self.state.windowStart:
@@ -145,6 +174,10 @@ class Gui(threading.Thread):
         self.labels[self.pbstart-2][0].configure(fg="maroon1")
         self.labels[self.pbstart-2][2].configure(fg="maroon1")
 
+    ##########################################################
+    ## Update current split and BPT information based on the
+    ## current split
+    ##########################################################
     def updateInfo(self):
         self.labels[self.pbstart][1].configure(text=self.state.compareSplits[self.state.currentCompare].get(self.state.splitnum).__str__(precision=2))
         self.labels[self.pbstart+1][1].configure(text=self.state.compareSplits[0].get(self.state.splitnum).__str__(precision=2))
@@ -154,6 +187,10 @@ class Gui(threading.Thread):
         if not self.state.skip:
             self.labels[self.bptstart+2][1].configure(text=self.state.bptList.sum().__str__(precision=2))
 
+    ##########################################################
+    ## Initialize the start and first split times when the run
+    ## starts
+    ##########################################################
     def start(self):
         self.starttime = timer()
         self.splitstarttime = timer()
