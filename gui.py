@@ -83,16 +83,15 @@ class Gui(threading.Thread):
         self.root.bind('<Return>', self.onSplitEnd)
         button2.grid(row=self.buttonstart,column=4,columnspan=2)
         button3 = tk.Button(self.root, bg='steel blue', text="Reset", fg='black', width=10, command=self.reset)
-        self.root.bind('<space>', self.reset)
+        self.root.bind('r', self.reset)
         button3.grid(row=self.buttonstart,column=2,columnspan=2)
         button4 = tk.Button(self.root, bg='steel blue', text="Skip Split", fg='black', width=10, command=self.skip)
         self.root.bind('s', self.skip)
         button4.grid(row=self.buttonstart,column=0,columnspan=2)
         button5 = tk.Button(self.root, bg='steel blue', text="Start Run", fg='black', width=15, command=self.start)
         button5.grid(row=self.buttonstart,column=9,columnspan=3)
+        self.root.bind('<space>', self.start)
         self.buttons.append([button1,button2,button3])
-
-        State.guiComplete=1
 
         ## Initialize the text in the gui and set the timer to update 
         ## at 60ish FPS
@@ -109,7 +108,7 @@ class Gui(threading.Thread):
             self.labels[self.timer+1][0].configure(text=Time.Time(2,floattime=timer()-self.state.starttime).__str__(flag2=0))
             self.labels[self.timer][0].configure(text=Time.Time(0,floattime=timer()-self.state.splitstarttime).__str__(flag2=0))
         if self.state.splitnum < len(self.state.splitnames):
-            self.root.after(17,self.update)
+            self.root.after(8,self.update)
         else:
             self.root.after(1,self.doEnd)
 
@@ -191,11 +190,16 @@ class Gui(threading.Thread):
     ## Initialize the start and first split times when the run
     ## starts
     ##########################################################
-    def start(self):
+    def start(self, event=None):
         self.state.starttime = timer()
         self.state.splitstarttime = timer()
         self.state.started = True
 
+    ##########################################################
+    ## At the end of each split, record and store the times, 
+    ## calculate all the diffs, and call the helper functions 
+    ## to update the GUI
+    ##########################################################
     def onSplitEnd(self,event=None):
         splitEnd = timer()
         totalTime = Time.Time(5,floattime=splitEnd-self.state.starttime)
@@ -215,6 +219,16 @@ class Gui(threading.Thread):
             self.updateInfo()
         self.state.splitstarttime = splitEnd
 
+    ##########################################################
+    ## Update the times and split names in the split portion 
+    ## of the GUI. This includes shifting entries as needed so
+    ## the current split is the third entry in the list, and 
+    ## colouring the diff numbers properly
+    ##
+    ## Parameters: lowIndex - the index in state.splitNames of
+    ##                        the split at the top of the 
+    ##                        section
+    ##########################################################
     def updateTimes(self,lowIndex):
         ## i is the number from the top of the list of splits. For the 
         ## top entry i=0, the next one down has i=1, and so on
@@ -229,22 +243,22 @@ class Gui(threading.Thread):
         for i in range(self.state.windowStart,self.pbstart-self.splitstart-2):
             ## The index of the split we're looking at currently
             subjectSplitIndex = i+lowIndex-self.state.windowStart
-            self.labels[self.splitstart+i][0].configure(text=self.state.splitnames[i+lowIndex-self.state.windowStart])
-            if self.state.splitnum > i + lowIndex - self.state.windowStart:
-                if not self.state.compareSplits[self.state.currentCompare].get(i+lowIndex-self.state.windowStart).equal(Time.Time(5,timestring='-')):
-                    self.labels[self.splitstart+i][1].configure(text=self.state.diffs[self.state.currentCompare].get(i+lowIndex-self.state.windowStart).__str__(1,precision=2))
+            self.labels[self.splitstart+i][0].configure(text=self.state.splitnames[subjectSplitIndex])
+            if self.state.splitnum > subjectSplitIndex:
+                if not self.state.compareSplits[self.state.currentCompare].get(subjectSplitIndex).equal(Time.Time(5,timestring='-')):
+                    self.labels[self.splitstart+i][1].configure(text=self.state.diffs[self.state.currentCompare].get(subjectSplitIndex).__str__(1,precision=2))
                 else:
                     self.labels[self.splitstart+i][1].configure(text='-')
-                self.labels[self.splitstart+i][2].configure(text=self.state.currentTotals.get(i+lowIndex-self.state.windowStart).__str__(precision=2))
-                if self.state.diffSplits[0].get(i+lowIndex-self.state.windowStart).greater(Time.Time(5,timestring='-')) == -1:
+                self.labels[self.splitstart+i][2].configure(text=self.state.currentTotals.get(subjectSplitIndex).__str__(precision=2))
+                if self.state.diffSplits[0].get(subjectSplitIndex).greater(Time.Time(5,timestring='-')) == -1:
                     self.labels[self.splitstart+i][1].configure(fg='gold')
-                elif (self.state.diffs[self.state.currentCompare].get(i+lowIndex-self.state.windowStart).greater(Time.Time(5,timestring='-')) == -1) or (self.state.compareSplits[self.state.currentCompare].get(i+lowIndex-self.state.windowStart).equal(Time.Time(2,timestring='-'))):
+                elif (self.state.diffs[self.state.currentCompare].get(subjectSplitIndex).greater(Time.Time(5,timestring='-')) == -1) or (self.state.compareSplits[self.state.currentCompare].get(subjectSplitIndex).equal(Time.Time(2,timestring='-'))):
                     self.labels[self.splitstart+i][1].configure(fg='green')
                 else:
                     self.labels[self.splitstart+i][1].configure(fg='red')
             else:
                 self.labels[self.splitstart+i][1].configure(text="")
-                self.labels[self.splitstart+i][2].configure(text=self.state.compares[self.state.currentCompare].get(i+lowIndex-self.state.windowStart).__str__(precision=2))
+                self.labels[self.splitstart+i][2].configure(text=self.state.compares[self.state.currentCompare].get(subjectSplitIndex).__str__(precision=2))
         if self.state.splitnum >= len(self.state.splitnames):
             self.labels[self.pbstart-2][1].configure(text=self.state.diffs[self.state.currentCompare].get(-1).__str__(1,precision=2))
             self.labels[self.pbstart-2][2].configure(text=self.state.currentTotals.get(-1).__str__(precision=2))
@@ -256,6 +270,10 @@ class Gui(threading.Thread):
                 self.labels[self.pbstart-2][1].configure(fg='red')
 
 
+    ##########################################################
+    ## Calculate all the comparisons and export them along 
+    ## with the splits from the current run
+    ##########################################################
     def doEnd(self):
         self.state.fillTimes(self.state.currentSplits)
         self.state.fillTimes(self.state.currentTotals)
@@ -276,17 +294,13 @@ class Gui(threading.Thread):
         self.state.replaceCsvLines(pbSplits,5)
         self.state.insertCsvLines(lastRun,7)
         fileio.writeCSV(self.state.game,self.state.category,self.state.completeCsv)
+        print "Close the window to end the program"
 
     def guiSwitchCompare(self):
         config.choice = (config.choice+1)%4
         config.choiceChanged = 1
 
-    def guiSplit(self,event=None):
-        user.switch = 1
-        pass
-
     def reset(self, event=None):
-        print "Close the window to end the program"
         user.switch = 1
         config.reset = 1
 
