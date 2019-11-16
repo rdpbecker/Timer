@@ -1,5 +1,6 @@
 # Run tkinter code in another thread
 
+import Time
 import Tkinter as tk
 import threading
 from timeit import default_timer as timer
@@ -14,15 +15,20 @@ class Gui(threading.Thread):
     timer = 12
     bptstart = 14
     buttonstart = 18
+    starttime = 0
+    splitstarttime = 0
+    splitcount = -1
+    state = None
 
     def __init__(self):
         threading.Thread.__init__(self)
-        self.start()
+        self.run()
 
     def callback(self):
         self.root.quit()
 
     def run(self):
+        self.state = State.State(self.pbstart,self.splitstart)
         self.root = tk.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.callback)
         self.root.configure(background='black')
@@ -30,10 +36,10 @@ class Gui(threading.Thread):
         for i in range(self.splitstart):
             label = tk.Label(self.root, bg='black', text="", fg="white", width=7, anchor="w")
             label.grid(row=i,column=0,columnspan=2)
-            label2 = tk.Label(self.root, bg='black', text="", fg="white", width=13, anchor='w')
-            label2.grid(row=i,column=2,columnspan=2)
-            label3 = tk.Label(self.root, bg='black', text="", fg="white", width=25, anchor='e')
-            label3.grid(row=i,column=4,columnspan=5)
+            label2 = tk.Label(self.root, bg='black', text="", fg="white", width=23, anchor='w')
+            label2.grid(row=i,column=2,columnspan=4)
+            label3 = tk.Label(self.root, bg='black', text="", fg="white", width=15, anchor='e')
+            label3.grid(row=i,column=6,columnspan=3)
             label4 = tk.Label(self.root, bg='black', text="", fg="white", width=15)
             label4.grid(row=i,column=9,columnspan=3)
             self.labels.append([label,label2,label3,label4])
@@ -72,20 +78,86 @@ class Gui(threading.Thread):
 
         button1 = tk.Button(self.root, bg='steel blue', text="Change Compare", fg='black', width=15, command=self.guiSwitchCompare)
         button1.grid(row=self.buttonstart,column=6,columnspan=3)
-        button2 = tk.Button(self.root, bg='steel blue', text="Split", fg='black', width=15, command=self.guiSplit)
+        button2 = tk.Button(self.root, bg='steel blue', text="Split", fg='black', width=10, command=self.guiSplit)
         self.root.bind('<Return>', self.guiSplit)
-        button2.grid(row=self.buttonstart,column=9,columnspan=3)
-        button3 = tk.Button(self.root, bg='steel blue', text="Reset", fg='black', width=15, command=self.reset)
+        button2.grid(row=self.buttonstart,column=4,columnspan=2)
+        button3 = tk.Button(self.root, bg='steel blue', text="Reset", fg='black', width=10, command=self.reset)
         self.root.bind('<space>', self.reset)
-        button3.grid(row=self.buttonstart,column=3,columnspan=3)
-        button4 = tk.Button(self.root, bg='steel blue', text="Skip Split", fg='black', width=15, command=self.skip)
+        button3.grid(row=self.buttonstart,column=2,columnspan=2)
+        button4 = tk.Button(self.root, bg='steel blue', text="Skip Split", fg='black', width=10, command=self.skip)
         self.root.bind('s', self.skip)
-        button4.grid(row=self.buttonstart,column=0,columnspan=3)
+        button4.grid(row=self.buttonstart,column=0,columnspan=2)
+        button5 = tk.Button(self.root, bg='steel blue', text="Start Run", fg='black', width=15, command=self.start)
+        button5.grid(row=self.buttonstart,column=9,columnspan=3)
         self.buttons.append([button1,button2,button3])
 
         State.guiComplete=1
 
+        self.initialize()
+        self.root.after(17,self.update)
+
         self.root.mainloop()
+
+    def update(self):
+        if self.splitcount > -1:
+            self.labels[self.timer][0].configure(text=str(Time.Time(2,floattime=timer()-self.starttime)))
+            self.labels[self.timer+1][0].configure(text=str(Time.Time(2,floattime=timer()-self.splitstarttime)))
+        self.root.after(17,self.update)
+
+    def initialize(self):
+        self.initHeader()
+        self.initTimes()
+        self.initInfo()
+        self.updateCurrentColour()
+
+    def initHeader(self):
+        self.labels[0][0].configure(text=self.state.game)
+        self.labels[0][1].configure(text=self.state.category)
+        self.labels[0][2].configure(text="Comparing Against")
+        self.labels[0][3].configure(text="Personal Best")
+
+    def initTimes(self):
+        for i in range(self.state.windowStart,self.pbstart-self.splitstart-2):
+            self.labels[self.splitstart+i][0].configure(text=self.state.splitnames[i-self.state.windowStart])
+            self.labels[self.splitstart+i][2].configure(text=self.state.compares[self.state.currentCompare].get(i-self.state.windowStart).__str__(precision=2))
+        self.labels[self.pbstart-2][0].configure(text=self.state.splitnames[-1])
+        self.labels[self.pbstart-2][2].configure(text=self.state.compares[self.state.currentCompare].get(-1).__str__(precision=2))
+
+    def initInfo(self):
+        self.labels[self.pbstart][0].configure(text="PB Split:")
+        self.labels[self.pbstart+1][0].configure(text="Best Split:")
+
+        self.labels[self.bptstart][0].configure(text="Possible Time Save:")
+        self.labels[self.bptstart+1][0].configure(text="Last Split (vs Best):")
+        self.labels[self.bptstart+2][0].configure(text="Best Possible Time:")
+        self.labels[self.bptstart+3][0].configure(text="Personal Best:")
+        self.labels[self.bptstart+3][1].configure(text=self.state.compares[2].get(-1).__str__(precision=2))
+        self.updateInfo()
+
+    def updateCurrentColour(self):
+        for i in range(0,self.pbstart-self.splitstart-1):
+            if i == self.state.splitnum-self.state.getWindowStart()+self.state.windowStart:
+                self.labels[self.splitstart+i][0].configure(fg="DarkOrchid2")
+                self.labels[self.splitstart+i][2].configure(fg="DarkOrchid2")
+            else:
+                self.labels[self.splitstart+i][0].configure(fg="white")
+                self.labels[self.splitstart+i][2].configure(fg="white")
+        self.labels[self.pbstart-2][0].configure(fg="maroon1")
+        self.labels[self.pbstart-2][2].configure(fg="maroon1")
+
+    def updateInfo(self):
+        self.labels[self.pbstart][1].configure(text=self.state.compareSplits[self.state.currentCompare].get(self.state.splitnum).__str__(precision=2))
+        self.labels[self.pbstart+1][1].configure(text=self.state.compareSplits[0].get(self.state.splitnum).__str__(precision=2))
+        self.labels[self.bptstart][1].configure(text=self.state.compareSplits[self.state.currentCompare].get(self.state.splitnum).subtract(self.state.compareSplits[0].get(self.state.splitnum)).__str__(precision=2))
+        if self.state.splitnum:
+            self.labels[self.bptstart+1][1].configure(text=self.state.currentSplits.get(-1).subtract(self.state.compareSplits[0].get(self.state.splitnum-1)).__str__(1,precision=2))
+        if not self.state.skip:
+            self.labels[self.bptstart+2][1].configure(text=self.state.bptList.sum().__str__(precision=2))
+
+    def start(self):
+        self.starttime = timer()
+        self.splitstarttime = timer()
+        self.splitcount = 0
 
     def guiSwitchCompare(self):
         config.choice = (config.choice+1)%4

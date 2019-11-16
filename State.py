@@ -23,8 +23,7 @@ class State:
     app = 0
     windowStart = 0
 
-    def __init__(self):
-        global guiComplete
+    def __init__(self,pbstart,splitstart):
         self.getSplitNames()
 
         self.completeCsv = fileio.csvReadStart(self.game,self.category,self.splitnames)
@@ -43,11 +42,7 @@ class State:
         
         self.currentSplits = Timelist.Timelist()
         self.currentTotals = Timelist.Timelist()
-        self.app = gui.Gui()
-        self.windowStart = 7-min(self.app.pbstart-self.app.splitstart-1, self.compares[0].length)
-        while not guiComplete:
-            continue
-        self.InitGui()
+        self.windowStart = 7-min(pbstart-splitstart-1, self.compares[0].length)
 
     def getSplitNames(self):
         splitNames = cate.findAllSplits()
