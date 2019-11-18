@@ -270,11 +270,19 @@ class Gui(threading.Thread):
             else:
                 self.labels[self.pbstart-2][1].configure(fg='red')
 
+    ##########################################################
+    ## Update information about the comparison splits when the 
+    ## comparison is changed
+    ##########################################################
     def updateCompare(self):
         self.labels[0][3].configure(text=self.state.compareHeaders[self.state.currentCompare])
         self.labels[self.pbstart][0].configure(text=self.state.splitCompareHeaders[self.state.currentCompare]+":")
         self.labels[self.pbstart-2][2].configure(text=self.state.compares[self.state.currentCompare].get(-1).__str__(precision=2))
 
+    ##########################################################
+    ## The function called when the 'Switch Compare' button is
+    ## clicked
+    ##########################################################
     def guiSwitchCompare(self,event=None):
         self.state.currentCompare = (self.state.currentCompare+1)%4
         lowIndex = self.state.getWindowStart()
@@ -282,6 +290,9 @@ class Gui(threading.Thread):
         self.updateInfo()
         self.updateCompare()
 
+    ##########################################################
+    ## Stop the run here
+    ##########################################################
     def reset(self, event=None):
         self.state.reset = True
 
