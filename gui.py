@@ -107,7 +107,7 @@ class Gui(threading.Thread):
         if self.state.started:
             self.labels[self.timer+1][0].configure(text=Time.Time(2,floattime=timer()-self.state.starttime).__str__(flag2=0))
             self.labels[self.timer][0].configure(text=Time.Time(0,floattime=timer()-self.state.splitstarttime).__str__(flag2=0))
-        if self.state.splitnum < len(self.state.splitnames):
+        if self.state.splitnum < len(self.state.splitnames) and not self.state.reset:
             self.root.after(8,self.update)
         else:
             self.root.after(1,self.doEnd)
@@ -301,8 +301,7 @@ class Gui(threading.Thread):
         config.choiceChanged = 1
 
     def reset(self, event=None):
-        user.switch = 1
-        config.reset = 1
+        self.state.reset = True
 
     def skip(self,event=None):
         user.switch = 1
