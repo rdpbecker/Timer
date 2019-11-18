@@ -251,6 +251,10 @@ class State:
             for j in range(len(lines)):
                 self.completeCsv[i].append(lines[j][i-1])
 
+    ##########################################################
+    ## Calculate all the comparisons and export them along 
+    ## with the splits from the current run
+    ##########################################################
     def doEnd(self):
         print "doEnd"
         self.fillTimes(self.currentSplits)
@@ -272,6 +276,7 @@ class State:
         self.replaceCsvLines(pbSplits,5)
         self.insertCsvLines(lastRun,7)
         fileio.writeCSV(self.game,self.category,self.completeCsv)
+        print "Close the window to end the program"
 
     def setFlags(self,skip,reset):
         print "setFlags"

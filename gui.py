@@ -110,7 +110,7 @@ class Gui(threading.Thread):
         if self.state.splitnum < len(self.state.splitnames) and not self.state.reset:
             self.root.after(8,self.update)
         else:
-            self.root.after(1,self.doEnd)
+            self.root.after(1,self.state.doEnd)
 
     ##########################################################
     ## Caller to all the functions that initialize text before
@@ -269,32 +269,6 @@ class Gui(threading.Thread):
             else:
                 self.labels[self.pbstart-2][1].configure(fg='red')
 
-
-    ##########################################################
-    ## Calculate all the comparisons and export them along 
-    ## with the splits from the current run
-    ##########################################################
-    def doEnd(self):
-        self.state.fillTimes(self.state.currentSplits)
-        self.state.fillTimes(self.state.currentTotals)
-        bests = self.state.getBests()
-        averages = self.state.getAverages()
-        if self.state.isPB():
-            pbSplits = [self.state.currentSplits.toStringList(),self.state.currentTotals.toStringList()]
-        else:
-            pbSplits = [self.state.compareSplits[2].toStringList(),self.state.compares[2].toStringList()]
-        bestSplits = [bests.toStringList(), bests.getSums().toStringList()]
-        averageSplits = [averages.toStringList(), averages.getSums().toStringList()]
-        lastRun = [self.state.currentSplits.toStringList(),self.state.currentTotals.toStringList()]
-        self.state.completeCsv[0].insert(7,"Run #"+str((len(self.state.completeCsv[1])-5)/2))
-        self.state.completeCsv[0].insert(8,"Totals")
-        self.state.replaceCsvLines([self.state.splitnames],0)
-        self.state.replaceCsvLines(bestSplits,1)
-        self.state.replaceCsvLines(averageSplits,3)
-        self.state.replaceCsvLines(pbSplits,5)
-        self.state.insertCsvLines(lastRun,7)
-        fileio.writeCSV(self.state.game,self.state.category,self.state.completeCsv)
-        print "Close the window to end the program"
 
     def guiSwitchCompare(self):
         config.choice = (config.choice+1)%4
