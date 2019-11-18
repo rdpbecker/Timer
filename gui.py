@@ -163,8 +163,9 @@ class Gui(threading.Thread):
     ## on the current split number
     ##########################################################
     def updateCurrentColour(self):
+        windowStart = self.state.getWindowStart()
         for i in range(0,self.pbstart-self.splitstart-1):
-            if i == self.state.splitnum-self.state.getWindowStart()+self.state.windowStart:
+            if i == self.state.splitnum-windowStart+self.state.windowStart:
                 self.labels[self.splitstart+i][0].configure(fg="DarkOrchid2")
                 self.labels[self.splitstart+i][2].configure(fg="DarkOrchid2")
             else:
@@ -211,8 +212,8 @@ class Gui(threading.Thread):
         for i in range(4):
             self.state.diffs[i].insert(totalTime.subtract(self.state.compares[i].get(self.state.splitnum)))
             self.state.diffSplits[i].insert(self.state.currentSplits.get(self.state.splitnum).subtract(self.state.compareSplits[i].get(self.state.splitnum)))
-        lowIndex = self.state.getWindowStart()
         self.state.splitnum = self.state.splitnum + 1
+        lowIndex = self.state.getWindowStart()
         self.updateTimes(lowIndex)
         self.updateCurrentColour()
         if self.state.splitnum < len(self.state.splitnames):
