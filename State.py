@@ -22,6 +22,7 @@ class State:
     skip = 0
     currentCompare = 2
     compareHeaders = ["Sum of Bests", "Average", "Personal Best", "Last Run"]
+    splitCompareHeaders = ["Best Split", "Average Split", "PB Split", "Last Run Split"]
     app = 0
     windowStart = 0
 

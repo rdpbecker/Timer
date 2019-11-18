@@ -37,10 +37,10 @@ class Gui(threading.Thread):
         for i in range(self.splitstart):
             label = tk.Label(self.root, bg='black', text="", fg="white", width=7, anchor="w")
             label.grid(row=i,column=0,columnspan=2)
-            label2 = tk.Label(self.root, bg='black', text="", fg="white", width=23, anchor='w')
-            label2.grid(row=i,column=2,columnspan=4)
-            label3 = tk.Label(self.root, bg='black', text="", fg="white", width=15, anchor='e')
-            label3.grid(row=i,column=6,columnspan=3)
+            label2 = tk.Label(self.root, bg='black', text="", fg="white", width=18, anchor='w')
+            label2.grid(row=i,column=2,columnspan=3)
+            label3 = tk.Label(self.root, bg='black', text="", fg="white", width=20, anchor='e')
+            label3.grid(row=i,column=5,columnspan=4)
             label4 = tk.Label(self.root, bg='black', text="", fg="white", width=15)
             label4.grid(row=i,column=9,columnspan=3)
             self.labels.append([label,label2,label3,label4])
@@ -53,10 +53,10 @@ class Gui(threading.Thread):
             label3.grid(row=i,column=8,columnspan=4)
             self.labels.append([label,label2,label3])
         for i in range(self.pbstart,self.timer):
-            label = tk.Label(self.root, bg='black', text="", fg="white", width=10, anchor='w')
-            label.grid(row=i,column=0,columnspan=2)
-            label2 = tk.Label(self.root, bg='black', text="", fg="white", width=20, anchor='w')
-            label2.grid(row=i,column=2,columnspan=4)
+            label = tk.Label(self.root, bg='black', text="", fg="white", width=15, anchor='w')
+            label.grid(row=i,column=0,columnspan=3)
+            label2 = tk.Label(self.root, bg='black', text="", fg="white", width=15, anchor='w')
+            label2.grid(row=i,column=3,columnspan=3)
             label3 = tk.Label(self.root, bg='black', text="", fg="white", width=15, anchor='w')
             label3.grid(row=i,column=6,columnspan=3)
             label4 = tk.Label(self.root, bg='black', text="", fg="white", width=15, anchor='e')
@@ -269,10 +269,17 @@ class Gui(threading.Thread):
             else:
                 self.labels[self.pbstart-2][1].configure(fg='red')
 
+    def updateCompare(self):
+        self.labels[0][3].configure(text=self.state.compareHeaders[self.state.currentCompare])
+        self.labels[self.pbstart][0].configure(text=self.state.splitCompareHeaders[self.state.currentCompare]+":")
+        self.labels[self.pbstart-2][2].configure(text=self.state.compares[self.state.currentCompare].get(-1).__str__(precision=2))
 
-    def guiSwitchCompare(self):
-        config.choice = (config.choice+1)%4
-        config.choiceChanged = 1
+    def guiSwitchCompare(self,event=None):
+        self.state.currentCompare = (self.state.currentCompare+1)%4
+        lowIndex = self.state.getWindowStart()
+        self.updateTimes(lowIndex)
+        self.updateInfo()
+        self.updateCompare()
 
     def reset(self, event=None):
         self.state.reset = True
