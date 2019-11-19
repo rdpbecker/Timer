@@ -4,8 +4,7 @@ import Time
 import Tkinter as tk
 import threading
 from timeit import default_timer as timer
-import State, test, config, fileio 
-import userInput as user
+import State, test, fileio 
 
 class Gui(threading.Thread):
     labels = []
