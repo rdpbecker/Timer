@@ -306,7 +306,6 @@ class Gui(threading.Thread):
         self.state.currentSplits.insert(splitTime)
         self.state.currentTotals.insert(totalTime)
 
-        self.state.bptList.replace(Time.Time(5,floattime=splitEnd-self.state.splitstarttime),self.state.splitnum)
         for i in range(4):
             self.state.diffs[i].insert(Time.Time(5,floattime=0))
             self.state.diffSplits[i].insert(Time.Time(5,floattime=0))
