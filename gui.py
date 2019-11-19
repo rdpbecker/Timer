@@ -296,6 +296,24 @@ class Gui(threading.Thread):
     def reset(self, event=None):
         self.state.reset = True
 
+    ##########################################################
+    ## Skip a split
+    ##########################################################
     def skip(self,event=None):
-        user.switch = 1
-        config.skip = 1
+        splitEnd = timer()
+        totalTime = Time.Time(5,floattime=0)
+        splitTime = Time.Time(5,floattime=0)
+        self.state.currentSplits.insert(splitTime)
+        self.state.currentTotals.insert(totalTime)
+
+        self.state.bptList.replace(Time.Time(5,floattime=splitEnd-self.state.splitstarttime),self.state.splitnum)
+        for i in range(4):
+            self.state.diffs[i].insert(Time.Time(5,floattime=0))
+            self.state.diffSplits[i].insert(Time.Time(5,floattime=0))
+        self.state.splitnum = self.state.splitnum + 1
+        lowIndex = self.state.getWindowStart()
+        self.updateTimes(lowIndex)
+        self.updateCurrentColour()
+        if self.state.splitnum < len(self.state.splitnames):
+            self.updateInfo()
+        self.state.splitstarttime = splitEnd
