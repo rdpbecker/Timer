@@ -183,8 +183,7 @@ class Gui(threading.Thread):
         self.labels[self.bptstart][1].configure(text=self.state.compareSplits[self.state.currentCompare].get(self.state.splitnum).subtract(self.state.compareSplits[0].get(self.state.splitnum)).__str__(precision=2))
         if self.state.splitnum > 0:
             self.labels[self.bptstart+1][1].configure(text=self.state.currentSplits.get(-1).subtract(self.state.compareSplits[0].get(self.state.splitnum-1)).__str__(1,precision=2))
-        if not self.state.skip:
-            self.labels[self.bptstart+2][1].configure(text=self.state.bptList.sum().__str__(precision=2))
+        self.labels[self.bptstart+2][1].configure(text=self.state.bptList.sum().__str__(precision=2))
 
     ##########################################################
     ## Initialize the start and first split times when the run

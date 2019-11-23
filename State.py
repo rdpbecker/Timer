@@ -10,20 +10,18 @@ class State:
     splitnames = []
     game = ""
     category = ""
-    completeCsv = ""
-    bptList = 0 
+    completeCsv = None
+    bptList = None
     compares = []
     compareSplits = []
     diffs = []
     diffSplits = []
-    currentSplits = 0
-    currentTotals = 0
-    reset = 0
-    skip = 0
+    currentSplits = None
+    currentTotals = None
+    reset = False
     currentCompare = 2
     compareHeaders = ["Sum of Bests", "Average", "Personal Best", "Last Run"]
     splitCompareHeaders = ["Best Split", "Average Split", "PB Split", "Last Run Split"]
-    app = 0
     windowStart = 0
 
     def __init__(self,pbstart,splitstart):
