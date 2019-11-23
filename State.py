@@ -36,8 +36,18 @@ class State:
         for i in range(3):
             self.compares.append(self.getTimes(2*i+2))
             self.compareSplits.append(self.getTimes(2*i+1))
-        self.compares.append(self.getTimes(-1))
-        self.compareSplits.append(self.getTimes(-2))
+
+        ## There's no way to take out a comparison at the moment, and we
+        ## set all the comparisons for the first run of a category when
+        ## we read the CSV file, so if there isn't a run already we just
+        ## set the last run to be the PB splits. It doesn't matter 
+        ## because the PB splits are all '-' anyway
+        if len(self.completeCsv[0]) > 7:
+          self.compares.append(self.getTimes(8))
+          self.compareSplits.append(self.getTimes(7))
+        else: 
+          self.compares.append(self.getTimes(6))
+          self.compareSplits.append(self.getTimes(5))
         
         for i in range(4):
             self.diffs.append(Timelist.Timelist())
@@ -73,7 +83,7 @@ class State:
     def getBests(self):
         bests = Timelist.Timelist()
         for i in range(self.currentSplits.length):
-            if (self.currentSplits.get(i).greater(self.compareSplits[0].get(i)) > 0 and not self.compareSplits[0].get(i).equal(Time.Time(2,timestring='-'))) or self.currentSplits.get(i).equal(Time.Time(5,timestring='-')):
+            if (self.currentSplits.get(i).greater(self.compareSplits[0].get(i)) > 0 and not self.compareSplits[0].get(i).equal(Time.Time(5,timestring='-'))) or self.currentSplits.get(i).equal(Time.Time(5,timestring='-')):
                 bests.insert(self.compareSplits[0].get(i))
             else:
                 bests.insert(self.currentSplits.get(i))
