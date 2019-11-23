@@ -93,9 +93,9 @@ class Gui(threading.Thread):
         self.buttons.append([button1,button2,button3])
 
         ## Initialize the text in the gui and set the timer to update 
-        ## at 60ish FPS
+        ## at 125ish FPS
         self.initialize()
-        self.root.after(17,self.update)
+        self.root.after(8,self.update)
 
         self.root.mainloop()
 
