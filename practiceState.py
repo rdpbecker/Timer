@@ -2,6 +2,7 @@ import Time, Timelist, categorySelection as cate, fileio
 
 class State:
     started = False
+    finished = False
     starttime = 0
     splitstarttime = 0
     splitnum = 0
@@ -14,7 +15,6 @@ class State:
     diffSplits = None
     currentSplits = None
     currentTotals = None
-    restart = False
     windowStart = 0
 
     def __init__(self):
@@ -50,8 +50,13 @@ class State:
 
     def getPracticeSplits(self):
         startSplitName = cate.readThingInList(self.splitnames)
-        startSplitIndex = self.splitnames.index(startSplitName)
-        self.splitnames = self.splitnames[startSplitIndex]
+        self.startSplitIndex = self.splitnames.index(startSplitName)
+        self.splitnames = self.splitnames[self.startSplitIndex]
         newBptList = Timelist.Timelist()
-        newBptList.insert(self.bptList.get(startSplitIndex))
+        newBptList.insert(self.bptList.get(self.startSplitIndex))
         self.bptList = newBptList
+
+    def replaceCsvLines(self,lines,start):
+        for i in range(1,len(self.completeCsv)):
+            for j in range(len(lines)):
+                self.completeCsv[i][start+j]=lines[j][i-1]
