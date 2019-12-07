@@ -27,8 +27,8 @@ class Gui(threading.Thread):
         ## Initialize the format of the gui and store references to all
         ## the labels so we can change them. References are stored in
         ## a grid
-        anchor = 'c'
-        font = ("Helvetica",24)
+        anchor = 'w'
+        font = ("Age",24)
         colour = 'lime green'
 
         label1 = tk.Label(self.root, bg='black', text="Best Split", fg='white', width=10, anchor='w')
@@ -37,8 +37,8 @@ class Gui(threading.Thread):
         label2.grid(row=0,column=3,columnspan=3)
         self.labels.append([label1,label2])
 
-        label = tk.Label(self.root, bg='black', text="", fg=colour, width=27, font=font, anchor=anchor)
-        label.grid(row=1,column=0,columnspan=12)
+        label = tk.Label(self.root, bg='black', text="", fg=colour, width=12, font=font, anchor=anchor)
+        label.grid(row=1,column=5,columnspan=8)
         self.labels.append([label])
 
         button1 = tk.Button(self.root, bg='steel blue', text="Split", fg='black', width=12, command=self.onSplitEnd)
