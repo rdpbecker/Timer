@@ -62,7 +62,7 @@ class Gui(threading.Thread):
             label4.grid(row=i,column=9,columnspan=3)
             self.labels.append([label,label2,label3,label4])
         anchorlist = ['e','c']
-        fontlist = [("Liberation Sans",18),("Helvetica",24)]
+        fontlist = [("Liberation Sans",18),("Arial Black",24)]
         colourlist = ['blue','lime green']
         for i in range(self.timer,self.bptstart):
             label = tk.Label(self.root, bg='black', text="", fg=colourlist[i-self.timer], width=27, font=fontlist[i-self.timer], anchor=anchorlist[i-self.timer])
