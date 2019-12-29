@@ -12,13 +12,6 @@ def setPrecision(finalLength,string):
         string = string + "0"
     return string
 
-def reducePrecision(finalLength,string):
-    if len(string) >= 5:
-        base = 10**(len(string)-4)
-        if int(string)/(10**base) != (int(string)+2)/base:
-            string = str((int(string)+2)/base)
-    return string[:finalLength] 
-
 class Time:
     hours = 0
     mins = 0
