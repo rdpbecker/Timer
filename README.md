@@ -17,12 +17,12 @@ should have the name of the game.
 
 # runTimer.py
 
+Usage: python runTimer.py
+
 This is a segmented timer which keeps track of segments and stores
 them in a CSV file when the program is completed (either when the
 final segment is completed or when the user terminates the
 program).
-
-Usage: python runTimer.py
 
 ## How it works
 
@@ -56,6 +56,8 @@ are `Personal Best`, `Sum of Bests`, `Average`, and `Last Run`.
 
 # practice.py
 
+Usage: `python practice.py`
+
 `practice.py` allows you to practice (and improve bests for)
 individual segments. This is run in the same way as `runTimer.py`,
 and has mostly the same buttons and key bindings. To choose the
@@ -67,4 +69,15 @@ that run. Only the best time for the practiced segment will be
 written - the sum of best times will be updated with the next run
 of `runTimer.py`.
 
-usage: `python practice.py`
+# variance.py
+
+Usage: `python variance.py`
+
+This simply computes the variance of all the segments to determine
+which ones are most and least consistent. The variance is presented
+as a percentage of the average length of the corresponding segment,
+and the segments are printed in descending order by this percent
+variance.
+
+The game and category are chosen in the same way as in the other
+two programs.
