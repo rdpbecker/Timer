@@ -1,4 +1,4 @@
-import Time, Timelist, gui, categorySelection as cate, fileio, config
+import Time, Timelist, gui, categorySelection as cate, fileio 
 
 guiComplete=0
 
