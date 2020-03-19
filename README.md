@@ -13,7 +13,11 @@ The game only needs to be given once, and all the categories should be
 in a block on that line and the ones after it. For example, if
 there are two categories for *Super Mario Bros.*, the two
 categories should be on consecutive lines, and only the first line
-should have the name of the game. 
+should have the name of the game. For example, the second row could
+be
+```
+,World 1 RTA,World 1-1,World 1-2,World 1-3,World 1-4
+```
 
 # runTimer.py
 
