@@ -200,6 +200,9 @@ class Gui(threading.Thread):
     ## to update the GUI
     ##########################################################
     def onSplitEnd(self,event=None):
+        if not self.state.started:
+            self.start()
+            return
         splitEnd = timer()
         totalTime = Time.Time(5,floattime=splitEnd-self.state.starttime)
         splitTime = Time.Time(5,floattime=splitEnd-self.state.splitstarttime)
