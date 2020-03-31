@@ -57,6 +57,10 @@ class State:
         self.currentTotals = Timelist.Timelist()
         self.windowStart = config["numSplits"]-min(pbstart-splitstart-1, self.compares[0].length)
 
+        if self.config["numSplits"] > len(self.splitnames):
+            self.config["numSplits"] = len(self.splitnames)
+            self.config["activeSplit"] = len(self.splitnames) - 2
+
     def getSplitNames(self):
         splitNames = cate.findAllSplits()
         names = cate.findNames(splitNames,0)
