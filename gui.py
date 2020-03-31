@@ -25,9 +25,9 @@ class Gui(threading.Thread):
         self.root.quit()
 
     def run(self):
-        config = fileio.readJson("config.json")
         ## Initialize the state. This picks the game and category
-        self.state = State.State(self.pbstart,self.splitstart)
+        config = fileio.readJson("config.json")
+        self.state = State.State(self.pbstart,self.splitstart,config)
         self.root = tk.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.callback)
         self.root.configure(background='black')
