@@ -27,6 +27,7 @@ class Gui(threading.Thread):
     def run(self):
         ## Initialize the state. This picks the game and category
         config = fileio.readJson("config.json")
+        self.setSectionStarts(config)
         self.state = State.State(self.pbstart,self.splitstart,config)
         self.root = tk.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.callback)
@@ -100,6 +101,12 @@ class Gui(threading.Thread):
         self.root.after(8,self.update)
 
         self.root.mainloop()
+
+    def setSectionStarts(self,config):
+        self.pbstart = self.splitstart + config["numSplits"] + 1
+        self.timer = self.pbstart + 2
+        self.bptstart = self.timer + 2
+        self.buttonstart = self.bptstart + 4
 
     ##########################################################
     ## Set the timer to update every time this is called

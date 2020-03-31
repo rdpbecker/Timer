@@ -74,11 +74,11 @@ class State:
         return times
 
     def getWindowStart(self):
-        if self.splitnum <= self.config["activeSplit"]-1:
+        if self.splitnum <= self.config["activeSplit"] - 1:
             return 0
         if self.splitnum >= len(self.splitnames) - (self.config["numSplits"]-self.config["activeSplit"]):
             return len(self.splitnames) - self.config["numSplits"]
-        return self.splitnum - 2
+        return self.splitnum - (self.config["activeSplit"] - 1)
 
     def getBests(self):
         bests = Timelist.Timelist()
