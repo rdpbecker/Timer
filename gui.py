@@ -4,7 +4,7 @@ import Time
 import Tkinter as tk
 import threading
 from timeit import default_timer as timer
-import State, fileio 
+import State, GeneralInfo, fileio 
 import json
 
 class Gui(threading.Thread):
@@ -27,8 +27,18 @@ class Gui(threading.Thread):
     def run(self):
         ## Initialize the state. This picks the game and category
         config = fileio.readJson("config.json")
-        self.setSectionStarts(config)
+        generalInfo = {\
+            "timeSave": GeneralInfo.GeneralInfo(config["timeSaveShow"],self.timeSaveInfo),\
+            "diff": GeneralInfo.GeneralInfo(config["diffShow"],self.diffInfo),\
+            "bpt": GeneralInfo.GeneralInfo(config["bptShow"],self.bptInfo),\
+            "pb": GeneralInfo.GeneralInfo(config["pbShow"],self.pbInfo)\
+        }
+        generalInfoKeys = ["timeSave","diff","bpt","pb"]
+        self.setSectionStarts(config,generalInfo,generalInfoKeys)
         self.state = State.State(self.pbstart,self.splitstart,config)
+        self.state.generalInfo = generalInfo
+        self.state.generalInfoKeys = generalInfoKeys
+
         self.root = tk.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.callback)
         self.root.configure(background='black')
@@ -102,11 +112,15 @@ class Gui(threading.Thread):
 
         self.root.mainloop()
 
-    def setSectionStarts(self,config):
+    def setSectionStarts(self,config,generalInfo,generalInfoKeys):
         self.pbstart = self.splitstart + config["numSplits"] + 1
         self.timer = self.pbstart + 2
         self.bptstart = self.timer + 2
-        self.buttonstart = self.bptstart + 4
+        count = 0
+        for key in generalInfoKeys:
+            if generalInfo[key].show:
+                count = count + 1
+        self.buttonstart = self.bptstart + count
 
     ##########################################################
     ## Set the timer to update every time this is called
@@ -159,11 +173,20 @@ class Gui(threading.Thread):
         self.labels[self.pbstart][0].configure(text="PB Split:")
         self.labels[self.pbstart+1][0].configure(text="Best Split:")
 
-        self.labels[self.bptstart][0].configure(text="Possible Time Save:")
-        self.labels[self.bptstart+1][0].configure(text="Last Split (vs Best):")
-        self.labels[self.bptstart+2][0].configure(text="Best Possible Time:")
-        self.labels[self.bptstart+3][0].configure(text="Personal Best:")
-        self.labels[self.bptstart+3][1].configure(text=self.state.compares[2].get(-1).__str__(precision=2))
+        count = 0
+        if self.state.generalInfo["timeSave"].show:
+            self.labels[self.bptstart+count][0].configure(text="Possible Time Save:")
+            count = count + 1
+        if self.state.generalInfo["diff"].show:
+            self.labels[self.bptstart+count][0].configure(text="Last Split (vs Best):")
+            count = count + 1
+        if self.state.generalInfo["bpt"].show:
+            self.labels[self.bptstart+count][0].configure(text="Best Possible Time:")
+            count = count + 1
+        if self.state.generalInfo["pb"].show:
+            self.labels[self.bptstart+count][0].configure(text="Personal Best:")
+            self.labels[self.bptstart+count][1].configure(text=self.state.compares[2].get(-1).__str__(precision=2))
+            count = count + 1
         self.updateInfo()
 
     ##########################################################
@@ -189,10 +212,11 @@ class Gui(threading.Thread):
     def updateInfo(self):
         self.labels[self.pbstart][1].configure(text=self.state.compareSplits[self.state.currentCompare].get(self.state.splitnum).__str__(precision=2))
         self.labels[self.pbstart+1][1].configure(text=self.state.compareSplits[0].get(self.state.splitnum).__str__(precision=2))
-        self.labels[self.bptstart][1].configure(text=self.state.compareSplits[self.state.currentCompare].get(self.state.splitnum).subtract(self.state.compareSplits[0].get(self.state.splitnum)).__str__(precision=2))
-        if self.state.splitnum > 0:
-            self.labels[self.bptstart+1][1].configure(text=self.state.currentSplits.get(-1).subtract(self.state.compareSplits[0].get(self.state.splitnum-1)).__str__(1,precision=2))
-        self.labels[self.bptstart+2][1].configure(text=self.state.bptList.sum().__str__(precision=2))
+        count = 0
+        for key in self.state.generalInfoKeys:
+            if self.state.generalInfo[key].show:
+                self.state.generalInfo[key].callback(count)
+                count = count + 1
 
     ##########################################################
     ## Initialize the start and first split times when the run
@@ -326,3 +350,16 @@ class Gui(threading.Thread):
         if self.state.splitnum < len(self.state.splitnames):
             self.updateInfo()
         self.state.splitstarttime = splitEnd
+
+    def timeSaveInfo(self,i):
+        self.labels[self.bptstart+i][1].configure(text=self.state.compareSplits[self.state.currentCompare].get(self.state.splitnum).subtract(self.state.compareSplits[0].get(self.state.splitnum)).__str__(precision=2))
+
+    def diffInfo(self,i):
+        if self.state.splitnum > 0:
+            self.labels[self.bptstart+i][1].configure(text=self.state.currentSplits.get(-1).subtract(self.state.compareSplits[0].get(self.state.splitnum-1)).__str__(1,precision=2))
+
+    def bptInfo(self,i):
+        self.labels[self.bptstart+i][1].configure(text=self.state.bptList.sum().__str__(precision=2))
+
+    def pbInfo(self,i):
+        pass
