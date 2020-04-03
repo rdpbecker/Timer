@@ -5,7 +5,6 @@ import Tkinter as tk
 import threading
 from timeit import default_timer as timer
 import State, GeneralInfo, fileio 
-import json
 
 class Gui(threading.Thread):
     labels = []
