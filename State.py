@@ -12,6 +12,7 @@ class State:
     category = ""
     completeCsv = None
     bptList = None
+    currentBests = None
     compares = []
     compareSplits = []
     diffs = []
@@ -32,6 +33,7 @@ class State:
         self.completeCsv = fileio.csvReadStart(self.game,self.category,self.splitnames)
 
         self.bptList = self.getTimes(1)
+        self.currentBests = self.getTimes(1)
         
         for i in range(3):
             self.compares.append(self.getTimes(2*i+2))
