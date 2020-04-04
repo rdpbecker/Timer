@@ -188,13 +188,13 @@ class Gui(threading.Thread):
         windowStart = self.state.getWindowStart()
         for i in range(0,self.pbstart-self.splitstart-1):
             if i == self.state.splitnum-windowStart+self.state.windowStart:
-                self.labels[self.splitstart+i][0].configure(fg="DarkOrchid2")
-                self.labels[self.splitstart+i][2].configure(fg="DarkOrchid2")
+                self.labels[self.splitstart+i][0].configure(fg=self.state.config["activeColour"])
+                self.labels[self.splitstart+i][2].configure(fg=self.state.config["activeColour"])
             else:
-                self.labels[self.splitstart+i][0].configure(fg="white")
-                self.labels[self.splitstart+i][2].configure(fg="white")
-        self.labels[self.pbstart-2][0].configure(fg="maroon1")
-        self.labels[self.pbstart-2][2].configure(fg="maroon1")
+                self.labels[self.splitstart+i][0].configure(fg=self.state.config["mainColour"])
+                self.labels[self.splitstart+i][2].configure(fg=self.state.config["mainColour"])
+        self.labels[self.pbstart-2][0].configure(fg=self.state.config["endColour"])
+        self.labels[self.pbstart-2][2].configure(fg=self.state.config["endColour"])
 
     ##########################################################
     ## Update current split and BPT information based on the
