@@ -23,8 +23,10 @@ class State:
     compareHeaders = ["Sum of Bests", "Average", "Personal Best", "Last Run"]
     splitCompareHeaders = ["Best Split", "Average Split", "PB Split", "Last Run Split"]
     windowStart = 0
+    config = None
 
-    def __init__(self,pbstart,splitstart):
+    def __init__(self,pbstart,splitstart,config):
+        self.config = config
         self.getSplitNames()
 
         self.completeCsv = fileio.csvReadStart(self.game,self.category,self.splitnames)
@@ -53,7 +55,11 @@ class State:
         
         self.currentSplits = Timelist.Timelist()
         self.currentTotals = Timelist.Timelist()
-        self.windowStart = 7-min(pbstart-splitstart-1, self.compares[0].length)
+        self.windowStart = config["numSplits"]-min(pbstart-splitstart-1, self.compares[0].length)
+
+        if self.config["numSplits"] > len(self.splitnames):
+            self.config["numSplits"] = len(self.splitnames)
+            self.config["activeSplit"] = len(self.splitnames) - 2
 
     def getSplitNames(self):
         splitNames = cate.findAllSplits()
@@ -72,11 +78,11 @@ class State:
         return times
 
     def getWindowStart(self):
-        if self.splitnum <= 2:
+        if self.splitnum <= self.config["activeSplit"] - 1:
             return 0
-        if self.splitnum >= len(self.splitnames) - 4:
-            return len(self.splitnames) - 7
-        return self.splitnum - 2
+        if self.splitnum >= len(self.splitnames) - (self.config["numSplits"]-self.config["activeSplit"]):
+            return len(self.splitnames) - self.config["numSplits"]
+        return self.splitnum - (self.config["activeSplit"] - 1)
 
     def getBests(self):
         bests = Timelist.Timelist()

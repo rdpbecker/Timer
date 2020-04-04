@@ -1,4 +1,5 @@
 import os, csv
+import json
 
 def csvReadStart(name,category,splitList):
     csvName = "../" + name + "/" + category + ".csv"
@@ -32,3 +33,8 @@ def writeCSV(name,category,splitWrite):
 def stripEmptyStrings(stringList):
     while not stringList[-1]:
         stringList.pop(-1)
+
+def readJson(filepath):
+    with open(filepath,'r') as reader:
+        data = json.load(reader)
+    return data
