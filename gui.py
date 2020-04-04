@@ -27,10 +27,10 @@ class Gui(threading.Thread):
         ## Initialize the state. This picks the game and category
         config = fileio.readJson("config.json")
         generalInfo = {\
-            "timeSave": GeneralInfo.GeneralInfo(config["timeSaveShow"],self.timeSaveInfo),\
-            "diff": GeneralInfo.GeneralInfo(config["diffShow"],self.diffInfo),\
-            "bpt": GeneralInfo.GeneralInfo(config["bptShow"],self.bptInfo),\
-            "pb": GeneralInfo.GeneralInfo(config["pbShow"],self.pbInfo)\
+            "timeSave": GeneralInfo.GeneralInfo(config["timeSaveShow"],self.timeSaveSet,self.timeSaveInfo),\
+            "diff": GeneralInfo.GeneralInfo(config["diffShow"],self.diffSet,self.diffInfo),\
+            "bpt": GeneralInfo.GeneralInfo(config["bptShow"],self.bptSet,self.bptInfo),\
+            "pb": GeneralInfo.GeneralInfo(config["pbShow"],self.pbSet,self.pbInfo)\
         }
         generalInfoKeys = ["timeSave","diff","bpt","pb"]
         self.setSectionStarts(config,generalInfo,generalInfoKeys)
@@ -173,19 +173,11 @@ class Gui(threading.Thread):
         self.labels[self.pbstart+1][0].configure(text="Best Split:")
 
         count = 0
-        if self.state.generalInfo["timeSave"].show:
-            self.labels[self.bptstart+count][0].configure(text="Possible Time Save:")
-            count = count + 1
-        if self.state.generalInfo["diff"].show:
-            self.labels[self.bptstart+count][0].configure(text="Last Split (vs Best):")
-            count = count + 1
-        if self.state.generalInfo["bpt"].show:
-            self.labels[self.bptstart+count][0].configure(text="Best Possible Time:")
-            count = count + 1
-        if self.state.generalInfo["pb"].show:
-            self.labels[self.bptstart+count][0].configure(text="Personal Best:")
-            self.labels[self.bptstart+count][1].configure(text=self.state.compares[2].get(-1).__str__(precision=2))
-            count = count + 1
+        for key in self.state.generalInfoKeys:
+            if self.state.generalInfo[key].show:
+                self.state.generalInfo[key].startCallback(count)
+                count = count + 1
+
         self.updateInfo()
 
     ##########################################################
@@ -214,7 +206,7 @@ class Gui(threading.Thread):
         count = 0
         for key in self.state.generalInfoKeys:
             if self.state.generalInfo[key].show:
-                self.state.generalInfo[key].callback(count)
+                self.state.generalInfo[key].generalCallback(count)
                 count = count + 1
 
     ##########################################################
@@ -349,6 +341,19 @@ class Gui(threading.Thread):
         if self.state.splitnum < len(self.state.splitnames):
             self.updateInfo()
         self.state.splitstarttime = splitEnd
+
+    def timeSaveSet(self,i):
+        self.labels[self.bptstart+i][0].configure(text="Possible Time Save:")
+
+    def diffSet(self,i):
+        self.labels[self.bptstart+i][0].configure(text="Last Split (vs Best):")
+
+    def bptSet(self,i):
+        self.labels[self.bptstart+i][0].configure(text="Best Possible Time:")
+
+    def pbSet(self,i):
+        self.labels[self.bptstart+i][0].configure(text="Personal Best:")
+        self.labels[self.bptstart+i][1].configure(text=self.state.compares[2].get(-1).__str__(precision=2))
 
     def timeSaveInfo(self,i):
         self.labels[self.bptstart+i][1].configure(text=self.state.compareSplits[self.state.currentCompare].get(self.state.splitnum).subtract(self.state.compareSplits[0].get(self.state.splitnum)).__str__(precision=2))

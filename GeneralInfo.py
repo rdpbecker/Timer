@@ -1,7 +1,9 @@
 class GeneralInfo:
     show = False
-    callback = None
+    startCallback = None
+    generalCallback = None
 
-    def __init__(self,show,callback):
+    def __init__(self,show,startCallback,generalCallback):
         self.show = show
-        self.callback = callback
+        self.startCallback = startCallback
+        self.generalCallback = generalCallback
