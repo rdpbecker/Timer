@@ -30,9 +30,10 @@ class Gui(threading.Thread):
             "timeSave": GeneralInfo.GeneralInfo(config["timeSaveShow"],self.timeSaveSet,self.timeSaveInfo),\
             "diff": GeneralInfo.GeneralInfo(config["diffShow"],self.diffSet,self.diffInfo),\
             "bpt": GeneralInfo.GeneralInfo(config["bptShow"],self.bptSet,self.bptInfo),\
+            "sob": GeneralInfo.GeneralInfo(config["sobShow"],self.sobSet,self.sobInfo),\
             "pb": GeneralInfo.GeneralInfo(config["pbShow"],self.pbSet,self.pbInfo)\
         }
-        generalInfoKeys = ["timeSave","diff","bpt","pb"]
+        generalInfoKeys = ["timeSave","diff","bpt","sob","pb"]
         self.setSectionStarts(config,generalInfo,generalInfoKeys)
         self.state = State.State(self.pbstart,self.splitstart,config)
         self.state.generalInfo = generalInfo
@@ -237,6 +238,8 @@ class Gui(threading.Thread):
         for i in range(4):
             self.state.diffs[i].insert(totalTime.subtract(self.state.compares[i].get(self.state.splitnum)))
             self.state.diffSplits[i].insert(self.state.currentSplits.get(self.state.splitnum).subtract(self.state.compareSplits[i].get(self.state.splitnum)))
+        if self.state.diffSplits[0].get(self.state.splitnum).greater(Time.Time(5,timestring='-')) == -1:
+            self.state.currentBests.replace(Time.Time(5,floattime=splitEnd-self.state.splitstarttime),self.state.splitnum)
         self.state.splitnum = self.state.splitnum + 1
         lowIndex = self.state.getWindowStart()
         self.updateTimes(lowIndex)
@@ -351,6 +354,9 @@ class Gui(threading.Thread):
     def bptSet(self,i):
         self.labels[self.bptstart+i][0].configure(text="Best Possible Time:")
 
+    def sobSet(self,i):
+        self.labels[self.bptstart+i][0].configure(text="Sum of Bests:")
+
     def pbSet(self,i):
         self.labels[self.bptstart+i][0].configure(text="Personal Best:")
         self.labels[self.bptstart+i][1].configure(text=self.state.compares[2].get(-1).__str__(precision=2))
@@ -364,6 +370,9 @@ class Gui(threading.Thread):
 
     def bptInfo(self,i):
         self.labels[self.bptstart+i][1].configure(text=self.state.bptList.sum().__str__(precision=2))
+
+    def sobInfo(self,i):
+        self.labels[self.bptstart+i][1].configure(text=self.state.currentBests.sum().__str__(precision=2))
 
     def pbInfo(self,i):
         pass
