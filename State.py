@@ -99,7 +99,7 @@ class State:
         averages = Timelist.Timelist()
         for i in range(self.currentSplits.length):
             average = Timelist.Timelist()
-            for j in range((len(self.completeCsv[0])-7)/2):
+            for j in range(int((len(self.completeCsv[0])-7)/2)):
                 average.insert(Time.Time(5,timestring=self.completeCsv[i+1][2*j+7]))
             average.insert(self.currentSplits.get(i))
             averages.insert(average.average())
@@ -153,4 +153,4 @@ class State:
         self.replaceCsvLines(pbSplits,5)
         self.insertCsvLines(lastRun,7)
         fileio.writeCSV(self.game,self.category,self.completeCsv)
-        print "Close the window to end the program"
+        print("Close the window to end the program")

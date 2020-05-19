@@ -35,9 +35,9 @@ class Time:
             self.fracsecs = int(fracs*(10**precision))
             real = int(floattime)
             self.secs = real%60
-            real = (real-self.secs)/60
+            real = int((real-self.secs)/60)
             self.mins = real%60
-            real = (real-self.mins)/60
+            real = int((real-self.mins)/60)
             self.hours = real
         else:
             if timestring == "-":

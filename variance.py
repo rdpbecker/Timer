@@ -2,7 +2,7 @@ global varianceList
 
 def printLines(lines):
   for line in lines:
-    print line.__str__()
+    print(line.__str__())
 
 def getSplitNames():
     splitNames = cate.findAllSplits()
@@ -53,15 +53,15 @@ def main():
   for row in timeRows:
     avg = row.average().toSecs()
     secsList = [x.toSecs() for x in row.timelist]
-    filtered = filter(lambda x: not x == 0,secsList)
+    filtered = [x for x in secsList if not x == 0]
     varList = [(x-avg)**2 for x in filtered]
     variance = sum(varList)/len(varList)
     varianceList.append(100*variance/avg)
-  print "In Order:\n\n"
+  print("In Order:\n\n")
   printLines(splitnames[i]+": "+'%.3f'%(varianceList[i])+"%" for i in range(len(varianceList)))
 
-  print "\n\n\nSorted:\n\n"
-  sortedRange = sorted(range(len(varianceList)),key=sort,reverse=True)
+  print("\n\n\nSorted:\n\n")
+  sortedRange = sorted(list(range(len(varianceList))),key=sort,reverse=True)
   printLines(splitnames[i]+": "+'%.3f'%(varianceList[i])+"%" for i in sortedRange) 
 
 if __name__ == "__main__":
