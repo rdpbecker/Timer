@@ -1,0 +1,20 @@
+{
+    "buttonFont": ["DejaVu Sans", 10],
+    "mainFont": ["DejaVu Sans", 10],
+    "segmentFont": ["Liberation Sans",18],
+    "timerFont": ["Arial Black",24],
+    "activeColour": "DarkOrchid2",
+    "buttonBgColour": "steel blue",
+    "buttonTextColour": "black",
+    "endColour": "maroon1",
+    "mainColour": "white",
+    "segmentColour": "blue",
+    "timerColour": "lime green",
+    "numSplits": 8,
+    "activeSplit": 6,
+    "timeSaveShow": true,
+    "diffShow": true,
+    "bptShow": true,
+    "sobShow": true,
+    "pbShow": false
+}

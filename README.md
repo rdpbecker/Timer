@@ -19,6 +19,11 @@ be
 ,World 1 RTA,World 1-1,World 1-2,World 1-3,World 1-4
 ```
 
+The timer is also configurable now! There is an example of a config
+file in the *examples/* directory. The real config file should be
+in *config.json*, and the program will not run without it. More 
+information is in that directory.
+
 # runTimer.py
 
 Usage: python runTimer.py
