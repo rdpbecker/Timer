@@ -26,7 +26,7 @@ information is in that directory.
 
 # runTimer.py
 
-Usage: python runTimer.py
+Usage: python3 runTimer.py
 
 This is a segmented timer which keeps track of segments and stores
 them in a CSV file when the program is completed (either when the
@@ -65,7 +65,7 @@ are `Personal Best`, `Sum of Bests`, `Average`, and `Last Run`.
 
 # practice.py
 
-Usage: `python practice.py`
+Usage: `python3 practice.py`
 
 `practice.py` allows you to practice (and improve bests for)
 individual segments. This is run in the same way as `runTimer.py`,
@@ -80,7 +80,7 @@ of `runTimer.py`.
 
 # variance.py
 
-Usage: `python variance.py`
+Usage: `python3 variance.py`
 
 This simply computes the variance of all the segments to determine
 which ones are most and least consistent. The variance is presented
