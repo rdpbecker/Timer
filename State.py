@@ -4,8 +4,11 @@ guiComplete=0
 
 class State:
     started = False
+    paused = False
+    pauseTime = 0
     starttime = 0
     splitstarttime = 0
+    lastUpdateTime = 0
     splitnum = 0
     splitnames = []
     game = ""

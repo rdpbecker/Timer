@@ -91,19 +91,22 @@ class Gui(threading.Thread):
 
         button1 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Change Compare", fg=config["buttonTextColour"], width=15, command=self.guiSwitchCompare)
         button1.grid(row=self.buttonstart,column=6,columnspan=3)
-        button2 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Split", fg=config["buttonTextColour"], width=10, command=self.onSplitEnd)
+        button2 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Split", fg=config["buttonTextColour"], width=33, command=self.onSplitEnd)
         self.root.bind('<Return>', self.onSplitEnd)
-        button2.grid(row=self.buttonstart,column=4,columnspan=2)
-        button3 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Reset", fg=config["buttonTextColour"], width=10, command=self.reset)
+        button2.grid(row=self.buttonstart+1,column=0,columnspan=6)
+        button3 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Reset", fg=config["buttonTextColour"], width=15, command=self.reset)
         self.root.bind('r', self.reset)
-        button3.grid(row=self.buttonstart,column=2,columnspan=2)
-        button4 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Skip Split", fg=config["buttonTextColour"], width=10, command=self.skip)
+        button3.grid(row=self.buttonstart,column=0,columnspan=3)
+        button4 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Skip Split", fg=config["buttonTextColour"], width=15, command=self.skip)
         self.root.bind('s', self.skip)
-        button4.grid(row=self.buttonstart,column=0,columnspan=2)
-        button5 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Start Run", fg=config["buttonTextColour"], width=15, command=self.start)
-        button5.grid(row=self.buttonstart,column=9,columnspan=3)
+        button4.grid(row=self.buttonstart,column=3,columnspan=3)
+        button5 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Start Run", fg=config["buttonTextColour"], width=33, command=self.start)
+        button5.grid(row=self.buttonstart+1,column=6,columnspan=6)
         self.root.bind('<space>', self.start)
-        self.buttons.append([button1,button2,button3])
+        button6 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Pause", fg=config["buttonTextColour"], width=15, command=self.togglePause)
+        button6.grid(row=self.buttonstart,column=9,columnspan=3)
+        self.root.bind('p', self.togglePause)
+        self.buttons.append([button1,button2,button3,button4,button5,button6])
 
         ## Initialize the text in the gui and set the timer to update 
         ## at 125ish FPS
@@ -127,8 +130,14 @@ class Gui(threading.Thread):
     ##########################################################
     def update(self):
         if self.state.started:
-            self.labels[self.timer+1][0].configure(text=Time.Time(2,floattime=timer()-self.state.starttime).__str__(flag2=0))
-            self.labels[self.timer][0].configure(text=Time.Time(0,floattime=timer()-self.state.splitstarttime).__str__(flag2=0))
+            currentTime = timer()
+            if self.state.paused:
+                elapsed = currentTime - self.state.lastUpdateTime
+                self.state.starttime = self.state.starttime + elapsed
+                self.state.splitstarttime = self.state.splitstarttime + elapsed
+            self.labels[self.timer+1][0].configure(text=Time.Time(2,floattime=currentTime-self.state.starttime).__str__(flag2=0))
+            self.labels[self.timer][0].configure(text=Time.Time(0,floattime=currentTime-self.state.splitstarttime).__str__(flag2=0))
+            self.state.lastUpdateTime = currentTime
         if self.state.splitnum < len(self.state.splitnames) and not self.state.reset:
             self.root.after(8,self.update)
         else:
@@ -344,6 +353,16 @@ class Gui(threading.Thread):
         if self.state.splitnum < len(self.state.splitnames):
             self.updateInfo()
         self.state.splitstarttime = splitEnd
+
+    def togglePause(self,event=None):
+        currentTime = timer()
+        if self.state.paused:
+            self.state.paused = False
+            self.state.pauseTime = 0
+        else:
+            self.state.paused = True
+            self.state.pauseTime = currentTime
+        self.state.lastUpdateTime = currentTime
 
     def timeSaveSet(self,i):
         self.labels[self.bptstart+i][0].configure(text="Possible Time Save:")
