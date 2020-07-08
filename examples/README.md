@@ -1,3 +1,11 @@
+# splitNames.csv
+
+In the root directory, there should be a file called
+*splitNames.csv*. This file contains all the games, categories, and
+split names for each category. An example is in *splitNames.csv*.
+
+# config.json
+
 The *config.json* file allows for configuration of the timer fonts
 and colours, as well as the information shown in the bottom
 section, the number of segments included, and the position of the
