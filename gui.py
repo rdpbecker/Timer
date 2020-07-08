@@ -224,8 +224,12 @@ class Gui(threading.Thread):
     ## starts
     ##########################################################
     def start(self, event=None):
-        self.state.starttime = timer()
-        self.state.splitstarttime = timer()
+        currentTime = timer()
+        if self.state.started:
+            self.onSplitEnd()
+            return
+        self.state.starttime = currentTime
+        self.state.splitstarttime = currentTime
         self.state.started = True
 
     ##########################################################
