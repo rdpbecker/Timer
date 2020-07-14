@@ -241,7 +241,10 @@ class Gui(threading.Thread):
         if not self.state.started:
             self.start()
             return
+        
         splitEnd = timer()
+        if self.state.splitnames[self.state.splitnum][-3:] == "[P]" and not self.state.splitnum == len(self.state.splitnames) and not self.state.paused:
+            self.togglePause()
         totalTime = Time.Time(5,floattime=splitEnd-self.state.starttime)
         splitTime = Time.Time(5,floattime=splitEnd-self.state.splitstarttime)
         self.state.currentSplits.insert(splitTime)
