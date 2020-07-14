@@ -132,9 +132,7 @@ class Gui(threading.Thread):
         if self.state.started:
             currentTime = timer()
             if self.state.paused:
-                elapsed = currentTime - self.state.lastUpdateTime
-                self.state.starttime = self.state.starttime + elapsed
-                self.state.splitstarttime = self.state.splitstarttime + elapsed
+                currentTime = self.state.pauseTime
             self.labels[self.timer+1][0].configure(text=Time.Time(2,floattime=currentTime-self.state.starttime).__str__(flag2=0))
             self.labels[self.timer][0].configure(text=Time.Time(0,floattime=currentTime-self.state.splitstarttime).__str__(flag2=0))
             self.state.lastUpdateTime = currentTime
@@ -240,6 +238,10 @@ class Gui(threading.Thread):
     def onSplitEnd(self,event=None):
         if not self.state.started:
             self.start()
+            return
+
+        if self.state.paused:
+            self.togglePause()
             return
         
         splitEnd = timer()
@@ -365,11 +367,13 @@ class Gui(threading.Thread):
         currentTime = timer()
         if self.state.paused:
             self.state.paused = False
+            elapsed = currentTime - self.state.pauseTime
+            self.state.starttime = self.state.starttime + elapsed
+            self.state.splitstarttime = self.state.splitstarttime + elapsed
             self.state.pauseTime = 0
         else:
             self.state.paused = True
             self.state.pauseTime = currentTime
-        self.state.lastUpdateTime = currentTime
 
     def timeSaveSet(self,i):
         self.labels[self.bptstart+i][0].configure(text="Possible Time Save:")

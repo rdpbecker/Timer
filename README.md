@@ -44,7 +44,8 @@ times for the uncompleted segments.
 the next timer starts at the time you press this button.
 5. `Change Compare` rotates through the possible comparisons. These
 are `Personal Best`, `Sum of Bests`, `Average`, and `Last Run`.
-6. `Pause` pauses the timer.
+6. `Pause` pauses the timer. You will be unable to split while the
+timer is paused - pressing <Return> will just unpause the timer.
 
 The key bindings for `Start Run` and `Split` are different, but
 they will actually both do the same thing. Pressing `Split` before
