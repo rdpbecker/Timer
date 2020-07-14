@@ -36,11 +36,7 @@ also have key bindings.
 Each button calls a function to progress through the segments:
 1. `Start Run` starts the timer by initializing the start time.
 2. `Split` ends the current segment and moves to the next one. The
-GUI is also shifted at the end of the segment. **Note**: Don't end
-a segment before the timer is initialized, or at the very least
-re-initialize the timer if you do. If you end a segment without
-initializing the start time, the start time is 0 and the time at
-the segment will say it has taken thousands of hours.
+GUI is also shifted at the end of the segment. 
 3. `Reset` ends the program and timer, and writes the completed
 segments as if all the segments have been completed with blank
 times for the uncompleted segments.
@@ -49,6 +45,11 @@ the next timer starts at the time you press this button.
 5. `Change Compare` rotates through the possible comparisons. These
 are `Personal Best`, `Sum of Bests`, `Average`, and `Last Run`.
 6. `Pause` pauses the timer.
+
+The key bindings for `Start Run` and `Split` are different, but
+they will actually both do the same thing. Pressing `Split` before
+the run has started will start the run, and pressing `Start Run`
+after the run has started will end the current segment
 
 # practice.py
 
