@@ -148,7 +148,7 @@ class State:
         bestSplits = [bests.toStringList(), bests.getSums().toStringList()]
         averageSplits = [averages.toStringList(), averages.getSums().toStringList()]
         lastRun = [self.currentSplits.toStringList(),self.currentTotals.toStringList()]
-        self.completeCsv[0].insert(7,"Run #"+str((len(self.completeCsv[1])-5)/2))
+        self.completeCsv[0].insert(7,"Run #"+str(int((len(self.completeCsv[1])-5)/2)))
         self.completeCsv[0].insert(8,"Totals")
         self.replaceCsvLines([self.splitnames],0)
         self.replaceCsvLines(bestSplits,1)
