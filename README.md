@@ -1,23 +1,8 @@
 # Setup
 
-In the parent directory, create a file called *splitNames.csv*. This file should contain
-the name of the game and category to be played in the first two
-columns, and the names of all the desired segments starting in the
-same column. The first column is for games, and the second for
-categories. An example of a row is
-```
-Super Mario Bros.,Any%,World 1-1,World 1-2,World 4-1,World
-4-2,World 8-1,World 8-2,World 8-3,World 8-4
-```
-The game only needs to be given once, and all the categories should be
-in a block on that line and the ones after it. For example, if
-there are two categories for *Super Mario Bros.*, the two
-categories should be on consecutive lines, and only the first line
-should have the name of the game. For example, the second row could
-be
-```
-,World 1 RTA,World 1-1,World 1-2,World 1-3,World 1-4
-```
+In the parent directory, create a file called *splitNames.csv*. 
+More explanation and an example are given in the *examples/* 
+directory.
 
 The timer is also configurable now! There is an example of a config
 file in the *examples/* directory. The real config file should be
@@ -39,13 +24,14 @@ The program starts by prompting the user to choose a game from
 those in the first column of *splitNames.csv*. Once the user has
 chosen a game, they are prompted to select a category for the game.
 When the user selects a category, a GUI pops up which is used for
-the rest of the program. There are five buttons, and most of them
+the rest of the program. There are six buttons, and most of them
 also have key bindings.
 1. `Start Run` has the key binding <Space>
 2. `Split` has the key binding <Return>
 3. `Reset` has the key binding `r`
 4. `Skip Split` has the key binding `s`
 5. `Change Compare` currently has no key binding
+6. `Pause` has the key binding `p`
 
 Each button calls a function to progress through the segments:
 1. `Start Run` starts the timer by initializing the start time.
@@ -62,6 +48,7 @@ times for the uncompleted segments.
 the next timer starts at the time you press this button.
 5. `Change Compare` rotates through the possible comparisons. These
 are `Personal Best`, `Sum of Bests`, `Average`, and `Last Run`.
+6. `Pause` pauses the timer.
 
 # practice.py
 
