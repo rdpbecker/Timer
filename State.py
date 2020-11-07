@@ -33,14 +33,18 @@ class State:
         self.config = config
         self.getSplitNames()
 
-        self.completeCsv = fileio.csvReadStart(self.game,self.category,self.splitnames)
+        splitArrs = fileio.csvReadStart(self.game,self.category,self.splitnames)
+        self.completeCsv = splitArrs[0]
+        self.comparesCsv = splitArrs[1]
 
-        self.bptList = self.getTimes(1)
-        self.currentBests = self.getTimes(1)
+        self.bptList = self.getTimes(1,self.comparesCsv)
+        self.currentBests = self.getTimes(1,self.comparesCsv)
         
-        for i in range(3):
-            self.compares.append(self.getTimes(2*i+2))
-            self.compareSplits.append(self.getTimes(2*i+1))
+        for i in range(len((self.comparesCsv[0]-1)/2)):
+            self.compares.append(self.getTimes(2*i+2,self.comparesCsv))
+            self.compareSplits.append(self.getTimes(2*i+1,self.comparesCsv))
+            self.splitCompareHeaders.append(self.comparesCsv[0][2*i+1])
+            self.compareHeaders.append(self.comparesCsv[0][2*i+2])
 
         ## There's no way to take out a comparison at the moment, and we
         ## set all the comparisons for the first run of a category when
@@ -48,13 +52,15 @@ class State:
         ## set the last run to be the PB splits. It doesn't matter 
         ## because the PB splits are all '-' anyway
         if len(self.completeCsv[0]) > 7:
-          self.compares.append(self.getTimes(8))
-          self.compareSplits.append(self.getTimes(7))
+          self.compares.append(self.getTimes(2,self.completeCsv))
+          self.compareSplits.append(self.getTimes(1,self.completeCsv))
         else: 
-          self.compares.append(self.getTimes(6))
-          self.compareSplits.append(self.getTimes(5))
+          self.compares.append(self.getTimes(2,self.comparesCsv))
+          self.compareSplits.append(self.getTimes(1,self.comparesCsv))
+        self.splitCompareHeaders.append("Last Run Splits")
+        self.compareHeaders.append("Last Run")
         
-        for i in range(4):
+        for i in range(len(self.compareHeaders)):
             self.diffs.append(Timelist.Timelist())
             self.diffSplits.append(Timelist.Timelist())
         
@@ -76,10 +82,10 @@ class State:
         self.splitnames = cate.findGameSplits(splitNames,self.category)
         fileio.stripEmptyStrings(self.splitnames)
 
-    def getTimes(self,col):
+    def getTimes(self,col,toCheck):
         times = Timelist.Timelist()
-        for i in range(1,len(self.completeCsv)):
-            times.insert(Time.Time(5,timestring=self.completeCsv[i][col]))
+        for i in range(1,len(toCheck)):
+            times.insert(Time.Time(5,timestring=toCheck[i][col]))
         return times
 
     def getWindowStart(self):
