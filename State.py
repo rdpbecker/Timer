@@ -28,6 +28,7 @@ class State:
     splitCompareHeaders = ["Best Split", "Average Split", "PB Split", "Last Run Split"]
     windowStart = 0
     config = None
+    numComparisons = 0
 
     def __init__(self,pbstart,splitstart,config):
         self.config = config
@@ -59,8 +60,10 @@ class State:
           self.compareSplits.append(self.getTimes(1,self.comparesCsv))
         self.splitCompareHeaders.append("Last Run Splits")
         self.compareHeaders.append("Last Run")
+
+        self.numComparisons = len(self.compareHeaders)
         
-        for i in range(len(self.compareHeaders)):
+        for i in range(self.numComparisons):
             self.diffs.append(Timelist.Timelist())
             self.diffSplits.append(Timelist.Timelist())
         
