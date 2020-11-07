@@ -52,7 +52,7 @@ class State:
         ## we read the CSV file, so if there isn't a run already we just
         ## set the last run to be the PB splits. It doesn't matter 
         ## because the PB splits are all '-' anyway
-        if len(self.completeCsv[0]) > 7:
+        if len(self.completeCsv[0]) > 1:
           self.compares.append(self.getTimes(2,self.completeCsv))
           self.compareSplits.append(self.getTimes(1,self.completeCsv))
         else: 
