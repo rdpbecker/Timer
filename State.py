@@ -111,7 +111,7 @@ class State:
         averages = Timelist.Timelist()
         for i in range(self.currentSplits.length):
             average = Timelist.Timelist()
-            for j in range(int((len(self.completeCsv[0])-7)/2)):
+            for j in range(int((len(self.completeCsv[0])-1)/2)):
                 average.insert(Time.Time(5,timestring=self.completeCsv[i+1][2*j+7]))
             average.insert(self.currentSplits.get(i))
             averages.insert(average.average())
@@ -131,10 +131,10 @@ class State:
         for i in range(n+1,len(self.completeCsv)):
             times.insert(Time.Time(5,timestring='-'))
 
-    def replaceCsvLines(self,lines,start):
-        for i in range(1,len(self.completeCsv)):
+    def replaceCsvLines(self,lines,start,csv_ref):
+        for i in range(1,len(csv_ref)):
             for j in range(len(lines)):
-                self.completeCsv[i][start+j]=lines[j][i-1]
+                csv_ref[i][start+j]=lines[j][i-1]
 
     def insertCsvLines(self,lines,startIndex):
         for i in range(1,len(self.completeCsv)):
@@ -157,12 +157,12 @@ class State:
         bestSplits = [bests.toStringList(), bests.getSums().toStringList()]
         averageSplits = [averages.toStringList(), averages.getSums().toStringList()]
         lastRun = [self.currentSplits.toStringList(),self.currentTotals.toStringList()]
-        self.completeCsv[0].insert(7,"Run #"+str(int((len(self.completeCsv[1])-5)/2)))
-        self.completeCsv[0].insert(8,"Totals")
+        self.completeCsv[0].insert(1,"Run #"+str(int((len(self.completeCsv[1])+1)/2)))
+        self.completeCsv[0].insert(2,"Totals")
         self.replaceCsvLines([self.splitnames],0)
-        self.replaceCsvLines(bestSplits,1)
-        self.replaceCsvLines(averageSplits,3)
-        self.replaceCsvLines(pbSplits,5)
-        self.insertCsvLines(lastRun,7)
-        fileio.writeCSV(self.game,self.category,self.completeCsv)
+        self.replaceCsvLines(bestSplits,1,self.comparesCsv)
+        self.replaceCsvLines(averageSplits,3,self.comparesCsv)
+        self.replaceCsvLines(pbSplits,5,self.comparesCsv)
+        self.insertCsvLines(lastRun,1)
+        fileio.writeCSV(self.game,self.category,self.completeCsv,self.comparesCsv)
         print("Close the window to end the program")

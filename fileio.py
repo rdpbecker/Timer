@@ -49,13 +49,18 @@ def csvReadStart(name,category,splitList):
 
     return splitWrite
 
-def writeCSV(name,category,splitWrite):
+def writeCSV(name,category,splitWrite,comparesWrite):
     csvName = "../" + name + "/" + category + ".csv"
+    compareCsvName = "../" + name + "/" + category + "_comparisons.csv"
     with open(csvName,'w') as writer:
         csvWriter = csv.writer(writer, delimiter = ',')
         for thing in splitWrite:
             csvWriter.writerow(thing)
 
+    with open(compareCsvName,'w') as writer:
+        csvWriter = csv.writer(writer, delimiter = ',')
+        for thing in comparesWrite:
+            csvWriter.writerow(thing)
 
 def stripEmptyStrings(stringList):
     while not stringList[-1]:
