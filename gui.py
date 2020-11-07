@@ -330,7 +330,7 @@ class Gui(threading.Thread):
     ## clicked
     ##########################################################
     def guiSwitchCompare(self,event=None):
-        self.state.currentCompare = (self.state.currentCompare+1)%4
+        self.state.currentCompare = (self.state.currentCompare+1)%self.state.numComparisons
         lowIndex = self.state.getWindowStart()
         self.updateTimes(lowIndex)
         self.updateInfo()
@@ -352,7 +352,7 @@ class Gui(threading.Thread):
         self.state.currentSplits.insert(splitTime)
         self.state.currentTotals.insert(totalTime)
 
-        for i in range(4):
+        for i in range(self.state.numComparisons):
             self.state.diffs[i].insert(Time.Time(5,floattime=0))
             self.state.diffSplits[i].insert(Time.Time(5,floattime=0))
         self.state.splitnum = self.state.splitnum + 1
