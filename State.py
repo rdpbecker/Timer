@@ -24,8 +24,8 @@ class State:
     currentTotals = None
     reset = False
     currentCompare = 2
-    compareHeaders = ["Sum of Bests", "Average", "Personal Best", "Last Run"]
-    splitCompareHeaders = ["Best Split", "Average Split", "PB Split", "Last Run Split"]
+    compareHeaders = []
+    splitCompareHeaders = []
     windowStart = 0
     config = None
     numComparisons = 0
@@ -41,7 +41,9 @@ class State:
         self.bptList = self.getTimes(1,self.comparesCsv)
         self.currentBests = self.getTimes(1,self.comparesCsv)
         
-        for i in range(len((self.comparesCsv[0]-1)/2)):
+        print(self.comparesCsv)
+        print(int((len(self.comparesCsv[0])-1)/2))
+        for i in range(int((len(self.comparesCsv[0])-1)/2)):
             self.compares.append(self.getTimes(2*i+2,self.comparesCsv))
             self.compareSplits.append(self.getTimes(2*i+1,self.comparesCsv))
             self.splitCompareHeaders.append(self.comparesCsv[0][2*i+1])
@@ -62,6 +64,7 @@ class State:
         self.compareHeaders.append("Last Run")
 
         self.numComparisons = len(self.compareHeaders)
+        print(self.compareHeaders, self.numComparisons)
         
         for i in range(self.numComparisons):
             self.diffs.append(Timelist.Timelist())
@@ -159,7 +162,7 @@ class State:
         lastRun = [self.currentSplits.toStringList(),self.currentTotals.toStringList()]
         self.completeCsv[0].insert(1,"Run #"+str(int((len(self.completeCsv[1])+1)/2)))
         self.completeCsv[0].insert(2,"Totals")
-        self.replaceCsvLines([self.splitnames],0)
+        self.replaceCsvLines([self.splitnames],0,self.completeCsv)
         self.replaceCsvLines(bestSplits,1,self.comparesCsv)
         self.replaceCsvLines(averageSplits,3,self.comparesCsv)
         self.replaceCsvLines(pbSplits,5,self.comparesCsv)

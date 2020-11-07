@@ -3,7 +3,7 @@ import json
 
 def csvReadStart(name,category,splitList):
     csvName = "../" + name + "/" + category + ".csv"
-    compareCsvName = "../" + name + "/" category + "_comparisons.csv"
+    compareCsvName = "../" + name + "/" + category + "_comparisons.csv"
     splitWrite = [[],[]]
     if not os.path.exists(csvName):
         if not os.path.isdir("../" + name):
@@ -35,14 +35,14 @@ def csvReadStart(name,category,splitList):
             'Personal Best' \
         ]]
         for thing in splitList:
-            splitWrite[1].append([thing])
+            splitWrite[1].append([thing,'-','-','-','-','-','-'])
         with open(compareCsvName,'w') as writer:
             csvWriter = csv.writer(writer, delimiter = ',')
             for thing in splitWrite[1]:
                 csvWriter.writerow(thing)
 
     else:
-        with open(csvName, 'r') as reader:
+        with open(compareCsvName, 'r') as reader:
             csvReader = csv.reader(reader, delimiter = ',')
             for row in csvReader:
                 splitWrite[1].append(row)
