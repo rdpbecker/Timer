@@ -41,8 +41,6 @@ class State:
         self.bptList = self.getTimes(1,self.comparesCsv)
         self.currentBests = self.getTimes(1,self.comparesCsv)
         
-        print(self.comparesCsv)
-        print(int((len(self.comparesCsv[0])-1)/2))
         for i in range(int((len(self.comparesCsv[0])-1)/2)):
             self.compares.append(self.getTimes(2*i+2,self.comparesCsv))
             self.compareSplits.append(self.getTimes(2*i+1,self.comparesCsv))
@@ -64,7 +62,6 @@ class State:
         self.compareHeaders.append("Last Run")
 
         self.numComparisons = len(self.compareHeaders)
-        print(self.compareHeaders, self.numComparisons)
         
         for i in range(self.numComparisons):
             self.diffs.append(Timelist.Timelist())
@@ -115,7 +112,7 @@ class State:
         for i in range(self.currentSplits.length):
             average = Timelist.Timelist()
             for j in range(int((len(self.completeCsv[0])-1)/2)):
-                average.insert(Time.Time(5,timestring=self.completeCsv[i+1][2*j+7]))
+                average.insert(Time.Time(5,timestring=self.completeCsv[i+1][2*j+1]))
             average.insert(self.currentSplits.get(i))
             averages.insert(average.average())
         return averages
