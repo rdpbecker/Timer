@@ -138,7 +138,7 @@ class Gui(threading.Thread):
             self.labels[self.timer][0].configure(text=timeh.toString(currentTime-self.state.splitstarttime,flag2=0))
             self.state.lastUpdateTime = currentTime
         if self.state.splitnum < len(self.state.splitnames) and not self.state.reset:
-            self.root.after(8,self.update)
+            self.root.after(17,self.update)
         else:
             self.root.after(1,self.state.doEnd)
 
