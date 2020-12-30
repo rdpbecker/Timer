@@ -1,6 +1,7 @@
 # Run tkinter code in another thread
 
 import Time
+import timeHelpers as timeh
 import tkinter as tk
 import threading
 from timeit import default_timer as timer
@@ -133,11 +134,11 @@ class Gui(threading.Thread):
             currentTime = timer()
             if self.state.paused:
                 currentTime = self.state.pauseTime
-            self.labels[self.timer+1][0].configure(text=Time.Time(2,floattime=currentTime-self.state.starttime).__str__(flag2=0))
-            self.labels[self.timer][0].configure(text=Time.Time(0,floattime=currentTime-self.state.splitstarttime).__str__(flag2=0))
+            self.labels[self.timer+1][0].configure(text=timeh.toString(currentTime-self.state.starttime,flag2=0,precision=2))
+            self.labels[self.timer][0].configure(text=timeh.toString(currentTime-self.state.splitstarttime,flag2=0))
             self.state.lastUpdateTime = currentTime
         if self.state.splitnum < len(self.state.splitnames) and not self.state.reset:
-            self.root.after(8,self.update)
+            self.root.after(17,self.update)
         else:
             self.root.after(1,self.state.doEnd)
 
