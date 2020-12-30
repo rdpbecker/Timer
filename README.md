@@ -9,6 +9,14 @@ file in the *examples/* directory. The real config file should be
 in *config.json*, and the program will not run without it. More 
 information is in that directory.
 
+In addition to all this, comparisons can be added manually now. The
+comparisons are all stored in a file separate from the saved runs.
+Runs are stored in `<game>/<category>.csv`, and the comparisons are
+stored in `<game>/<category>_comparisons.csv`. After the initial
+creation of the comparisons file during the first run of the
+category, new comparisons can be added to the comparisons manually
+by 
+
 # runTimer.py
 
 Usage: python3 runTimer.py
