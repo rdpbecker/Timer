@@ -17,8 +17,8 @@ def toString(totalSecs,flag=0,flag2=1,precision=0):
     totalSecs = int(totalSecs)
     secs = totalSecs % 60
     totalSecs = (totalSecs - secs)/60
-    mins = totalSecs % 60
-    hours = (totalSecs - mins)/60
+    mins = int(totalSecs % 60)
+    hours = int((totalSecs - mins)/60)
     if hours:
         string = string + str(hours) + ":"
         string = string + zeroPad(2,str(mins)) + ":"
