@@ -47,6 +47,8 @@ class Gui(threading.Thread):
         ## Initialize the format of the gui and store references to all
         ## the labels so we can change them. References are stored in
         ## a grid
+
+        ## The Title rows
         for i in range(self.splitstart):
             label = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"], width=7, anchor="w")
             label.grid(row=i,column=0,columnspan=2)
@@ -57,14 +59,18 @@ class Gui(threading.Thread):
             label4 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"], width=15)
             label4.grid(row=i,column=9,columnspan=3)
             self.labels.append([label,label2,label3,label4])
+
+        ## Splits and comparisons
         for i in range(self.splitstart,self.pbstart):
-            label = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"], width=20, anchor="w")
-            label.grid(row=i,column=0,columnspan=4)
-            label2 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"], width=20, anchor='e')
-            label2.grid(row=i,column=4,columnspan=4)
-            label3 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"], width=20, anchor='e')
-            label3.grid(row=i,column=8,columnspan=4)
+            label = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label.grid(row=i,column=0,columnspan=8,sticky='W',padx=10)
+            label2 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label2.grid(row=i,column=8,columnspan=2,sticky='E')
+            label3 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label3.grid(row=i,column=10,columnspan=2,sticky='E',padx=10)
             self.labels.append([label,label2,label3])
+
+        ## Current segment comparisons
         for i in range(self.pbstart,self.timer):
             label = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"], width=15, anchor='w')
             label.grid(row=i,column=0,columnspan=3)
@@ -75,6 +81,8 @@ class Gui(threading.Thread):
             label4 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"], width=15, anchor='e')
             label4.grid(row=i,column=9,columnspan=3)
             self.labels.append([label,label2,label3,label4])
+
+        ## Timers (segment and overall)
         anchorlist = ['e','c']
         fontlist = [config['segmentFont'],config['timerFont']]
         colourlist = [config["segmentColour"],config["timerColour"]]
@@ -83,6 +91,7 @@ class Gui(threading.Thread):
             label.grid(row=i,column=0,columnspan=12)
             self.labels.append([label])
 
+        ## Information
         for i in range(self.bptstart,self.buttonstart):
             label = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"], width=30, anchor='w')
             label.grid(row=i,column=0,columnspan=6)
