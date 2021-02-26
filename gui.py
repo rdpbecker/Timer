@@ -10,6 +10,7 @@ import State, GeneralInfo, fileio
 class Gui(threading.Thread):
     labels = []
     buttons = []
+    backgrounds = []
     splitstart = 2
     pbstart = 10
     timer = 12
@@ -65,6 +66,9 @@ class Gui(threading.Thread):
 
         ## Splits and comparisons
         for i in range(self.splitstart,self.pbstart):
+            background = tk.Frame(self.root, bg='black')
+            background.grid(row=i,column=0,columnspan=12,sticky='NSWE')
+            self.backgrounds.append(background)
             label = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
             label.grid(row=i,column=0,columnspan=8,sticky='W',padx=10)
             label2 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
@@ -210,11 +214,13 @@ class Gui(threading.Thread):
         windowStart = self.state.getWindowStart()
         for i in range(0,self.pbstart-self.splitstart-1):
             if i == self.state.splitnum-windowStart+self.state.windowStart:
-                self.labels[self.splitstart+i][0].configure(fg=self.state.config["activeColour"])
-                self.labels[self.splitstart+i][2].configure(fg=self.state.config["activeColour"])
+                self.labels[self.splitstart+i][0].configure(fg=self.state.config["mainColour"],bg=self.state.config["activeColour"])
+                self.labels[self.splitstart+i][2].configure(fg=self.state.config["mainColour"],bg=self.state.config["activeColour"])
+                self.backgrounds[i].configure(bg=self.state.config["activeColour"])
             else:
-                self.labels[self.splitstart+i][0].configure(fg=self.state.config["mainColour"])
-                self.labels[self.splitstart+i][2].configure(fg=self.state.config["mainColour"])
+                self.labels[self.splitstart+i][0].configure(fg=self.state.config["mainColour"],bg='black')
+                self.labels[self.splitstart+i][2].configure(fg=self.state.config["mainColour"],bg='black')
+                self.backgrounds[i].configure(bg='black')
         self.labels[self.pbstart-2][0].configure(fg=self.state.config["endColour"])
         self.labels[self.pbstart-2][2].configure(fg=self.state.config["endColour"])
 
