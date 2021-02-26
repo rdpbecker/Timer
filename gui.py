@@ -45,7 +45,7 @@ class Gui(threading.Thread):
         self.root.configure(background='black')
 
         for i in range(12):
-            self.root.columnconfigure(i,minsize=50,weight=1)
+            self.root.columnconfigure(i,minsize=40,weight=1)
 
         ## Initialize the format of the gui and store references to all
         ## the labels so we can change them. References are stored in
@@ -114,12 +114,12 @@ class Gui(threading.Thread):
         self.root.bind('<space>', self.start)
         button6 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Pause", fg=config["buttonTextColour"], command=self.togglePause)
         self.root.bind('p', self.togglePause)
-        button3.grid(row=self.buttonstart,column=0,columnspan=3,sticky='WE')
-        button4.grid(row=self.buttonstart,column=3,columnspan=3,sticky='WE')
-        button1.grid(row=self.buttonstart,column=6,columnspan=3,sticky='WE')
-        button6.grid(row=self.buttonstart,column=9,columnspan=3,sticky='WE')
-        button2.grid(row=self.buttonstart+1,column=0,columnspan=6,sticky='WE')
-        button5.grid(row=self.buttonstart+1,column=6,columnspan=6,sticky='WE')
+        button3.grid(row=self.buttonstart,column=0,columnspan=6,sticky='WE')
+        button4.grid(row=self.buttonstart,column=6,columnspan=6,sticky='WE')
+        button1.grid(row=self.buttonstart+1,column=0,columnspan=6,sticky='WE')
+        button6.grid(row=self.buttonstart+1,column=6,columnspan=6,sticky='WE')
+        button2.grid(row=self.buttonstart+2,column=0,columnspan=6,sticky='WE')
+        button5.grid(row=self.buttonstart+2,column=6,columnspan=6,sticky='WE')
         self.buttons.append([button1,button2,button3,button4,button5,button6])
 
         ## Initialize the text in the gui and set the timer to update 
