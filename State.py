@@ -34,7 +34,7 @@ class State:
         self.config = config
         self.getSplitNames()
 
-        splitArrs = fileio.csvReadStart(self.game,self.category,self.splitnames)
+        splitArrs = fileio.csvReadStart(config["baseDir"],self.game,self.category,self.splitnames)
         self.completeCsv = splitArrs[0]
         self.comparesCsv = splitArrs[1]
 
@@ -76,7 +76,7 @@ class State:
             self.config["activeSplit"] = len(self.splitnames) - 2
 
     def getSplitNames(self):
-        splitNames = cate.findAllSplits()
+        splitNames = cate.findAllSplits(self.config["baseDir"])
         names = cate.findNames(splitNames,0)
         self.game = cate.readThingInList(names)
         cate.restrictCategories(splitNames,self.game)
@@ -164,5 +164,5 @@ class State:
         self.replaceCsvLines(averageSplits,3,self.comparesCsv)
         self.replaceCsvLines(pbSplits,5,self.comparesCsv)
         self.insertCsvLines(lastRun,1)
-        fileio.writeCSV(self.game,self.category,self.completeCsv,self.comparesCsv)
+        fileio.writeCSV(self.config["baseDir"],self.game,self.category,self.completeCsv,self.comparesCsv)
         print("Close the window to end the program")

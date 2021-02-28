@@ -1,7 +1,7 @@
 import csv, sys
 
-def findAllSplits():
-    csvname = "../splitNames.csv"
+def findAllSplits(baseDir):
+    csvname = baseDir + "/splitNames.csv"
     with open(csvname,'r') as csvfile:
         thereader = csv.reader(csvfile, delimiter=",",quotechar="|")
         csvlines = []

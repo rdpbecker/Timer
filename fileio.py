@@ -1,13 +1,16 @@
 import os, csv
 import json
 
-def csvReadStart(name,category,splitList):
-    csvName = "../" + name + "/" + category + ".csv"
-    compareCsvName = "../" + name + "/" + category + "_comparisons.csv"
+def resolveFilename(arr):
+    return "/".join(arr)
+
+def csvReadStart(baseDir,name,category,splitList):
+    csvName = resolveFilename([baseDir,name,category + ".csv"])
+    compareCsvName = resolveFilename([baseDir,name,category + "_comparisons.csv"])
     splitWrite = [[],[]]
     if not os.path.exists(csvName):
-        if not os.path.isdir("../" + name):
-            os.mkdir("../" + name)
+        if not os.path.isdir(resolveFilename([baseDir,name])):
+            os.mkdir(resolveFilename([baseDir,name]))
         splitWrite[0] = [['Split Names']]
         for thing in splitList:
             splitWrite[0].append([thing])
@@ -23,8 +26,8 @@ def csvReadStart(name,category,splitList):
                 splitWrite[0].append(row)
 
     if not os.path.exists(compareCsvName):
-        if not os.path.isdir("../" + name):
-            os.mkdir("../" + name)
+        if not os.path.isdir(resolveFilename([baseDir,name])):
+            os.mkdir(resolveFilename([baseDir,name]))
         splitWrite[1] = [[ \
             'Split Names', \
             'Best Split', \
@@ -49,9 +52,9 @@ def csvReadStart(name,category,splitList):
 
     return splitWrite
 
-def writeCSV(name,category,splitWrite,comparesWrite):
-    csvName = "../" + name + "/" + category + ".csv"
-    compareCsvName = "../" + name + "/" + category + "_comparisons.csv"
+def writeCSV(baseDir,name,category,splitWrite,comparesWrite):
+    csvName = resolveFilename([baseDir,name,category + ".csv"])
+    compareCsvName = resolveFilename([baseDir,name,category + "_comparisons.csv"])
     with open(csvName,'w') as writer:
         csvWriter = csv.writer(writer, delimiter = ',')
         for thing in splitWrite:
