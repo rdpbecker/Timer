@@ -214,9 +214,9 @@ class Gui(threading.Thread):
         windowStart = self.state.getWindowStart()
         for i in range(0,self.pbstart-self.splitstart-1):
             if i == self.state.splitnum-windowStart+self.state.windowStart:
-                self.labels[self.splitstart+i][0].configure(fg=self.state.config["mainColour"],bg=self.state.config["activeColour"])
-                self.labels[self.splitstart+i][2].configure(fg=self.state.config["mainColour"],bg=self.state.config["activeColour"])
-                self.backgrounds[i].configure(bg=self.state.config["activeColour"])
+                self.labels[self.splitstart+i][0].configure(fg=self.state.config["activeColour"],bg=self.state.config["activeBgColour"])
+                self.labels[self.splitstart+i][2].configure(fg=self.state.config["activeColour"],bg=self.state.config["activeBgColour"])
+                self.backgrounds[i].configure(bg=self.state.config["activeBgColour"])
             else:
                 self.labels[self.splitstart+i][0].configure(fg=self.state.config["mainColour"],bg='black')
                 self.labels[self.splitstart+i][2].configure(fg=self.state.config["mainColour"],bg='black')
