@@ -10,6 +10,7 @@ import State, GeneralInfo, fileio
 class Gui(threading.Thread):
     labels = []
     buttons = []
+    backgrounds = []
     splitstart = 2
     pbstart = 10
     timer = 12
@@ -44,69 +45,85 @@ class Gui(threading.Thread):
         self.root.protocol("WM_DELETE_WINDOW", self.callback)
         self.root.configure(background='black')
 
+        for i in range(12):
+            self.root.columnconfigure(i,minsize=40,weight=1)
+
         ## Initialize the format of the gui and store references to all
         ## the labels so we can change them. References are stored in
         ## a grid
+
+        ## The Title rows
         for i in range(self.splitstart):
-            label = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"], width=7, anchor="w")
-            label.grid(row=i,column=0,columnspan=2)
-            label2 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"], width=18, anchor='w')
-            label2.grid(row=i,column=2,columnspan=3)
-            label3 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"], width=20, anchor='e')
-            label3.grid(row=i,column=5,columnspan=4)
-            label4 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"], width=15)
-            label4.grid(row=i,column=9,columnspan=3)
+            label = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label.grid(row=i,column=0,columnspan=2,sticky='W',ipadx=10)
+            label2 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label2.grid(row=i,column=2,columnspan=3,sticky='W')
+            label3 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label3.grid(row=i,column=5,columnspan=4,sticky='E')
+            label4 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label4.grid(row=i,column=9,columnspan=3,sticky='E',ipadx=10)
             self.labels.append([label,label2,label3,label4])
+
+        ## Splits and comparisons
         for i in range(self.splitstart,self.pbstart):
-            label = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"], width=20, anchor="w")
-            label.grid(row=i,column=0,columnspan=4)
-            label2 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"], width=20, anchor='e')
-            label2.grid(row=i,column=4,columnspan=4)
-            label3 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"], width=20, anchor='e')
-            label3.grid(row=i,column=8,columnspan=4)
+            background = tk.Frame(self.root, bg='black')
+            background.grid(row=i,column=0,columnspan=12,sticky='NSWE')
+            self.backgrounds.append(background)
+            label = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label.grid(row=i,column=0,columnspan=8,sticky='W',padx=10)
+            label2 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label2.grid(row=i,column=8,columnspan=2,sticky='E')
+            label3 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label3.grid(row=i,column=10,columnspan=2,sticky='E',padx=10)
             self.labels.append([label,label2,label3])
+
+        ## Current segment comparisons
         for i in range(self.pbstart,self.timer):
-            label = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"], width=15, anchor='w')
-            label.grid(row=i,column=0,columnspan=3)
-            label2 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"], width=15, anchor='w')
-            label2.grid(row=i,column=3,columnspan=3)
-            label3 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"], width=15, anchor='w')
-            label3.grid(row=i,column=6,columnspan=3)
-            label4 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"], width=15, anchor='e')
-            label4.grid(row=i,column=9,columnspan=3)
+            label = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label.grid(row=i,column=0,columnspan=3,sticky='W',padx=10)
+            label2 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label2.grid(row=i,column=3,columnspan=3,sticky='W')
+            label3 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label3.grid(row=i,column=6,columnspan=3,sticky='W')
+            label4 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label4.grid(row=i,column=9,columnspan=3,sticky='E',padx=10)
             self.labels.append([label,label2,label3,label4])
-        anchorlist = ['e','c']
+
+        ## Timers (segment and overall)
+        anchorlist = ['E','']
+        span = [10,12]
         fontlist = [config['segmentFont'],config['timerFont']]
         colourlist = [config["segmentColour"],config["timerColour"]]
         for i in range(self.timer,self.bptstart):
-            label = tk.Label(self.root, bg='black', text="", fg=colourlist[i-self.timer], width=27, font=fontlist[i-self.timer], anchor=anchorlist[i-self.timer])
-            label.grid(row=i,column=0,columnspan=12)
+            label = tk.Label(self.root, bg='black', text="", fg=colourlist[i-self.timer], font=fontlist[i-self.timer])
+            label.grid(row=i,column=0,columnspan=12,sticky=anchorlist[i-self.timer],padx=100)
             self.labels.append([label])
 
+        ## Information
         for i in range(self.bptstart,self.buttonstart):
-            label = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"], width=30, anchor='w')
-            label.grid(row=i,column=0,columnspan=6)
-            label4 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"], width=15, anchor='e')
-            label4.grid(row=i,column=9,columnspan=3)
+            label = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label.grid(row=i,column=0,columnspan=6,sticky='W',padx=10)
+            label4 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label4.grid(row=i,column=9,columnspan=3,sticky='E',padx=10)
             self.labels.append([label,label4])
 
-        button1 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Change Compare", fg=config["buttonTextColour"], width=15, command=self.guiSwitchCompare)
-        button1.grid(row=self.buttonstart,column=6,columnspan=3)
-        button2 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Split", fg=config["buttonTextColour"], width=33, command=self.onSplitEnd)
+        button1 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Change Compare", fg=config["buttonTextColour"],command=self.guiSwitchCompare)
+        button2 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Split", fg=config["buttonTextColour"],  command=self.onSplitEnd)
         self.root.bind('<Return>', self.onSplitEnd)
-        button2.grid(row=self.buttonstart+1,column=0,columnspan=6)
-        button3 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Reset", fg=config["buttonTextColour"], width=15, command=self.reset)
+        button3 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Reset", fg=config["buttonTextColour"],  command=self.reset)
         self.root.bind('r', self.reset)
-        button3.grid(row=self.buttonstart,column=0,columnspan=3)
-        button4 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Skip Split", fg=config["buttonTextColour"], width=15, command=self.skip)
+        button4 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Skip Split", fg=config["buttonTextColour"], command=self.skip)
         self.root.bind('s', self.skip)
-        button4.grid(row=self.buttonstart,column=3,columnspan=3)
-        button5 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Start Run", fg=config["buttonTextColour"], width=33, command=self.start)
-        button5.grid(row=self.buttonstart+1,column=6,columnspan=6)
+        button5 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Start Run", fg=config["buttonTextColour"], command=self.start)
         self.root.bind('<space>', self.start)
-        button6 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Pause", fg=config["buttonTextColour"], width=15, command=self.togglePause)
-        button6.grid(row=self.buttonstart,column=9,columnspan=3)
+        button6 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Pause", fg=config["buttonTextColour"], command=self.togglePause)
         self.root.bind('p', self.togglePause)
+        button3.grid(row=self.buttonstart,column=0,columnspan=6,sticky='WE')
+        button4.grid(row=self.buttonstart,column=6,columnspan=6,sticky='WE')
+        button1.grid(row=self.buttonstart+1,column=0,columnspan=6,sticky='WE')
+        button6.grid(row=self.buttonstart+1,column=6,columnspan=6,sticky='WE')
+        button2.grid(row=self.buttonstart+2,column=0,columnspan=6,sticky='WE')
+        button5.grid(row=self.buttonstart+2,column=6,columnspan=6,sticky='WE')
         self.buttons.append([button1,button2,button3,button4,button5,button6])
 
         ## Initialize the text in the gui and set the timer to update 
@@ -197,11 +214,13 @@ class Gui(threading.Thread):
         windowStart = self.state.getWindowStart()
         for i in range(0,self.pbstart-self.splitstart-1):
             if i == self.state.splitnum-windowStart+self.state.windowStart:
-                self.labels[self.splitstart+i][0].configure(fg=self.state.config["activeColour"])
-                self.labels[self.splitstart+i][2].configure(fg=self.state.config["activeColour"])
+                self.labels[self.splitstart+i][0].configure(fg=self.state.config["activeColour"],bg=self.state.config["activeBgColour"])
+                self.labels[self.splitstart+i][2].configure(fg=self.state.config["activeColour"],bg=self.state.config["activeBgColour"])
+                self.backgrounds[i].configure(bg=self.state.config["activeBgColour"])
             else:
-                self.labels[self.splitstart+i][0].configure(fg=self.state.config["mainColour"])
-                self.labels[self.splitstart+i][2].configure(fg=self.state.config["mainColour"])
+                self.labels[self.splitstart+i][0].configure(fg=self.state.config["mainColour"],bg='black')
+                self.labels[self.splitstart+i][2].configure(fg=self.state.config["mainColour"],bg='black')
+                self.backgrounds[i].configure(bg='black')
         self.labels[self.pbstart-2][0].configure(fg=self.state.config["endColour"])
         self.labels[self.pbstart-2][2].configure(fg=self.state.config["endColour"])
 
