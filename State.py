@@ -80,11 +80,12 @@ class State:
         
         self.currentSplits = Timelist.Timelist()
         self.currentTotals = Timelist.Timelist()
-        self.windowStart = max(0,config["numSplits"]-len(self.splitnames))
 
         if self.config["numSplits"] > len(self.splitnames):
             self.config["numSplits"] = len(self.splitnames)
             self.config["activeSplit"] = len(self.splitnames) - 2
+
+        self.windowStart = max(0,config["numSplits"]-len(self.splitnames))
 
     def getSplitNames(self):
         splitNames = cate.findAllSplits(self.config["baseDir"])
