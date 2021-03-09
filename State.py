@@ -1,4 +1,5 @@
 import Time, Timelist, gui, categorySelection as cate, fileio 
+import os
 
 guiComplete=0
 
@@ -30,9 +31,19 @@ class State:
     config = None
     numComparisons = 0
 
-    def __init__(self,pbstart,splitstart,config):
+    def __init__(self):
+        defaultConfig = fileio.readJson("defaultConfig.json")
+        config = defaultConfig
+        if os.path.exists("config.json"):
+            userConfig = fileio.readJson("config.json")
+            config.update(userConfig)
         self.config = config
         self.getSplitNames()
+        cateFile = config["baseDir"] + "/" + self.game + "/" + self.category + "_config.json"
+        if os.path.exists(cateFile):
+            cateConfig = fileio.readJson(cateFile)
+            config.update(cateConfig)
+        self.config = config
 
         splitArrs = fileio.csvReadStart(config["baseDir"],self.game,self.category,self.splitnames)
         self.completeCsv = splitArrs[0]
@@ -69,7 +80,7 @@ class State:
         
         self.currentSplits = Timelist.Timelist()
         self.currentTotals = Timelist.Timelist()
-        self.windowStart = config["numSplits"]-min(pbstart-splitstart-1, self.compares[0].length)
+        self.windowStart = max(0,config["numSplits"]-len(self.splitnames))
 
         if self.config["numSplits"] > len(self.splitnames):
             self.config["numSplits"] = len(self.splitnames)

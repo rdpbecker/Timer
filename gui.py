@@ -27,7 +27,8 @@ class Gui(threading.Thread):
 
     def run(self):
         ## Initialize the state. This picks the game and category
-        config = fileio.readJson("config.json")
+        self.state = State.State()
+        config = self.state.config
         generalInfo = {\
             "timeSave": GeneralInfo.GeneralInfo(config["timeSaveShow"],self.timeSaveSet,self.timeSaveInfo),\
             "diff": GeneralInfo.GeneralInfo(config["diffShow"],self.diffSet,self.diffInfo),\
@@ -37,7 +38,6 @@ class Gui(threading.Thread):
         }
         generalInfoKeys = ["timeSave","diff","bpt","sob","pb"]
         self.setSectionStarts(config,generalInfo,generalInfoKeys)
-        self.state = State.State(self.pbstart,self.splitstart,config)
         self.state.generalInfo = generalInfo
         self.state.generalInfoKeys = generalInfoKeys
 
