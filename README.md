@@ -1,14 +1,58 @@
 # Setup
 
-In the parent directory, create a file called *splitNames.csv*. 
-More explanation and an example are given in the *examples/* 
-directory.
+## Category/Segment Names
+In the parent directory, create a file called *splitNames.csv*. This 
+file stores the list of games and categories, along with the list
+of segments for each game/category pair.  More explanation and an 
+example are given in the *examples/* directory.
 
-The timer is also configurable now! There is an example of a config
-file in the *examples/* directory. The real config file should be
-in *config.json*, and the program will not run without it. More 
-information is in that directory.
+## Layout/Appearance Configuration
 
+Parts of the layout and appearance can be configured by the user.
+
+For the appearance, most of the colours and fonts can be
+configured, including but not limited to the main text, the timer,
+the buttons, and the highlighting on the current segment.
+
+For the layout, the number of segments displayed and the index of
+the current segment can be chosen, and the information shown at the
+bottom of the window about the comparisons.
+
+Finally, the base directory of the save files can be configured
+using the `baseDir` attribute. The default is to save all files in
+the parent of this directory.
+
+A list of all configurable attributes can be found in
+`defaultConfig.json`.
+
+## Creating the Configuration
+
+There is a default configuration provided at `defaultConfig.json`
+in the root directory. This configuration shouldn't be changed
+manually, as it will be overwritten whenever it gets changes in the
+repository. To override this configuration globally
+(i.e. for all game/category pairs), you can use create a file 
+called `config.json` in the root directory which overwrites the
+desired attributes. To override this configuration for a specific
+game/category pair, create a file at
+`<baseDir>/<game>/<category>.json` which overrides the desired
+attributes. The attributes are overwritten in the following order:
+
+```
+defaultConfig.json -> config.json ->
+<baseDir>/<game>/<category>.json
+```
+
+Attributes in files further right overwrite attributes set in
+previous files.
+
+## Manual Comparisons
+
+Comparisons can be added manually using a comparisons file. This
+file is automatically created the first time the timer is started
+with a particular game/category pair at
+`<baseDir>/<game>/<category>_comparisons.csv`. New comparisons can
+be added to the right side of this file. 
 In addition to all this, comparisons can be added manually now. The
 comparisons are all stored in a file separate from the saved runs.
 Runs are stored in `<game>/<category>.csv`, and the comparisons are
@@ -34,31 +78,21 @@ chosen a game, they are prompted to select a category for the game.
 When the user selects a category, a GUI pops up which is used for
 the rest of the program. There are six buttons, and most of them
 also have key bindings.
-1. `Start Run` has the key binding <Space>
-2. `Split` has the key binding <Return>
-3. `Reset` has the key binding `r`
-4. `Skip Split` has the key binding `s`
-5. `Change Compare` currently has no key binding
-6. `Pause` has the key binding `p`
 
-Each button calls a function to progress through the segments:
-1. `Start Run` starts the timer by initializing the start time.
-2. `Split` ends the current segment and moves to the next one. The
-GUI is also shifted at the end of the segment. 
-3. `Reset` ends the program and timer, and writes the completed
-segments as if all the segments have been completed with blank
-times for the uncompleted segments.
-4. `Skip Split` skips the current segment. The segment timer for
-the next timer starts at the time you press this button.
-5. `Change Compare` rotates through the possible comparisons. These
-are `Personal Best`, `Sum of Bests`, `Average`, and `Last Run`.
-6. `Pause` pauses the timer. You will be unable to split while the
-timer is paused - pressing <Return> will just unpause the timer.
+|Function|Description|Hotkey|
+|:------:|:---------:|:----:|
+|`Start Run`|Starts the timer|`<Space>`|
+|`Split`|Ends the current segment and starts the next one|`<Return>`|
+|`Reset`|Ends the timer and writes the completed segments, regardless
+of whether all segments have been completed|`r`|
+|`Skip Split`|Skips the current segment|`s`|
+|`Change Compare`|Changes to the next comparison|None|
+|`Pause`|Toggles whether the timer is paused|`p`|
 
 The key bindings for `Start Run` and `Split` are different, but
 they will actually both do the same thing. Pressing `Split` before
 the run has started will start the run, and pressing `Start Run`
-after the run has started will end the current segment
+after the run has started will end the current segment.
 
 # practice.py
 
