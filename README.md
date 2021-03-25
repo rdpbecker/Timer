@@ -39,8 +39,7 @@ game/category pair, create a file at
 attributes. The attributes are overwritten in the following order:
 
 ```
-defaultConfig.json -> config.json ->
-<baseDir>/<game>/<category>.json
+defaultConfig.json -> config.json -> <baseDir>/<game>/<category>.json
 ```
 
 Attributes in files further right overwrite attributes set in
