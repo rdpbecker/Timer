@@ -29,7 +29,7 @@ A list of all configurable attributes can be found in
 
 There is a default configuration provided at `defaultConfig.json`
 in the root directory. This configuration shouldn't be changed
-manually, as it will be overwritten whenever it gets changes in the
+manually, as it will be overwritten whenever it gets changed in the
 repository. To override this configuration globally
 (i.e. for all game/category pairs), you can use create a file 
 called `config.json` in the root directory which overwrites the
