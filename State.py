@@ -32,20 +32,9 @@ class State:
     numComparisons = 0
 
     def __init__(self):
-        defaultConfig = fileio.readJson("defaultConfig.json")
-        config = defaultConfig
-        if os.path.exists("config.json"):
-            userConfig = fileio.readJson("config.json")
-            config.update(userConfig)
-        self.config = config
-        self.getSplitNames()
-        cateFile = config["baseDir"] + "/" + self.game + "/" + self.category + "_config.json"
-        if os.path.exists(cateFile):
-            cateConfig = fileio.readJson(cateFile)
-            config.update(cateConfig)
-        self.config = config
+        self.config = self.getConfigAndSplits()
 
-        splitArrs = fileio.csvReadStart(config["baseDir"],self.game,self.category,self.splitnames)
+        splitArrs = fileio.csvReadStart(self.config["baseDir"],self.game,self.category,self.splitnames)
         self.completeCsv = splitArrs[0]
         self.comparesCsv = splitArrs[1]
 
@@ -85,10 +74,23 @@ class State:
             self.config["numSplits"] = len(self.splitnames)
             self.config["activeSplit"] = len(self.splitnames) - 2
 
-        self.windowStart = max(0,config["numSplits"]-len(self.splitnames))
+        self.windowStart = max(0,self.config["numSplits"]-len(self.splitnames))
 
-    def getSplitNames(self):
-        splitNames = cate.findAllSplits(self.config["baseDir"])
+    def getConfigAndSplits(self):
+        defaultConfig = fileio.readJson("defaultConfig.json")
+        config = defaultConfig
+        if os.path.exists("config.json"):
+            userConfig = fileio.readJson("config.json")
+            config.update(userConfig)
+        self.getSplitNames(config["baseDir"])
+        cateFile = config["baseDir"] + "/" + self.game + "/" + self.category + "_config.json"
+        if os.path.exists(cateFile):
+            cateConfig = fileio.readJson(cateFile)
+            config.update(cateConfig)
+        return config
+
+    def getSplitNames(self,baseDir):
+        splitNames = cate.findAllSplits(baseDir)
         names = cate.findNames(splitNames,0)
         self.game = cate.readThingInList(names)
         cate.restrictCategories(splitNames,self.game)
