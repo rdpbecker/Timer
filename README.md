@@ -51,14 +51,14 @@ Comparisons can be added manually using a comparisons file. This
 file is automatically created the first time the timer is started
 with a particular game/category pair at
 `<baseDir>/<game>/<category>_comparisons.csv`. New comparisons can
-be added to the right side of this file. 
-In addition to all this, comparisons can be added manually now. The
-comparisons are all stored in a file separate from the saved runs.
-Runs are stored in `<game>/<category>.csv`, and the comparisons are
-stored in `<game>/<category>_comparisons.csv`. After the initial
-creation of the comparisons file during the first run of the
-category, new comparisons can be added to the comparisons manually
-by 
+be added to the right side of this file (the first three
+comparisons in the file are expected to be in the positions they
+are put in when the file is created). 
+
+Each comparison should have two columns. The left column should be
+the time for the given segment, and the right column should be the
+total time up the end of the given segment. The title (first entry)
+of the second column is used as the name of the comparison.
 
 # runTimer.py
 
