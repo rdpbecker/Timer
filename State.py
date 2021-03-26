@@ -1,4 +1,5 @@
 import Time, Timelist, gui, categorySelection as cate, fileio 
+import os
 
 guiComplete=0
 
@@ -30,11 +31,10 @@ class State:
     config = None
     numComparisons = 0
 
-    def __init__(self,pbstart,splitstart,config):
-        self.config = config
-        self.getSplitNames()
+    def __init__(self):
+        self.config = self.getConfigAndSplits()
 
-        splitArrs = fileio.csvReadStart(config["baseDir"],self.game,self.category,self.splitnames)
+        splitArrs = fileio.csvReadStart(self.config["baseDir"],self.game,self.category,self.splitnames)
         self.completeCsv = splitArrs[0]
         self.comparesCsv = splitArrs[1]
 
@@ -69,14 +69,28 @@ class State:
         
         self.currentSplits = Timelist.Timelist()
         self.currentTotals = Timelist.Timelist()
-        self.windowStart = config["numSplits"]-min(pbstart-splitstart-1, self.compares[0].length)
 
         if self.config["numSplits"] > len(self.splitnames):
             self.config["numSplits"] = len(self.splitnames)
             self.config["activeSplit"] = len(self.splitnames) - 2
 
-    def getSplitNames(self):
-        splitNames = cate.findAllSplits(self.config["baseDir"])
+        self.windowStart = max(0,self.config["numSplits"]-len(self.splitnames))
+
+    def getConfigAndSplits(self):
+        defaultConfig = fileio.readJson("defaultConfig.json")
+        config = defaultConfig
+        if os.path.exists("config.json"):
+            userConfig = fileio.readJson("config.json")
+            config.update(userConfig)
+        self.getSplitNames(config["baseDir"])
+        cateFile = config["baseDir"] + "/" + self.game + "/" + self.category + "_config.json"
+        if os.path.exists(cateFile):
+            cateConfig = fileio.readJson(cateFile)
+            config.update(cateConfig)
+        return config
+
+    def getSplitNames(self,baseDir):
+        splitNames = cate.findAllSplits(baseDir)
         names = cate.findNames(splitNames,0)
         self.game = cate.readThingInList(names)
         cate.restrictCategories(splitNames,self.game)
