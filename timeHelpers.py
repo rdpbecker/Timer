@@ -33,3 +33,22 @@ def toString(totalSecs,flag=0,flag2=1,precision=0):
     if precision:
         string = string + str(fracsecs)[1:precision+2]
     return string
+
+def stringToTime(timestring)
+    if timestring == "-":
+        return "BLANK"
+    parts1 = re.split("\.",timestring)
+    parts2 = re.split(":",parts1[0])
+    if precision and len(parts1) > 1:
+        stringPrecision = len(parts1[1])
+        fracsecs = float("0."+parts1[1])
+    if len(parts2) == 3:
+        hours = int(parts2[0])
+        mins = int(parts2[1])
+        secs = int(parts2[2])
+    elif len(parts2) == 2:
+        mins = int(parts2[0])
+        secs = int(parts2[1])
+    else:
+        secs = int(parts2[0])
+    return 3600*hours + 60*mins + secs + fracsecs
