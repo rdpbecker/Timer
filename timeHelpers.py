@@ -1,3 +1,5 @@
+import re
+
 def zeroPad(finalLength,string):
     while len(string) < finalLength:
         string = "0" + string
