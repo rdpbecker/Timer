@@ -6,6 +6,8 @@ class CurrentRun:
         pass
 
     def addSegment(self,segment,total):
-        if (not segment == "BLANK"):
+        if (not self.totals[-1] == "BLANK"):
             self.segments.append(segment)
+        else:
+            self.segments.append("BLANK")
         self.totals.append(total)
