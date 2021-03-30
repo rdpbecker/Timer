@@ -1,4 +1,6 @@
 import Time, Timelist, gui, categorySelection as cate, fileio 
+import timeHelpers as timeh
+import BptList
 import os
 
 guiComplete=0
@@ -38,8 +40,8 @@ class State:
         self.completeCsv = splitArrs[0]
         self.comparesCsv = splitArrs[1]
 
-        self.bptList = self.getTimes(1,self.comparesCsv)
-        self.currentBests = self.getTimes(1,self.comparesCsv)
+        self.bptList = self.getBptList()
+        self.currentBests = self.getBptList()
         
         for i in range(int((len(self.comparesCsv[0])-1)/2)):
             self.compares.append(self.getTimes(2*i+2,self.comparesCsv))
@@ -104,6 +106,15 @@ class State:
         for i in range(1,len(toCheck)):
             times.insert(Time.Time(5,timestring=toCheck[i][col]))
         return times
+
+    def getTimes2(self,col,toCheck):
+        times = []
+        for i in range(1,len(toCheck)):
+            times.append(timeh.stringToTime(toCheck[i][col]))
+        return times
+
+    def getBptList(self):
+        return BptList.BptList(self.getTimes2(1,self.comparesCsv))
 
     def getWindowStart(self):
         if self.splitnum <= self.config["activeSplit"] - 1:

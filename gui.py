@@ -269,15 +269,17 @@ class Gui(threading.Thread):
             self.togglePause()
         totalTime = Time.Time(5,floattime=splitEnd-self.state.starttime)
         splitTime = Time.Time(5,floattime=splitEnd-self.state.splitstarttime)
+        totalTimeNumber = splitEnd - self.state.starttime
+        splitTimeNumber = splitEnd - self.state.splitstarttime
         self.state.currentSplits.insert(splitTime)
         self.state.currentTotals.insert(totalTime)
 
-        self.state.bptList.replace(Time.Time(5,floattime=splitEnd-self.state.splitstarttime),self.state.splitnum)
+        self.state.bptList.update(splitTimeNumber,self.state.splitnum)
         for i in range(self.state.numComparisons):
             self.state.diffs[i].insert(totalTime.subtract(self.state.compares[i].get(self.state.splitnum)))
             self.state.diffSplits[i].insert(self.state.currentSplits.get(self.state.splitnum).subtract(self.state.compareSplits[i].get(self.state.splitnum)))
-        if self.state.diffSplits[0].get(self.state.splitnum).greater(Time.Time(5,timestring='-')) == -1:
-            self.state.currentBests.replace(Time.Time(5,floattime=splitEnd-self.state.splitstarttime),self.state.splitnum)
+        if splitTimeNumber < self.state.currentBests.bests[self.state.splitnum]:
+            self.state.currentBests.update(splitTimeNumber,self.state.splitnum)
         self.state.splitnum = self.state.splitnum + 1
         lowIndex = self.state.getWindowStart()
         self.updateTimes(lowIndex)
@@ -419,10 +421,10 @@ class Gui(threading.Thread):
             self.labels[self.bptstart+i][1].configure(text=self.state.currentSplits.get(-1).subtract(self.state.compareSplits[0].get(self.state.splitnum-1)).__str__(1,precision=2))
 
     def bptInfo(self,i):
-        self.labels[self.bptstart+i][1].configure(text=self.state.bptList.sum().__str__(precision=2))
+        self.labels[self.bptstart+i][1].configure(text=timeh.toString(self.state.bptList.total,precision=2))
 
     def sobInfo(self,i):
-        self.labels[self.bptstart+i][1].configure(text=self.state.currentBests.sum().__str__(precision=2))
+        self.labels[self.bptstart+i][1].configure(text=timeh.toString(self.state.currentBests.total,precision=2))
 
     def pbInfo(self,i):
         pass
