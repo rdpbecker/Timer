@@ -5,12 +5,12 @@ def zeroPad(finalLength,string):
         string = "0" + string
     return string
 
-def toString(totalSecs,flag=0,flag2=1,precision=0):
+def timeToString(totalSecs,showSign=False,blankToDash=True,precision=0):
     if not totalSecs:
-        if flag2:
+        if blankToDash:
             return '-'
     string = ""
-    if flag:
+    if showSign:
         if string > 0:
             string = "+"
         else: 

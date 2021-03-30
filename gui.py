@@ -151,8 +151,8 @@ class Gui(threading.Thread):
             currentTime = timer()
             if self.state.paused:
                 currentTime = self.state.pauseTime
-            self.labels[self.timer+1][0].configure(text=timeh.toString(currentTime-self.state.starttime,flag2=0,precision=2))
-            self.labels[self.timer][0].configure(text=timeh.toString(currentTime-self.state.splitstarttime,flag2=0))
+            self.labels[self.timer+1][0].configure(text=timeh.timeToString(currentTime-self.state.starttime,blankToDash=False,precision=2))
+            self.labels[self.timer][0].configure(text=timeh.timeToString(currentTime-self.state.splitstarttime,blankToDash=False))
             self.state.lastUpdateTime = currentTime
         if self.state.splitnum < len(self.state.splitnames) and not self.state.reset:
             self.root.after(17,self.update)
@@ -421,10 +421,10 @@ class Gui(threading.Thread):
             self.labels[self.bptstart+i][1].configure(text=self.state.currentSplits.get(-1).subtract(self.state.compareSplits[0].get(self.state.splitnum-1)).__str__(1,precision=2))
 
     def bptInfo(self,i):
-        self.labels[self.bptstart+i][1].configure(text=timeh.toString(self.state.bptList.total,precision=2))
+        self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(self.state.bptList.total,precision=2))
 
     def sobInfo(self,i):
-        self.labels[self.bptstart+i][1].configure(text=timeh.toString(self.state.currentBests.total,precision=2))
+        self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(self.state.currentBests.total,precision=2))
 
     def pbInfo(self,i):
         pass
