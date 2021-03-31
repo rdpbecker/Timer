@@ -125,6 +125,21 @@ class State:
             return len(self.splitnames) - self.config["numSplits"]
         return self.splitnum - (self.config["activeSplit"] - 1)
 
+    def completeSegment(self,endTime):
+        totalTime = Time.Time(5,floattime=endTime-self.starttime)
+        splitTime = Time.Time(5,floattime=endTime-self.splitstarttime)
+        totalTimeNumber = endTime - self.starttime
+        splitTimeNumber = endTime - self.splitstarttime
+        self.currentSplits.insert(splitTime)
+        self.currentTotals.insert(totalTime)
+
+        self.bptList.update(splitTimeNumber,self.splitnum)
+        for i in range(self.numComparisons):
+            self.comparisons[i].updateDiffs(splitTimeNumber,totalTimeNumber)
+        if timeh.greater(self.currentBests.bests[self.splitnum],splitTimeNumber):
+            self.currentBests.update(splitTimeNumber,self.splitnum)
+        self.splitnum = self.splitnum + 1
+
     def getBests(self):
         return [self.currentBests.bests,self.currentBests.totalBests]
 

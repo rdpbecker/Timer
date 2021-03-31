@@ -177,7 +177,7 @@ class Gui(threading.Thread):
         self.labels[0][0].configure(text=self.state.game)
         self.labels[0][1].configure(text=self.state.category)
         self.labels[0][2].configure(text="Comparing Against")
-        self.labels[0][3].configure(text="Personal Best")
+        self.labels[0][3].configure(text=self.state.comparisons[self.state.currentCompare].totalHeader)
 
     ##########################################################
     ## Initialize the split names and times for the first few
@@ -195,7 +195,7 @@ class Gui(threading.Thread):
     ## comparisons, time save, BPT, and PB
     ##########################################################
     def initInfo(self):
-        self.labels[self.pbstart][0].configure(text="PB Split:")
+        self.labels[self.pbstart][0].configure(text=self.state.comparisons[self.state.currentCompare].segmentHeader)
         self.labels[self.pbstart+1][0].configure(text="Best Split:")
 
         count = 0
@@ -256,6 +256,7 @@ class Gui(threading.Thread):
     ## to update the GUI
     ##########################################################
     def onSplitEnd(self,event=None):
+        splitEnd = timer()
         if not self.state.started:
             self.start()
             return
@@ -264,22 +265,10 @@ class Gui(threading.Thread):
             self.togglePause()
             return
         
-        splitEnd = timer()
         if self.state.splitnames[self.state.splitnum][-3:] == "[P]" and not self.state.splitnum == len(self.state.splitnames) and not self.state.paused:
             self.togglePause()
-        totalTime = Time.Time(5,floattime=splitEnd-self.state.starttime)
-        splitTime = Time.Time(5,floattime=splitEnd-self.state.splitstarttime)
-        totalTimeNumber = splitEnd - self.state.starttime
-        splitTimeNumber = splitEnd - self.state.splitstarttime
-        self.state.currentSplits.insert(splitTime)
-        self.state.currentTotals.insert(totalTime)
 
-        self.state.bptList.update(splitTimeNumber,self.state.splitnum)
-        for i in range(self.state.numComparisons):
-            self.state.comparisons[i].updateDiffs(splitTimeNumber,totalTimeNumber)
-        if timeh.greater(self.state.currentBests.bests[self.state.splitnum],splitTimeNumber):
-            self.state.currentBests.update(splitTimeNumber,self.state.splitnum)
-        self.state.splitnum = self.state.splitnum + 1
+        self.state.completeSegment(splitEnd)
         lowIndex = self.state.getWindowStart()
         self.updateTimes(lowIndex)
         self.updateCurrentColour()
