@@ -6,9 +6,14 @@ def zeroPad(finalLength,string):
     return string
 
 def timeToString(totalSecs,showSign=False,blankToDash=True,precision=0):
-    if not totalSecs:
+    if isBlank(totalSecs):
         if blankToDash:
             return '-'
+        else:
+            if not precision:
+                return "0"
+            else:
+                return "0.0000000"[:precision+2]
     string = ""
     if showSign:
         if totalSecs > 0:
@@ -64,3 +69,26 @@ def stringToTime(timestring):
     else:
         secs = int(parts2[0])
     return 3600*hours + 60*mins + secs + fracsecs
+
+def isBlank(time):
+    return time == "BLANK"
+
+def difference(time1,time2):
+    if isBlank(time1) or isBlank(time2):
+        return "BLANK"
+    return time1 - time2
+
+def add(time1,time2):
+    if isBlank(time1) or isBlank(time2):
+        return "BLANK"
+    return time1 + time2
+
+def greater(time1,time2):
+    if isBlank(time1) or isBlank(time2):
+        return "BLANK"
+    return time1 > time2
+
+def equal(time1,time2):
+    if isBlank(time1) or isBlank(time2):
+        return "BLANK"
+    return time1 == time2

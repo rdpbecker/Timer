@@ -1,3 +1,5 @@
+import timeHelpers as timeh
+
 class Comparison:
     segmentHeader = ""
     totalHeader = ""
@@ -6,13 +8,13 @@ class Comparison:
     segmentDiffs = []
     totalDiffs = []
 
-    def __init__(self,shead,thead,segments,totals,segmentDiffs,totalDiffs):
+    def __init__(self,shead,thead,segments,totals):
         self.segmentHeader = shead
         self.totalHeader = thead
         self.segments = segments
         self.totals = totals
-        self.segmentDiffs = segmentDiffs
-        self.totalDiffs = totalDiffs
+        self.segmentDiffs = []
+        self.totalDiffs = []
 
     def getSegmentHeader(self):
         return self.segmentHeader
@@ -37,3 +39,7 @@ class Comparison:
 
     def getTotal(self,index):
         return self.totals[index]
+
+    def updateDiffs(self,splittime,totaltime):
+        self.segmentDiffs.append(timeh.difference(splittime,self.segments[len(self.segmentDiffs)]))
+        self.totalDiffs.append(timeh.difference(totaltime,self.totals[len(self.totalDiffs)]))

@@ -1,5 +1,6 @@
 import Time, Timelist, gui, categorySelection as cate, fileio 
 import timeHelpers as timeh
+import Comparison
 import BptList
 import os
 
@@ -19,10 +20,6 @@ class State:
     completeCsv = None
     bptList = None
     currentBests = None
-    compares = []
-    compareSplits = []
-    diffs = []
-    diffSplits = []
     currentSplits = None
     currentTotals = None
     reset = False
@@ -32,6 +29,7 @@ class State:
     windowStart = 0
     config = None
     numComparisons = 0
+    comparisons = []
 
     def __init__(self):
         self.config = self.getConfigAndSplits()
@@ -44,10 +42,12 @@ class State:
         self.currentBests = self.getBptList()
         
         for i in range(int((len(self.comparesCsv[0])-1)/2)):
-            self.compares.append(self.getTimes(2*i+2,self.comparesCsv))
-            self.compareSplits.append(self.getTimes(2*i+1,self.comparesCsv))
-            self.splitCompareHeaders.append(self.comparesCsv[0][2*i+1])
-            self.compareHeaders.append(self.comparesCsv[0][2*i+2])
+            self.comparisons.append(Comparison.Comparison( \
+                self.comparesCsv[0][2*i+1], \
+                self.comparesCsv[0][2*i+2], \
+                self.getTimes2(2*i+1,self.comparesCsv), \
+                self.getTimes2(2*i+2,self.comparesCsv) \
+             ))
 
         ## There's no way to take out a comparison at the moment, and we
         ## set all the comparisons for the first run of a category when
@@ -55,19 +55,21 @@ class State:
         ## set the last run to be the PB splits. It doesn't matter 
         ## because the PB splits are all '-' anyway
         if len(self.completeCsv[0]) > 1:
-          self.compares.append(self.getTimes(2,self.completeCsv))
-          self.compareSplits.append(self.getTimes(1,self.completeCsv))
+            self.comparisons.append(Comparison.Comparison( \
+                "Last Run Splits", \
+                "Last Run", \
+                self.getTimes2(1,self.completeCsv), \
+                self.getTimes2(2,self.completeCsv) \
+            ))
         else: 
-          self.compares.append(self.getTimes(2,self.comparesCsv))
-          self.compareSplits.append(self.getTimes(1,self.comparesCsv))
-        self.splitCompareHeaders.append("Last Run Splits")
-        self.compareHeaders.append("Last Run")
+            self.comparisons.append(Comparison.Comparison( \
+                "Last Run Splits", \
+                "Last Run", \
+                self.getTimes2(1,self.comparesCsv), \
+                self.getTimes2(2,self.comparesCsv) \
+            ))
 
-        self.numComparisons = len(self.compareHeaders)
-        
-        for i in range(self.numComparisons):
-            self.diffs.append(Timelist.Timelist())
-            self.diffSplits.append(Timelist.Timelist())
+        self.numComparisons = len(self.comparisons)
         
         self.currentSplits = Timelist.Timelist()
         self.currentTotals = Timelist.Timelist()
@@ -124,13 +126,7 @@ class State:
         return self.splitnum - (self.config["activeSplit"] - 1)
 
     def getBests(self):
-        bests = Timelist.Timelist()
-        for i in range(self.currentSplits.length):
-            if (self.currentSplits.get(i).greater(self.compareSplits[0].get(i)) > 0 and not self.compareSplits[0].get(i).equal(Time.Time(5,timestring='-'))) or self.currentSplits.get(i).equal(Time.Time(5,timestring='-')):
-                bests.insert(self.compareSplits[0].get(i))
-            else:
-                bests.insert(self.currentSplits.get(i))
-        return bests
+        return [self.currentBests.bests,self.currentBests.totalBests]
 
     def getAverages(self):
         averages = Timelist.Timelist()
@@ -143,11 +139,11 @@ class State:
         return averages
 
     def isPB(self):
-        if self.currentSplits.lastNonZero()> self.compares[2].lastNonZero():
+        if self.currentSplits.lastNonZero()> len(self.comparisons[2].totals):
             return 1
-        if self.currentSplits.lastNonZero() < self.compares[2].lastNonZero():
+        if self.currentSplits.lastNonZero() < len(self.comparisons[2].totals):
             return 0
-        if self.compares[2].get(-1).greater(self.currentTotals.get(-1)) == 1:
+        if timeh.greater(0,self.comparisons[2].totalDiffs[-1]):
             return 1
         return 0
 
@@ -178,8 +174,8 @@ class State:
         if self.isPB():
             pbSplits = [self.currentSplits.toStringList(),self.currentTotals.toStringList()]
         else:
-            pbSplits = [self.compareSplits[2].toStringList(),self.compares[2].toStringList()]
-        bestSplits = [bests.toStringList(), bests.getSums().toStringList()]
+            pbSplits = [timeh.timesToStringList(self.comparisons[2].segments,precision=5),timeh.timesToStringList(self.comparisons[2].totals,precision=5)]
+        bestSplits = [timeh.timesToStringList(bests[0],precision=5), timeh.timesToStringList(bests[1],precision=5)]
         averageSplits = [averages.toStringList(), averages.getSums().toStringList()]
         lastRun = [self.currentSplits.toStringList(),self.currentTotals.toStringList()]
         self.completeCsv[0].insert(1,"Run #"+str(int((len(self.completeCsv[1])+1)/2)))
