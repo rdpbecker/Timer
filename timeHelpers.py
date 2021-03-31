@@ -11,10 +11,11 @@ def timeToString(totalSecs,showSign=False,blankToDash=True,precision=0):
             return '-'
     string = ""
     if showSign:
-        if string > 0:
+        if totalSecs > 0:
             string = "+"
         else: 
             string = '-'
+    totalSecs = abs(totalSecs)
     fracsecs = totalSecs - int(totalSecs)
     totalSecs = int(totalSecs)
     secs = totalSecs % 60
@@ -35,6 +36,12 @@ def timeToString(totalSecs,showSign=False,blankToDash=True,precision=0):
     if precision:
         string = string + str(fracsecs)[1:precision+2]
     return string
+
+def timesToStringList(arr,showSign=False,blankToDash=True,precision=0):
+    newarr = []
+    for thing in arr:
+        newarr.append(timeToString(thing,showSign,blankToDash,precision))
+    return newarr
 
 def stringToTime(timestring):
     if timestring == "-":
