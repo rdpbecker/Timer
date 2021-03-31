@@ -153,7 +153,6 @@ class Gui(threading.Thread):
                 currentTime = self.state.pauseTime
             self.labels[self.timer+1][0].configure(text=timeh.timeToString(currentTime-self.state.starttime,blankToDash=False,precision=2))
             self.labels[self.timer][0].configure(text=timeh.timeToString(currentTime-self.state.splitstarttime,blankToDash=False))
-            self.state.lastUpdateTime = currentTime
         if self.state.splitnum < len(self.state.splitnames) and not self.state.reset:
             self.root.after(17,self.update)
         else:
@@ -184,9 +183,9 @@ class Gui(threading.Thread):
     ## splits and the last one. This is based on the PB time
     ##########################################################
     def initTimes(self):
-        for i in range(self.state.windowStart,self.pbstart-self.splitstart-2):
-            self.labels[self.splitstart+i][0].configure(text=self.state.splitnames[i-self.state.windowStart])
-            self.labels[self.splitstart+i][2].configure(text=timeh.timeToString(self.state.comparisons[self.state.currentCompare].totals[i-self.state.windowStart],precision=2))
+        for i in range(0,self.pbstart-self.splitstart-2):
+            self.labels[self.splitstart+i][0].configure(text=self.state.splitnames[i])
+            self.labels[self.splitstart+i][2].configure(text=timeh.timeToString(self.state.comparisons[self.state.currentCompare].totals[i],precision=2))
         self.labels[self.pbstart-2][0].configure(text=self.state.splitnames[-1])
         self.labels[self.pbstart-2][2].configure(text=timeh.timeToString(self.state.comparisons[self.state.currentCompare].totals[-1],precision=2))
 
@@ -211,9 +210,9 @@ class Gui(threading.Thread):
     ## on the current split number
     ##########################################################
     def updateCurrentColour(self):
-        windowStart = self.state.getWindowStart()
+        lowIndex = self.state.getWindowStart()
         for i in range(0,self.pbstart-self.splitstart-1):
-            if i == self.state.splitnum-windowStart+self.state.windowStart:
+            if i == self.state.splitnum-lowIndex:
                 self.labels[self.splitstart+i][0].configure(fg=self.state.config["activeColour"],bg=self.state.config["activeBgColour"])
                 self.labels[self.splitstart+i][2].configure(fg=self.state.config["activeColour"],bg=self.state.config["activeBgColour"])
                 self.backgrounds[i].configure(bg=self.state.config["activeBgColour"])
@@ -293,13 +292,9 @@ class Gui(threading.Thread):
         ## lowIndex is the index in the list of splits of the top split
         ## in the gui - if split #5 is at the top of the view area in
         ## the gui, then lowIndex=5
-        ## 
-        ## windowStart is the index at which the window in the GUI starts
-        ## This is determined only by the total number of splits, and
-        ## for categories with more than 7 splits windowStart=0
-        for i in range(self.state.windowStart,self.pbstart-self.splitstart-2):
+        for i in range(0,self.pbstart-self.splitstart-2):
             ## The index of the split we're looking at currently
-            subjectSplitIndex = i+lowIndex-self.state.windowStart
+            subjectSplitIndex = i+lowIndex
             self.labels[self.splitstart+i][0].configure(text=self.state.splitnames[subjectSplitIndex])
             if self.state.splitnum > subjectSplitIndex:
                 if self.state.comparisons[self.state.currentCompare].segments[subjectSplitIndex]:

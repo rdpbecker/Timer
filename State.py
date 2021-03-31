@@ -4,32 +4,35 @@ import Comparison
 import BptList
 import os
 
-guiComplete=0
-
 class State:
     started = False
     paused = False
+    reset = False
+
     pauseTime = 0
     starttime = 0
     splitstarttime = 0
-    lastUpdateTime = 0
+
     splitnum = 0
     splitnames = []
+
     game = ""
     category = ""
+
     completeCsv = None
+    comparesCsv = None
+
     bptList = None
     currentBests = None
+
     currentSplits = None
     currentTotals = None
-    reset = False
-    currentCompare = 2
-    compareHeaders = []
-    splitCompareHeaders = []
-    windowStart = 0
-    config = None
-    numComparisons = 0
+
     comparisons = []
+    currentCompare = 2
+    numComparisons = 0
+
+    config = None
 
     def __init__(self):
         self.config = self.getConfigAndSplits()
@@ -77,8 +80,6 @@ class State:
         if self.config["numSplits"] > len(self.splitnames):
             self.config["numSplits"] = len(self.splitnames)
             self.config["activeSplit"] = len(self.splitnames) - 2
-
-        self.windowStart = max(0,self.config["numSplits"]-len(self.splitnames))
 
     def getConfigAndSplits(self):
         defaultConfig = fileio.readJson("defaultConfig.json")
