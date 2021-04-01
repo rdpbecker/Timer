@@ -362,14 +362,9 @@ class Gui(threading.Thread):
     def togglePause(self,event=None):
         currentTime = timer()
         if self.state.paused:
-            self.state.paused = False
-            elapsed = currentTime - self.state.pauseTime
-            self.state.starttime = self.state.starttime + elapsed
-            self.state.splitstarttime = self.state.splitstarttime + elapsed
-            self.state.pauseTime = 0
+            self.state.endPause(currentTime)
         else:
-            self.state.paused = True
-            self.state.pauseTime = currentTime
+            self.state.startPause(currentTime)
 
     def timeSaveSet(self,i):
         self.labels[self.bptstart+i][0].configure(text="Possible Time Save:")

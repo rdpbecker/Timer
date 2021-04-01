@@ -143,6 +143,17 @@ class State:
             self.comparisons[i].segmentDiffs.append("BLANK")
         self.splitnum = self.splitnum + 1
 
+    def endPause(self,time):
+            self.paused = False
+            elapsed = time - self.pauseTime
+            self.starttime = self.starttime + elapsed
+            self.splitstarttime = self.splitstarttime + elapsed
+            self.pauseTime = 0
+
+    def startPause(self,time):
+            self.paused = True
+            self.pauseTime = time
+
     def getBests(self):
         return [self.currentBests.bests,self.currentBests.totalBests]
 
