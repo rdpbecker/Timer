@@ -48,8 +48,8 @@ class State:
             self.comparisons.append(Comparison.Comparison( \
                 self.comparesCsv[0][2*i+1], \
                 self.comparesCsv[0][2*i+2], \
-                self.getTimes2(2*i+1,self.comparesCsv), \
-                self.getTimes2(2*i+2,self.comparesCsv) \
+                self.getTimes(2*i+1,self.comparesCsv), \
+                self.getTimes(2*i+2,self.comparesCsv) \
              ))
 
         ## There's no way to take out a comparison at the moment, and we
@@ -61,15 +61,15 @@ class State:
             self.comparisons.append(Comparison.Comparison( \
                 "Last Run Splits", \
                 "Last Run", \
-                self.getTimes2(1,self.completeCsv), \
-                self.getTimes2(2,self.completeCsv) \
+                self.getTimes(1,self.completeCsv), \
+                self.getTimes(2,self.completeCsv) \
             ))
         else: 
             self.comparisons.append(Comparison.Comparison( \
                 "Last Run Splits", \
                 "Last Run", \
-                self.getTimes2(1,self.comparesCsv), \
-                self.getTimes2(2,self.comparesCsv) \
+                self.getTimes(1,self.comparesCsv), \
+                self.getTimes(2,self.comparesCsv) \
             ))
 
         self.numComparisons = len(self.comparisons)
@@ -104,19 +104,13 @@ class State:
         fileio.stripEmptyStrings(self.splitnames)
 
     def getTimes(self,col,toCheck):
-        times = Timelist.Timelist()
-        for i in range(1,len(toCheck)):
-            times.insert(Time.Time(5,timestring=toCheck[i][col]))
-        return times
-
-    def getTimes2(self,col,toCheck):
         times = []
         for i in range(1,len(toCheck)):
             times.append(timeh.stringToTime(toCheck[i][col]))
         return times
 
     def getBptList(self):
-        return BptList.BptList(self.getTimes2(1,self.comparesCsv))
+        return BptList.BptList(self.getTimes(1,self.comparesCsv))
 
     def getWindowStart(self):
         if self.splitnum <= self.config["activeSplit"] - 1:
