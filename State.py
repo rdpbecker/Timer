@@ -32,6 +32,9 @@ class State:
     currentCompare = 2
     numComparisons = 0
 
+    generalInfo = None
+    generalInfoKeys = []
+
     config = None
 
     def __init__(self):
@@ -133,6 +136,13 @@ class State:
             self.currentBests.update(splitTimeNumber,self.splitnum)
         self.splitnum = self.splitnum + 1
 
+    def skipSegment(self):
+        self.currentRun.addSegment("BLANK","BLANK")
+        for i in range(self.numComparisons):
+            self.comparisons[i].totalDiffs.append("BLANK")
+            self.comparisons[i].segmentDiffs.append("BLANK")
+        self.splitnum = self.splitnum + 1
+
     def getBests(self):
         return [self.currentBests.bests,self.currentBests.totalBests]
 
@@ -144,7 +154,8 @@ class State:
                 time = timeh.stringToTime(self.completeCsv[i+1][2*j+1])
                 if not timeh.isBlank(time):
                     average.append(timeh.stringToTime(self.completeCsv[i+1][2*j+1]))
-            average.append(self.currentRun.segments[i])
+            if not timeh.isBlank(self.currentRun.segments[i]):
+                average.append(self.currentRun.segments[i])
             averageTime = timeh.sumTimeList(average)
             averages.append(averageTime/len(average))
         return BptList.BptList(averages)

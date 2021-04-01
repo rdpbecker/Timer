@@ -297,10 +297,7 @@ class Gui(threading.Thread):
             subjectSplitIndex = i+lowIndex
             self.labels[self.splitstart+i][0].configure(text=self.state.splitnames[subjectSplitIndex])
             if self.state.splitnum > subjectSplitIndex:
-                if self.state.comparisons[self.state.currentCompare].segments[subjectSplitIndex]:
-                    self.labels[self.splitstart+i][1].configure(text=timeh.timeToString(self.state.comparisons[self.state.currentCompare].totalDiffs[subjectSplitIndex],showSign=True,precision=2))
-                else:
-                    self.labels[self.splitstart+i][1].configure(text='-')
+                self.labels[self.splitstart+i][1].configure(text=timeh.timeToString(self.state.comparisons[self.state.currentCompare].totalDiffs[subjectSplitIndex],showSign=True,precision=2))
                 self.labels[self.splitstart+i][2].configure(text=timeh.timeToString(self.state.currentRun.totals[subjectSplitIndex],precision=2))
                 if timeh.greater(0,self.state.comparisons[0].segmentDiffs[subjectSplitIndex]):
                     self.labels[self.splitstart+i][1].configure(fg='gold')
@@ -354,12 +351,7 @@ class Gui(threading.Thread):
         splitEnd = timer()
         totalTime = Time.Time(5,floattime=0)
         splitTime = Time.Time(5,floattime=0)
-        self.state.currentRun.addSegment("BLANK","BLANK")
-
-        for i in range(self.state.numComparisons):
-            self.state.comparisons[i].totalDiffs.append("BLANK")
-            self.state.comparisons[i].segmentDiffs.append("BLANK")
-        self.state.splitnum = self.state.splitnum + 1
+        self.state.skipSegment()
         lowIndex = self.state.getWindowStart()
         self.updateTimes(lowIndex)
         self.updateCurrentColour()
