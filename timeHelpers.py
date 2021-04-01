@@ -73,6 +73,12 @@ def stringToTime(timestring):
 def isBlank(time):
     return time == "BLANK"
 
+def sumTimeList(arr):
+    total = arr[0]
+    for i in range(1,len(arr)):
+        total = add(total,arr[i])
+    return total
+
 def difference(time1,time2):
     if isBlank(time1) or isBlank(time2):
         return "BLANK"

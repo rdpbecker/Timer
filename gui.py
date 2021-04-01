@@ -301,7 +301,7 @@ class Gui(threading.Thread):
                     self.labels[self.splitstart+i][1].configure(text=timeh.timeToString(self.state.comparisons[self.state.currentCompare].totalDiffs[subjectSplitIndex],showSign=True,precision=2))
                 else:
                     self.labels[self.splitstart+i][1].configure(text='-')
-                self.labels[self.splitstart+i][2].configure(text=self.state.currentTotals.get(subjectSplitIndex).__str__(precision=2))
+                self.labels[self.splitstart+i][2].configure(text=timeh.timeToString(self.state.currentRun.totals[subjectSplitIndex],precision=2))
                 if timeh.greater(0,self.state.comparisons[0].segmentDiffs[subjectSplitIndex]):
                     self.labels[self.splitstart+i][1].configure(fg='gold')
                 elif timeh.greater(0,self.state.comparisons[self.state.currentCompare].totalDiffs[subjectSplitIndex]):
@@ -313,7 +313,7 @@ class Gui(threading.Thread):
                 self.labels[self.splitstart+i][2].configure(text=timeh.timeToString(self.state.comparisons[self.state.currentCompare].totals[subjectSplitIndex],precision=2))
         if self.state.splitnum >= len(self.state.splitnames):
             self.labels[self.pbstart-2][1].configure(text=timeh.timeToString(self.state.comparisons[self.state.currentCompare].totalDiffs[-1],showSign=True,precision=2))
-            self.labels[self.pbstart-2][2].configure(text=self.state.currentTotals.get(-1).__str__(precision=2))
+            self.labels[self.pbstart-2][2].configure(text=timeh.timeToString(self.state.currentRun.totals[-1],precision=2))
             if timeh.greater(0,self.state.comparisons[0].segmentDiffs[-1]):
                 self.labels[self.pbstart-2][1].configure(fg='gold')
             elif timeh.greater(0,self.state.comparisons[self.state.currentCompare].totalDiffs[-1]):
@@ -354,8 +354,7 @@ class Gui(threading.Thread):
         splitEnd = timer()
         totalTime = Time.Time(5,floattime=0)
         splitTime = Time.Time(5,floattime=0)
-        self.state.currentSplits.insert(splitTime)
-        self.state.currentTotals.insert(totalTime)
+        self.state.currentRun.addSegment("BLANK","BLANK")
 
         for i in range(self.state.numComparisons):
             self.state.comparisons[i].totalDiffs.append("BLANK")

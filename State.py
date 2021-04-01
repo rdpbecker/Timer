@@ -2,6 +2,7 @@ import Time, Timelist, gui, categorySelection as cate, fileio
 import timeHelpers as timeh
 import Comparison
 import BptList
+import CurrentRun
 import os
 
 class State:
@@ -25,8 +26,7 @@ class State:
     bptList = None
     currentBests = None
 
-    currentSplits = None
-    currentTotals = None
+    currentRun = None
 
     comparisons = []
     currentCompare = 2
@@ -74,8 +74,7 @@ class State:
 
         self.numComparisons = len(self.comparisons)
         
-        self.currentSplits = Timelist.Timelist()
-        self.currentTotals = Timelist.Timelist()
+        self.currentRun = CurrentRun.CurrentRun()
 
         if self.config["numSplits"] > len(self.splitnames):
             self.config["numSplits"] = len(self.splitnames)
@@ -131,8 +130,7 @@ class State:
         splitTime = Time.Time(5,floattime=endTime-self.splitstarttime)
         totalTimeNumber = endTime - self.starttime
         splitTimeNumber = endTime - self.splitstarttime
-        self.currentSplits.insert(splitTime)
-        self.currentTotals.insert(totalTime)
+        self.currentRun.addSegment(splitTimeNumber,totalTimeNumber)
 
         self.bptList.update(splitTimeNumber,self.splitnum)
         for i in range(self.numComparisons):
@@ -145,19 +143,22 @@ class State:
         return [self.currentBests.bests,self.currentBests.totalBests]
 
     def getAverages(self):
-        averages = Timelist.Timelist()
-        for i in range(self.currentSplits.length):
-            average = Timelist.Timelist()
+        averages = []
+        for i in range(len(self.currentRun.segments)):
+            average = []
             for j in range(int((len(self.completeCsv[0])-1)/2)):
-                average.insert(Time.Time(5,timestring=self.completeCsv[i+1][2*j+1]))
-            average.insert(self.currentSplits.get(i))
-            averages.insert(average.average())
-        return averages
+                time = timeh.stringToTime(self.completeCsv[i+1][2*j+1])
+                if not timeh.isBlank(time):
+                    average.append(timeh.stringToTime(self.completeCsv[i+1][2*j+1]))
+            average.append(self.currentRun.segments[i])
+            averageTime = timeh.sumTimeList(average)
+            averages.append(averageTime/len(average))
+        return BptList.BptList(averages)
 
     def isPB(self):
-        if self.currentSplits.lastNonZero()> len(self.comparisons[2].totals):
+        if len(self.currentRun.totals) > len(self.comparisons[2].totals):
             return 1
-        if self.currentSplits.lastNonZero() < len(self.comparisons[2].totals):
+        if len(self.currentRun.totals) < len(self.comparisons[2].totals):
             return 0
         if timeh.greater(0,self.comparisons[2].totalDiffs[-1]):
             return 1
@@ -183,17 +184,16 @@ class State:
     ## with the splits from the current run
     ##########################################################
     def doEnd(self):
-        self.fillTimes(self.currentSplits)
-        self.fillTimes(self.currentTotals)
+        self.currentRun.fillTimes(len(self.splitnames))
         bests = self.getBests()
         averages = self.getAverages()
         if self.isPB():
-            pbSplits = [self.currentSplits.toStringList(),self.currentTotals.toStringList()]
+            pbSplits = [timeh.timesToStringList(self.currentRun.segments,precision=5),timeh.timesToStringList(self.currentRun.totals,precision=5)]
         else:
             pbSplits = [timeh.timesToStringList(self.comparisons[2].segments,precision=5),timeh.timesToStringList(self.comparisons[2].totals,precision=5)]
         bestSplits = [timeh.timesToStringList(bests[0],precision=5), timeh.timesToStringList(bests[1],precision=5)]
-        averageSplits = [averages.toStringList(), averages.getSums().toStringList()]
-        lastRun = [self.currentSplits.toStringList(),self.currentTotals.toStringList()]
+        averageSplits = [timeh.timesToStringList(averages.bests,precision=5), timeh.timesToStringList(averages.totalBests,precision=5)]
+        lastRun = [timeh.timesToStringList(self.currentRun.segments,precision=5),timeh.timesToStringList(self.currentRun.totals,precision=5)]
         self.completeCsv[0].insert(1,"Run #"+str(int((len(self.completeCsv[1])+1)/2)))
         self.completeCsv[0].insert(2,"Totals")
         self.replaceCsvLines([self.splitnames],0,self.completeCsv)
