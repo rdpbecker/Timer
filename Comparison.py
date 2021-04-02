@@ -16,7 +16,7 @@ class Comparison:
         self.segmentDiffs = []
         self.totalDiffs = []
 
-    def getString(self,index,name,options={}):
+    def getString(self,name,index,options={}):
         if (name == "segments"):
             return timeh.timeToString(self.segments[index],options)
         if (name == "totals"):
