@@ -199,12 +199,12 @@ class State:
         bests = self.getBests()
         averages = self.getAverages()
         if self.isPB():
-            pbSplits = [timeh.timesToStringList(self.currentRun.segments,precision=5),timeh.timesToStringList(self.currentRun.totals,precision=5)]
+            pbSplits = [timeh.timesToStringList(self.currentRun.segments,{"precision":5}),timeh.timesToStringList(self.currentRun.totals,{"precision":5})]
         else:
-            pbSplits = [timeh.timesToStringList(self.comparisons[2].segments,precision=5),timeh.timesToStringList(self.comparisons[2].totals,precision=5)]
-        bestSplits = [timeh.timesToStringList(bests[0],precision=5), timeh.timesToStringList(bests[1],precision=5)]
-        averageSplits = [timeh.timesToStringList(averages.bests,precision=5), timeh.timesToStringList(averages.totalBests,precision=5)]
-        lastRun = [timeh.timesToStringList(self.currentRun.segments,precision=5),timeh.timesToStringList(self.currentRun.totals,precision=5)]
+            pbSplits = [timeh.timesToStringList(self.comparisons[2].segments,{"precision":5}),timeh.timesToStringList(self.comparisons[2].totals,{"precision":5})]
+        bestSplits = [timeh.timesToStringList(bests[0],{"precision":5}), timeh.timesToStringList(bests[1],{"precision":5})]
+        averageSplits = [timeh.timesToStringList(averages.bests,{"precision":5}), timeh.timesToStringList(averages.totalBests,{"precision":5})]
+        lastRun = [timeh.timesToStringList(self.currentRun.segments,{"precision":5}),timeh.timesToStringList(self.currentRun.totals,{"precision":5})]
         self.completeCsv[0].insert(1,"Run #"+str(int((len(self.completeCsv[1])+1)/2)))
         self.completeCsv[0].insert(2,"Totals")
         self.replaceCsvLines([self.splitnames],0,self.completeCsv)

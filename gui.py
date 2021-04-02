@@ -151,8 +151,8 @@ class Gui(threading.Thread):
             currentTime = timer()
             if self.state.paused:
                 currentTime = self.state.pauseTime
-            self.labels[self.timer+1][0].configure(text=timeh.timeToString(currentTime-self.state.starttime,blankToDash=False,precision=2))
-            self.labels[self.timer][0].configure(text=timeh.timeToString(currentTime-self.state.splitstarttime,blankToDash=False))
+            self.labels[self.timer+1][0].configure(text=timeh.timeToString(currentTime-self.state.starttime,{"blankToDash":False,"precision":2}))
+            self.labels[self.timer][0].configure(text=timeh.timeToString(currentTime-self.state.splitstarttime,{"blankToDash":False}))
         if self.state.splitnum < len(self.state.splitnames) and not self.state.reset:
             self.root.after(17,self.update)
         else:
@@ -185,9 +185,9 @@ class Gui(threading.Thread):
     def initTimes(self):
         for i in range(0,self.pbstart-self.splitstart-2):
             self.labels[self.splitstart+i][0].configure(text=self.state.splitnames[i])
-            self.labels[self.splitstart+i][2].configure(text=timeh.timeToString(self.state.comparisons[self.state.currentCompare].totals[i],precision=2))
+            self.labels[self.splitstart+i][2].configure(text=timeh.timeToString(self.state.comparisons[self.state.currentCompare].totals[i],{"precision":2}))
         self.labels[self.pbstart-2][0].configure(text=self.state.splitnames[-1])
-        self.labels[self.pbstart-2][2].configure(text=timeh.timeToString(self.state.comparisons[self.state.currentCompare].totals[-1],precision=2))
+        self.labels[self.pbstart-2][2].configure(text=timeh.timeToString(self.state.comparisons[self.state.currentCompare].totals[-1],{"precision":2}))
 
     ##########################################################
     ## Initialize all the info on the bottom, including split
@@ -228,8 +228,8 @@ class Gui(threading.Thread):
     ## current split
     ##########################################################
     def updateInfo(self):
-        self.labels[self.pbstart][1].configure(text=timeh.timeToString(self.state.comparisons[self.state.currentCompare].segments[self.state.splitnum],precision=2))
-        self.labels[self.pbstart+1][1].configure(text=timeh.timeToString(self.state.comparisons[0].segments[self.state.splitnum],precision=2))
+        self.labels[self.pbstart][1].configure(text=timeh.timeToString(self.state.comparisons[self.state.currentCompare].segments[self.state.splitnum],{"precision":2}))
+        self.labels[self.pbstart+1][1].configure(text=timeh.timeToString(self.state.comparisons[0].segments[self.state.splitnum],{"precision":2}))
         count = 0
         for key in self.state.generalInfoKeys:
             if self.state.generalInfo[key].show:
@@ -297,8 +297,8 @@ class Gui(threading.Thread):
             subjectSplitIndex = i+lowIndex
             self.labels[self.splitstart+i][0].configure(text=self.state.splitnames[subjectSplitIndex])
             if self.state.splitnum > subjectSplitIndex:
-                self.labels[self.splitstart+i][1].configure(text=timeh.timeToString(self.state.comparisons[self.state.currentCompare].totalDiffs[subjectSplitIndex],showSign=True,precision=2))
-                self.labels[self.splitstart+i][2].configure(text=timeh.timeToString(self.state.currentRun.totals[subjectSplitIndex],precision=2))
+                self.labels[self.splitstart+i][1].configure(text=timeh.timeToString(self.state.comparisons[self.state.currentCompare].totalDiffs[subjectSplitIndex],{"showSign":True,"precision":2}))
+                self.labels[self.splitstart+i][2].configure(text=timeh.timeToString(self.state.currentRun.totals[subjectSplitIndex],{"precision":2}))
                 if timeh.greater(0,self.state.comparisons[0].segmentDiffs[subjectSplitIndex]):
                     self.labels[self.splitstart+i][1].configure(fg='gold')
                 elif timeh.greater(0,self.state.comparisons[self.state.currentCompare].totalDiffs[subjectSplitIndex]):
@@ -307,10 +307,10 @@ class Gui(threading.Thread):
                     self.labels[self.splitstart+i][1].configure(fg='red')
             else:
                 self.labels[self.splitstart+i][1].configure(text="")
-                self.labels[self.splitstart+i][2].configure(text=timeh.timeToString(self.state.comparisons[self.state.currentCompare].totals[subjectSplitIndex],precision=2))
+                self.labels[self.splitstart+i][2].configure(text=timeh.timeToString(self.state.comparisons[self.state.currentCompare].totals[subjectSplitIndex],{"precision":2}))
         if self.state.splitnum >= len(self.state.splitnames):
-            self.labels[self.pbstart-2][1].configure(text=timeh.timeToString(self.state.comparisons[self.state.currentCompare].totalDiffs[-1],showSign=True,precision=2))
-            self.labels[self.pbstart-2][2].configure(text=timeh.timeToString(self.state.currentRun.totals[-1],precision=2))
+            self.labels[self.pbstart-2][1].configure(text=timeh.timeToString(self.state.comparisons[self.state.currentCompare].totalDiffs[-1],{"showSign":True,"precision":2}))
+            self.labels[self.pbstart-2][2].configure(text=timeh.timeToString(self.state.currentRun.totals[-1],{"precision":2}))
             if timeh.greater(0,self.state.comparisons[0].segmentDiffs[-1]):
                 self.labels[self.pbstart-2][1].configure(fg='gold')
             elif timeh.greater(0,self.state.comparisons[self.state.currentCompare].totalDiffs[-1]):
@@ -325,7 +325,7 @@ class Gui(threading.Thread):
     def updateCompare(self):
         self.labels[0][3].configure(text=self.state.comparisons[self.state.currentCompare].totalHeader)
         self.labels[self.pbstart][0].configure(text=self.state.comparisons[self.state.currentCompare].segmentHeader+":")
-        self.labels[self.pbstart-2][2].configure(text=timeh.timeToString(self.state.comparisons[self.state.currentCompare].totals[-1],precision=2))
+        self.labels[self.pbstart-2][2].configure(text=timeh.timeToString(self.state.comparisons[self.state.currentCompare].totals[-1],{"precision":2}))
 
     ##########################################################
     ## The function called when the 'Switch Compare' button is
@@ -378,20 +378,20 @@ class Gui(threading.Thread):
 
     def pbSet(self,i):
         self.labels[self.bptstart+i][0].configure(text="Personal Best:")
-        self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(self.state.comparisons[2].totals[-1],precision=2))
+        self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(self.state.comparisons[2].totals[-1],{"precision":2}))
 
     def timeSaveInfo(self,i):
-        self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(timeh.difference(self.state.comparisons[self.state.currentCompare].segments[self.state.splitnum],self.state.comparisons[0].segments[self.state.splitnum]),precision=2))
+        self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(timeh.difference(self.state.comparisons[self.state.currentCompare].segments[self.state.splitnum],self.state.comparisons[0].segments[self.state.splitnum]),{"precision":2}))
 
     def diffInfo(self,i):
         if self.state.splitnum > 0:
-            self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(self.state.comparisons[0].segmentDiffs[self.state.splitnum-1],showSign=True,precision=2))
+            self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(self.state.comparisons[0].segmentDiffs[self.state.splitnum-1],{"showSign":True,"precision":2}))
 
     def bptInfo(self,i):
-        self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(self.state.bptList.total,precision=2))
+        self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(self.state.bptList.total,{"precision":2}))
 
     def sobInfo(self,i):
-        self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(self.state.currentBests.total,precision=2))
+        self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(self.state.currentBests.total,{"precision":2}))
 
     def pbInfo(self,i):
         pass

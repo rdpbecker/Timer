@@ -5,17 +5,34 @@ def zeroPad(finalLength,string):
         string = "0" + string
     return string
 
-def timeToString(totalSecs,showSign=False,blankToDash=True,precision=0):
+def adjustEnd(fracsecs):
+    string = str(fracsecs)
+    while (len(string) < 11):
+        string = string + "0"
+    return string
+
+def parseOptions(options):
+    newOptions = {\
+        "showSign": False, \
+        "blankToDash": True, \
+        "precision": 0\
+    }
+
+    newOptions.update(options)
+    return newOptions
+
+def timeToString(totalSecs,options={}):
+    options = parseOptions(options)
     if isBlank(totalSecs):
-        if blankToDash:
+        if options["blankToDash"]:
             return '-'
         else:
-            if not precision:
+            if not options["precision"]:
                 return "0"
             else:
-                return "0.0000000"[:precision+2]
+                return "0.0000000"[:options["precision"]+2]
     string = ""
-    if showSign:
+    if options["showSign"]:
         if totalSecs > 0:
             string = "+"
         else: 
@@ -38,14 +55,14 @@ def timeToString(totalSecs,showSign=False,blankToDash=True,precision=0):
         string = string + str(secs)
     else:
         string = string + "0" 
-    if precision:
-        string = string + str(fracsecs)[1:precision+2]
+    if options["precision"]:
+        string = string + adjustEnd(fracsecs)[1:options["precision"]+2]
     return string
 
-def timesToStringList(arr,showSign=False,blankToDash=True,precision=0):
+def timesToStringList(arr,options={}):
     newarr = []
     for thing in arr:
-        newarr.append(timeToString(thing,showSign,blankToDash,precision))
+        newarr.append(timeToString(thing,options))
     return newarr
 
 def stringToTime(timestring):
