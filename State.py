@@ -154,7 +154,7 @@ class State:
 
     def getAverages(self):
         averages = []
-        for i in range(len(self.currentRun.segments)):
+        for i in range(len(self.splitnames)):
             average = []
             for j in range(int((len(self.completeCsv[0])-1)/2)):
                 time = timeh.stringToTime(self.completeCsv[i+1][2*j+1])

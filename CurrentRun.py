@@ -15,6 +15,6 @@ class CurrentRun:
 
     def fillTimes(self,requiredLength):
         n = len(self.segments)
-        for i in range(n+1,requiredLength):
+        for i in range(requiredLength-n):
             self.segments.append("BLANK")
             self.totals.append("BLANK")
