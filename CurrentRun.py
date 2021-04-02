@@ -1,3 +1,5 @@
+import timeHelpers as timeh
+
 class CurrentRun:
     segments = []
     totals = []
@@ -18,3 +20,9 @@ class CurrentRun:
         for i in range(requiredLength-n):
             self.segments.append("BLANK")
             self.totals.append("BLANK")
+
+    def lastNonBlank(self):
+        for i in range(len(self.totals)-1,-1,-1):
+            if not timeh.isBlank(self.totals[i]):
+                return i
+        return -1

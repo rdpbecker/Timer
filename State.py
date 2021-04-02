@@ -169,16 +169,12 @@ class State:
         return SumList.SumList(averages)
 
     def isPB(self):
-        if len(self.currentRun.totals) > len(self.comparisons[2].totals):
-            print(1)
+        if self.currentRun.lastNonBlank() > self.comparisons[2].lastNonBlank():
             return 1
-        if len(self.currentRun.totals) < len(self.comparisons[2].totals):
-            print(2)
+        if self.currentRun.lastNonBlank() < self.comparisons[2].lastNonBlank():
             return 0
         if timeh.greater(0,self.comparisons[2].totalDiffs[-1]):
             return 1
-            print(3)
-        print(4)
         return 0
 
     def fillTimes(self,times):

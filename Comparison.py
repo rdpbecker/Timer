@@ -33,3 +33,9 @@ class Comparison:
         else:
             self.segmentDiffs.append("BLANK")
         self.totalDiffs.append(timeh.difference(totaltime,self.totals[len(self.totalDiffs)]))
+
+    def lastNonBlank(self):
+        for i in range(len(self.totals)-1,-1,-1):
+            if not timeh.isBlank(self.totals[i]):
+                return i
+        return -1
