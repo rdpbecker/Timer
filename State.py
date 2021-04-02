@@ -1,7 +1,7 @@
 import Time, Timelist, gui, categorySelection as cate, fileio 
 import timeHelpers as timeh
 import Comparison
-import BptList
+import BptList, SobList, SumList
 import CurrentRun
 import os
 
@@ -44,8 +44,8 @@ class State:
         self.completeCsv = splitArrs[0]
         self.comparesCsv = splitArrs[1]
 
-        self.bptList = self.getBptList()
-        self.currentBests = self.getBptList()
+        self.bptList = BptList.BptList(self.getTimes(1,self.comparesCsv))
+        self.currentBests = SobList.SobList(self.getTimes(1,self.comparesCsv))
         
         for i in range(int((len(self.comparesCsv[0])-1)/2)):
             self.comparisons.append(Comparison.Comparison( \
@@ -112,9 +112,6 @@ class State:
             times.append(timeh.stringToTime(toCheck[i][col]))
         return times
 
-    def getBptList(self):
-        return BptList.BptList(self.getTimes(1,self.comparesCsv))
-
     def getWindowStart(self):
         if self.splitnum <= self.config["activeSplit"] - 1:
             return 0
@@ -123,24 +120,22 @@ class State:
         return self.splitnum - (self.config["activeSplit"] - 1)
 
     def completeSegment(self,endTime):
-        totalTime = Time.Time(5,floattime=endTime-self.starttime)
-        splitTime = Time.Time(5,floattime=endTime-self.splitstarttime)
-        totalTimeNumber = endTime - self.starttime
-        splitTimeNumber = endTime - self.splitstarttime
-        self.currentRun.addSegment(splitTimeNumber,totalTimeNumber)
+        totalTime = endTime - self.starttime
+        splitTime = endTime - self.splitstarttime
+        self.currentRun.addSegment(splitTime,totalTime)
 
-        self.bptList.update(splitTimeNumber,self.splitnum)
+        self.bptList.update(totalTime)
         for i in range(self.numComparisons):
-            self.comparisons[i].updateDiffs(splitTimeNumber,totalTimeNumber)
-        if timeh.greater(self.currentBests.bests[self.splitnum],splitTimeNumber):
-            self.currentBests.update(splitTimeNumber,self.splitnum)
+            self.comparisons[i].updateDiffs(splitTime,totalTime)
+        if timeh.greater(self.currentBests.bests[self.splitnum],splitTime):
+            self.currentBests.update(splitTime,self.splitnum)
         self.splitnum = self.splitnum + 1
 
-    def skipSegment(self):
+    def skipSegment(self,splitEnd):
         self.currentRun.addSegment("BLANK","BLANK")
+        self.bptList.update(splitEnd-self.starttime)
         for i in range(self.numComparisons):
-            self.comparisons[i].totalDiffs.append("BLANK")
-            self.comparisons[i].segmentDiffs.append("BLANK")
+            self.comparisons[i].updateDiffs("BLANK","BLANK")
         self.splitnum = self.splitnum + 1
 
     def endPause(self,time):
@@ -169,7 +164,7 @@ class State:
                 average.append(self.currentRun.segments[i])
             averageTime = timeh.sumTimeList(average)
             averages.append(averageTime/len(average))
-        return BptList.BptList(averages)
+        return SumList.SumList(averages)
 
     def isPB(self):
         if len(self.currentRun.totals) > len(self.comparisons[2].totals):

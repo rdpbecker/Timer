@@ -41,5 +41,8 @@ class Comparison:
         return self.totals[index]
 
     def updateDiffs(self,splittime,totaltime):
-        self.segmentDiffs.append(timeh.difference(splittime,self.segments[len(self.segmentDiffs)]))
+        if (not(len(self.segmentDiffs)) or not self.totalDiffs[-1] == "BLANK"):
+            self.segmentDiffs.append(timeh.difference(splittime,self.segments[len(self.segmentDiffs)]))
+        else:
+            self.segmentDiffs.append("BLANK")
         self.totalDiffs.append(timeh.difference(totaltime,self.totals[len(self.totalDiffs)]))

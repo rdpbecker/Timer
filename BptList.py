@@ -3,21 +3,19 @@ import timeHelpers as timeh
 class BptList:
     total = 0
     bests = []
-    totalBests = []
+    currentTime = 0
 
     def __init__(self,bests):
         self.bests = bests
-        self.totalBests = [0 for i in range(len(bests))]
-        self.setTotals()
+        self.setTotal()
 
-    def update(self,time,index):
-        self.bests[index] = time
-        self.setTotals()
+    def update(self,currentTime):
+        self.currentTime = currentTime
+        self.bests.pop(0)
+        self.setTotal()
 
-    def setTotals(self):
-        total = self.bests[0]
-        self.totalBests[0] = total
-        for i in range(1,len(self.bests)):
+    def setTotal(self):
+        total = self.currentTime
+        for i in range(len(self.bests)):
             total = timeh.add(total,self.bests[i])
-            self.totalBests[i] = total
         self.total = total

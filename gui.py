@@ -349,9 +349,7 @@ class Gui(threading.Thread):
     ##########################################################
     def skip(self,event=None):
         splitEnd = timer()
-        totalTime = Time.Time(5,floattime=0)
-        splitTime = Time.Time(5,floattime=0)
-        self.state.skipSegment()
+        self.state.skipSegment(splitEnd)
         lowIndex = self.state.getWindowStart()
         self.updateTimes(lowIndex)
         self.updateCurrentColour()
