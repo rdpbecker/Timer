@@ -29,7 +29,8 @@ class State:
     currentRun = None
 
     comparisons = []
-    currentCompare = 2
+    currentComparison = None
+    compareNum = 2
     numComparisons = 0
 
     generalInfo = None
@@ -76,6 +77,7 @@ class State:
             ))
 
         self.numComparisons = len(self.comparisons)
+        self.currentComparison = self.comparisons[2]
         
         self.currentRun = CurrentRun.CurrentRun()
 
