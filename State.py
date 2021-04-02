@@ -1,7 +1,7 @@
 import Time, Timelist, gui, categorySelection as cate, fileio 
 import timeHelpers as timeh
 import Comparison
-import BptList, SobList, SumList
+import BptList, SumList
 import CurrentRun
 import os
 
@@ -46,7 +46,7 @@ class State:
         self.comparesCsv = splitArrs[1]
 
         self.bptList = BptList.BptList(self.getTimes(1,self.comparesCsv))
-        self.currentBests = SobList.SobList(self.getTimes(1,self.comparesCsv))
+        self.currentBests = SumList.SumList(self.getTimes(1,self.comparesCsv))
         
         for i in range(int((len(self.comparesCsv[0])-1)/2)):
             self.comparisons.append(Comparison.Comparison( \
@@ -170,11 +170,15 @@ class State:
 
     def isPB(self):
         if len(self.currentRun.totals) > len(self.comparisons[2].totals):
+            print(1)
             return 1
         if len(self.currentRun.totals) < len(self.comparisons[2].totals):
+            print(2)
             return 0
         if timeh.greater(0,self.comparisons[2].totalDiffs[-1]):
             return 1
+            print(3)
+        print(4)
         return 0
 
     def fillTimes(self,times):
