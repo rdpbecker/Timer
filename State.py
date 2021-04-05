@@ -1,4 +1,4 @@
-import Time, Timelist, gui, categorySelection as cate, fileio 
+import gui, categorySelection as cate, fileio
 import timeHelpers as timeh
 import Comparison
 import BptList, SumList
@@ -176,11 +176,6 @@ class State:
         if timeh.greater(0,self.comparisons[2].totalDiffs[-1]):
             return 1
         return 0
-
-    def fillTimes(self,times):
-        n = times.length
-        for i in range(n+1,len(self.completeCsv)):
-            times.insert(Time.Time(5,timestring='-'))
 
     def replaceCsvLines(self,lines,start,csv_ref):
         for i in range(1,len(csv_ref)):

@@ -1,6 +1,5 @@
 # Run tkinter code in another thread
 
-import Time
 import timeHelpers as timeh
 import tkinter as tk
 import threading
