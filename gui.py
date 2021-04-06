@@ -209,7 +209,7 @@ class Gui(threading.Thread):
     ## on the current split number
     ##########################################################
     def updateCurrentColour(self):
-        lowIndex = self.state.getWindowStart()
+        lowIndex = self.state.getTopSplit()
         for i in range(0,self.pbstart-self.splitstart-1):
             if i == self.state.splitnum-lowIndex:
                 self.labels[self.splitstart+i][0].configure(fg=self.state.config["activeColour"],bg=self.state.config["activeBgColour"])
@@ -267,8 +267,7 @@ class Gui(threading.Thread):
             self.togglePause()
 
         self.state.completeSegment(splitEnd)
-        lowIndex = self.state.getWindowStart()
-        self.updateTimes(lowIndex)
+        self.updateTimes()
         self.updateCurrentColour()
         if self.state.splitnum < len(self.state.splitnames):
             self.updateInfo()
@@ -279,18 +278,15 @@ class Gui(threading.Thread):
     ## of the GUI. This includes shifting entries as needed so
     ## the current split is the third entry in the list, and 
     ## colouring the diff numbers properly
-    ##
-    ## Parameters: lowIndex - the index in state.splitNames of
-    ##                        the split at the top of the 
-    ##                        section
     ##########################################################
-    def updateTimes(self,lowIndex):
+    def updateTimes(self):
         ## i is the number from the top of the list of splits. For the 
         ## top entry i=0, the next one down has i=1, and so on
         ##
         ## lowIndex is the index in the list of splits of the top split
         ## in the gui - if split #5 is at the top of the view area in
         ## the gui, then lowIndex=5
+        lowIndex = self.state.getTopSplit()
         for i in range(0,self.pbstart-self.splitstart-2):
             ## The index of the split we're looking at currently
             subjectSplitIndex = i+lowIndex
@@ -334,8 +330,7 @@ class Gui(threading.Thread):
     def guiSwitchCompare(self,event=None):
         self.state.compareNum = (self.state.compareNum+1)%self.state.numComparisons
         self.state.currentComparison = self.state.comparisons[self.state.compareNum]
-        lowIndex = self.state.getWindowStart()
-        self.updateTimes(lowIndex)
+        self.updateTimes()
         self.updateInfo()
         self.updateCompare()
 
@@ -351,8 +346,7 @@ class Gui(threading.Thread):
     def skip(self,event=None):
         splitEnd = timer()
         self.state.skipSegment(splitEnd)
-        lowIndex = self.state.getWindowStart()
-        self.updateTimes(lowIndex)
+        self.updateTimes()
         self.updateCurrentColour()
         if self.state.splitnum < len(self.state.splitnames):
             self.updateInfo()
