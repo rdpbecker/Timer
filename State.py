@@ -68,13 +68,6 @@ class State:
                 self.getTimes(1,self.completeCsv), \
                 self.getTimes(2,self.completeCsv) \
             ))
-        else: 
-            self.comparisons.append(Comparison.Comparison( \
-                "Last Run Splits", \
-                "Last Run", \
-                self.getTimes(1,self.comparesCsv), \
-                self.getTimes(2,self.comparesCsv) \
-            ))
 
         self.numComparisons = len(self.comparisons)
         self.currentComparison = self.comparisons[2]
