@@ -373,14 +373,14 @@ class Gui(threading.Thread):
 
     def pbSet(self,i):
         self.labels[self.bptstart+i][0].configure(text="Personal Best:")
-        self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(self.state.comparisons[2].totals[-1],{"precision":2}))
+        self.labels[self.bptstart+i][1].configure(text=self.state.comparisons[2].getString("totals",-1,{"precision":2}))
 
     def timeSaveInfo(self,i):
         self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(timeh.difference(self.state.currentComparison.segments[self.state.splitnum],self.state.comparisons[0].segments[self.state.splitnum]),{"precision":2}))
 
     def diffInfo(self,i):
         if self.state.splitnum > 0:
-            self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(self.state.comparisons[0].segmentDiffs[self.state.splitnum-1],{"showSign":True,"precision":2}))
+            self.labels[self.bptstart+i][1].configure(text=self.state.comparisons[0].getString("segmentDiffs",self.state.splitnum-1,{"showSign":True,"precision":2}))
 
     def bptInfo(self,i):
         self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(self.state.bptList.total,{"precision":2}))

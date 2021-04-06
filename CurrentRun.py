@@ -9,7 +9,7 @@ class CurrentRun:
         self.totals = []
 
     def addSegment(self,segment,total):
-        if (not(len(self.segments)) or not self.totals[-1] == "BLANK"):
+        if (not(len(self.segments)) or not timeh.isBlank(self.totals[-1])):
             self.segments.append(segment)
         else:
             self.segments.append("BLANK")

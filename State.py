@@ -118,8 +118,8 @@ class State:
         totalTime = endTime - self.starttime
         splitTime = endTime - self.splitstarttime
         self.currentRun.addSegment(splitTime,totalTime)
-
         self.bptList.update(totalTime)
+
         for i in range(self.numComparisons):
             self.comparisons[i].updateDiffs(splitTime,totalTime)
         if timeh.greater(self.currentBests.bests[self.splitnum],splitTime):
@@ -143,9 +143,6 @@ class State:
     def startPause(self,time):
             self.paused = True
             self.pauseTime = time
-
-    def getBests(self):
-        return [self.currentBests.bests,self.currentBests.totalBests]
 
     def getAverages(self):
         averages = []
@@ -186,13 +183,13 @@ class State:
     ##########################################################
     def doEnd(self):
         self.currentRun.fillTimes(len(self.splitnames))
-        bests = self.getBests()
+        bests = self.currentBests
         averages = self.getAverages()
         if self.isPB():
             pbSplits = [timeh.timesToStringList(self.currentRun.segments,{"precision":5}),timeh.timesToStringList(self.currentRun.totals,{"precision":5})]
         else:
             pbSplits = [timeh.timesToStringList(self.comparisons[2].segments,{"precision":5}),timeh.timesToStringList(self.comparisons[2].totals,{"precision":5})]
-        bestSplits = [timeh.timesToStringList(bests[0],{"precision":5}), timeh.timesToStringList(bests[1],{"precision":5})]
+        bestSplits = [timeh.timesToStringList(bests.bests,{"precision":5}), timeh.timesToStringList(bests.totalBests,{"precision":5})]
         averageSplits = [timeh.timesToStringList(averages.bests,{"precision":5}), timeh.timesToStringList(averages.totalBests,{"precision":5})]
         lastRun = [timeh.timesToStringList(self.currentRun.segments,{"precision":5}),timeh.timesToStringList(self.currentRun.totals,{"precision":5})]
         self.completeCsv[0].insert(1,"Run #"+str(int((len(self.completeCsv[1])+1)/2)))

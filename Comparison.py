@@ -28,7 +28,7 @@ class Comparison:
         return "BLANK"
 
     def updateDiffs(self,splittime,totaltime):
-        if (not(len(self.segmentDiffs)) or not self.totalDiffs[-1] == "BLANK"):
+        if (not(len(self.segmentDiffs)) or not timeh.isBlank(self.totalDiffs[-1])):
             self.segmentDiffs.append(timeh.difference(splittime,self.segments[len(self.segmentDiffs)]))
         else:
             self.segmentDiffs.append("BLANK")
