@@ -209,7 +209,7 @@ class Gui(threading.Thread):
     ## on the current split number
     ##########################################################
     def updateCurrentColour(self):
-        lowIndex = self.state.getTopSplit()
+        lowIndex = self.state.getTopSplitIndex()
         for i in range(0,self.pbstart-self.splitstart-1):
             if i == self.state.splitnum-lowIndex:
                 self.labels[self.splitstart+i][0].configure(fg=self.state.config["activeColour"],bg=self.state.config["activeBgColour"])
@@ -228,7 +228,7 @@ class Gui(threading.Thread):
     ##########################################################
     def updateInfo(self):
         self.labels[self.pbstart][1].configure(text=self.state.currentComparison.getString("segments",self.state.splitnum,{"precision":2}))
-        self.labels[self.pbstart+1][1].configure(text=timeh.timeToString(self.state.comparisons[0].segments[self.state.splitnum],{"precision":2}))
+        self.labels[self.pbstart+1][1].configure(text=self.state.comparisons[0].getString("segments",self.state.splitnum,{"precision":2}))
         count = 0
         for key in self.state.generalInfoKeys:
             if self.state.generalInfo[key].show:
@@ -286,7 +286,7 @@ class Gui(threading.Thread):
         ## lowIndex is the index in the list of splits of the top split
         ## in the gui - if split #5 is at the top of the view area in
         ## the gui, then lowIndex=5
-        lowIndex = self.state.getTopSplit()
+        lowIndex = self.state.getTopSplitIndex()
         for i in range(0,self.pbstart-self.splitstart-2):
             ## The index of the split we're looking at currently
             subjectSplitIndex = i+lowIndex

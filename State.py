@@ -107,7 +107,7 @@ class State:
             times.append(timeh.stringToTime(toCheck[i][col]))
         return times
 
-    def getTopSplit(self):
+    def getTopSplitIndex(self):
         if self.splitnum <= self.config["activeSplit"] - 1:
             return 0
         if self.splitnum >= len(self.splitnames) - (self.config["numSplits"]-self.config["activeSplit"]):
