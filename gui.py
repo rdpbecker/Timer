@@ -1,6 +1,5 @@
 # Run tkinter code in another thread
 
-import Time
 import timeHelpers as timeh
 import tkinter as tk
 import threading
@@ -151,9 +150,8 @@ class Gui(threading.Thread):
             currentTime = timer()
             if self.state.paused:
                 currentTime = self.state.pauseTime
-            self.labels[self.timer+1][0].configure(text=timeh.toString(currentTime-self.state.starttime,flag2=0,precision=2))
-            self.labels[self.timer][0].configure(text=timeh.toString(currentTime-self.state.splitstarttime,flag2=0))
-            self.state.lastUpdateTime = currentTime
+            self.labels[self.timer+1][0].configure(text=timeh.timeToString(currentTime-self.state.starttime,{"blankToDash":False,"precision":2}))
+            self.labels[self.timer][0].configure(text=timeh.timeToString(currentTime-self.state.splitstarttime,{"blankToDash":False}))
         if self.state.splitnum < len(self.state.splitnames) and not self.state.reset:
             self.root.after(17,self.update)
         else:
@@ -177,25 +175,25 @@ class Gui(threading.Thread):
         self.labels[0][0].configure(text=self.state.game)
         self.labels[0][1].configure(text=self.state.category)
         self.labels[0][2].configure(text="Comparing Against")
-        self.labels[0][3].configure(text="Personal Best")
+        self.labels[0][3].configure(text=self.state.currentComparison.totalHeader)
 
     ##########################################################
     ## Initialize the split names and times for the first few
     ## splits and the last one. This is based on the PB time
     ##########################################################
     def initTimes(self):
-        for i in range(self.state.windowStart,self.pbstart-self.splitstart-2):
-            self.labels[self.splitstart+i][0].configure(text=self.state.splitnames[i-self.state.windowStart])
-            self.labels[self.splitstart+i][2].configure(text=self.state.compares[self.state.currentCompare].get(i-self.state.windowStart).__str__(precision=2))
+        for i in range(0,self.pbstart-self.splitstart-2):
+            self.labels[self.splitstart+i][0].configure(text=self.state.splitnames[i])
+            self.labels[self.splitstart+i][2].configure(text=self.state.currentComparison.getString("totals",i,{"precision":2}))
         self.labels[self.pbstart-2][0].configure(text=self.state.splitnames[-1])
-        self.labels[self.pbstart-2][2].configure(text=self.state.compares[self.state.currentCompare].get(-1).__str__(precision=2))
+        self.labels[self.pbstart-2][2].configure(text=self.state.currentComparison.getString("totals",-1,{"precision":2}))
 
     ##########################################################
     ## Initialize all the info on the bottom, including split
     ## comparisons, time save, BPT, and PB
     ##########################################################
     def initInfo(self):
-        self.labels[self.pbstart][0].configure(text="PB Split:")
+        self.labels[self.pbstart][0].configure(text=self.state.currentComparison.segmentHeader)
         self.labels[self.pbstart+1][0].configure(text="Best Split:")
 
         count = 0
@@ -211,9 +209,9 @@ class Gui(threading.Thread):
     ## on the current split number
     ##########################################################
     def updateCurrentColour(self):
-        windowStart = self.state.getWindowStart()
+        lowIndex = self.state.getTopSplitIndex()
         for i in range(0,self.pbstart-self.splitstart-1):
-            if i == self.state.splitnum-windowStart+self.state.windowStart:
+            if i == self.state.splitnum-lowIndex:
                 self.labels[self.splitstart+i][0].configure(fg=self.state.config["activeColour"],bg=self.state.config["activeBgColour"])
                 self.labels[self.splitstart+i][2].configure(fg=self.state.config["activeColour"],bg=self.state.config["activeBgColour"])
                 self.backgrounds[i].configure(bg=self.state.config["activeBgColour"])
@@ -229,8 +227,8 @@ class Gui(threading.Thread):
     ## current split
     ##########################################################
     def updateInfo(self):
-        self.labels[self.pbstart][1].configure(text=self.state.compareSplits[self.state.currentCompare].get(self.state.splitnum).__str__(precision=2))
-        self.labels[self.pbstart+1][1].configure(text=self.state.compareSplits[0].get(self.state.splitnum).__str__(precision=2))
+        self.labels[self.pbstart][1].configure(text=self.state.currentComparison.getString("segments",self.state.splitnum,{"precision":2}))
+        self.labels[self.pbstart+1][1].configure(text=self.state.comparisons[0].getString("segments",self.state.splitnum,{"precision":2}))
         count = 0
         for key in self.state.generalInfoKeys:
             if self.state.generalInfo[key].show:
@@ -256,6 +254,7 @@ class Gui(threading.Thread):
     ## to update the GUI
     ##########################################################
     def onSplitEnd(self,event=None):
+        splitEnd = timer()
         if not self.state.started:
             self.start()
             return
@@ -264,23 +263,11 @@ class Gui(threading.Thread):
             self.togglePause()
             return
         
-        splitEnd = timer()
         if self.state.splitnames[self.state.splitnum][-3:] == "[P]" and not self.state.splitnum == len(self.state.splitnames) and not self.state.paused:
             self.togglePause()
-        totalTime = Time.Time(5,floattime=splitEnd-self.state.starttime)
-        splitTime = Time.Time(5,floattime=splitEnd-self.state.splitstarttime)
-        self.state.currentSplits.insert(splitTime)
-        self.state.currentTotals.insert(totalTime)
 
-        self.state.bptList.replace(Time.Time(5,floattime=splitEnd-self.state.splitstarttime),self.state.splitnum)
-        for i in range(self.state.numComparisons):
-            self.state.diffs[i].insert(totalTime.subtract(self.state.compares[i].get(self.state.splitnum)))
-            self.state.diffSplits[i].insert(self.state.currentSplits.get(self.state.splitnum).subtract(self.state.compareSplits[i].get(self.state.splitnum)))
-        if self.state.diffSplits[0].get(self.state.splitnum).greater(Time.Time(5,timestring='-')) == -1:
-            self.state.currentBests.replace(Time.Time(5,floattime=splitEnd-self.state.splitstarttime),self.state.splitnum)
-        self.state.splitnum = self.state.splitnum + 1
-        lowIndex = self.state.getWindowStart()
-        self.updateTimes(lowIndex)
+        self.state.completeSegment(splitEnd)
+        self.updateTimes()
         self.updateCurrentColour()
         if self.state.splitnum < len(self.state.splitnames):
             self.updateInfo()
@@ -291,47 +278,38 @@ class Gui(threading.Thread):
     ## of the GUI. This includes shifting entries as needed so
     ## the current split is the third entry in the list, and 
     ## colouring the diff numbers properly
-    ##
-    ## Parameters: lowIndex - the index in state.splitNames of
-    ##                        the split at the top of the 
-    ##                        section
     ##########################################################
-    def updateTimes(self,lowIndex):
+    def updateTimes(self):
         ## i is the number from the top of the list of splits. For the 
         ## top entry i=0, the next one down has i=1, and so on
         ##
         ## lowIndex is the index in the list of splits of the top split
         ## in the gui - if split #5 is at the top of the view area in
         ## the gui, then lowIndex=5
-        ## 
-        ## windowStart is the index at which the window in the GUI starts
-        ## This is determined only by the total number of splits, and
-        ## for categories with more than 7 splits windowStart=0
-        for i in range(self.state.windowStart,self.pbstart-self.splitstart-2):
+        lowIndex = self.state.getTopSplitIndex()
+        for i in range(0,self.pbstart-self.splitstart-2):
             ## The index of the split we're looking at currently
-            subjectSplitIndex = i+lowIndex-self.state.windowStart
+            subjectSplitIndex = i+lowIndex
             self.labels[self.splitstart+i][0].configure(text=self.state.splitnames[subjectSplitIndex])
             if self.state.splitnum > subjectSplitIndex:
-                if not self.state.compareSplits[self.state.currentCompare].get(subjectSplitIndex).equal(Time.Time(5,timestring='-')):
-                    self.labels[self.splitstart+i][1].configure(text=self.state.diffs[self.state.currentCompare].get(subjectSplitIndex).__str__(1,precision=2))
-                else:
-                    self.labels[self.splitstart+i][1].configure(text='-')
-                self.labels[self.splitstart+i][2].configure(text=self.state.currentTotals.get(subjectSplitIndex).__str__(precision=2))
-                if self.state.diffSplits[0].get(subjectSplitIndex).greater(Time.Time(5,timestring='-')) == -1:
+                self.labels[self.splitstart+i][1].configure(text=self.state.currentComparison.getString("totalDiffs",subjectSplitIndex,{"showSign":True,"precision":2}))
+                self.labels[self.splitstart+i][2].configure(text=timeh.timeToString(self.state.currentRun.totals[subjectSplitIndex],{"precision":2}))
+                if timeh.greater(0,self.state.comparisons[0].segmentDiffs[subjectSplitIndex]):
                     self.labels[self.splitstart+i][1].configure(fg='gold')
-                elif (self.state.diffs[self.state.currentCompare].get(subjectSplitIndex).greater(Time.Time(5,timestring='-')) == -1) or (self.state.compareSplits[self.state.currentCompare].get(subjectSplitIndex).equal(Time.Time(2,timestring='-'))):
+                elif timeh.greater(0,self.state.currentComparison.totalDiffs[subjectSplitIndex]):
                     self.labels[self.splitstart+i][1].configure(fg='green')
                 else:
                     self.labels[self.splitstart+i][1].configure(fg='red')
             else:
                 self.labels[self.splitstart+i][1].configure(text="")
-                self.labels[self.splitstart+i][2].configure(text=self.state.compares[self.state.currentCompare].get(subjectSplitIndex).__str__(precision=2))
+                self.labels[self.splitstart+i][2].configure(text=self.state.currentComparison.getString("totals",subjectSplitIndex,{"precision":2}))
+
         if self.state.splitnum >= len(self.state.splitnames):
-            self.labels[self.pbstart-2][1].configure(text=self.state.diffs[self.state.currentCompare].get(-1).__str__(1,precision=2))
-            self.labels[self.pbstart-2][2].configure(text=self.state.currentTotals.get(-1).__str__(precision=2))
-            if self.state.diffs[0].get(-1).greater(Time.Time(5,timestring='-')) == -1:
+            self.labels[self.pbstart-2][1].configure(text=self.state.currentComparison.getString("totalDiffs",-1,{"showSign":True,"precision":2}))
+            self.labels[self.pbstart-2][2].configure(text=timeh.timeToString(self.state.currentRun.totals[-1],{"precision":2}))
+            if timeh.greater(0,self.state.comparisons[0].segmentDiffs[-1]):
                 self.labels[self.pbstart-2][1].configure(fg='gold')
-            elif self.state.diffs[self.state.currentCompare].get(-1).greater(Time.Time(5,timestring='-')) == -1:
+            elif timeh.greater(0,self.state.currentComparison.totalDiffs[-1]):
                 self.labels[self.pbstart-2][1].configure(fg='green')
             else:
                 self.labels[self.pbstart-2][1].configure(fg='red')
@@ -341,18 +319,18 @@ class Gui(threading.Thread):
     ## comparison is changed
     ##########################################################
     def updateCompare(self):
-        self.labels[0][3].configure(text=self.state.compareHeaders[self.state.currentCompare])
-        self.labels[self.pbstart][0].configure(text=self.state.splitCompareHeaders[self.state.currentCompare]+":")
-        self.labels[self.pbstart-2][2].configure(text=self.state.compares[self.state.currentCompare].get(-1).__str__(precision=2))
+        self.labels[0][3].configure(text=self.state.currentComparison.totalHeader)
+        self.labels[self.pbstart][0].configure(text=self.state.currentComparison.segmentHeader+":")
+        self.labels[self.pbstart-2][2].configure(text=self.state.currentComparison.getString("totals",-1,{"precision":2}))
 
     ##########################################################
     ## The function called when the 'Switch Compare' button is
     ## clicked
     ##########################################################
     def guiSwitchCompare(self,event=None):
-        self.state.currentCompare = (self.state.currentCompare+1)%self.state.numComparisons
-        lowIndex = self.state.getWindowStart()
-        self.updateTimes(lowIndex)
+        self.state.compareNum = (self.state.compareNum+1)%self.state.numComparisons
+        self.state.currentComparison = self.state.comparisons[self.state.compareNum]
+        self.updateTimes()
         self.updateInfo()
         self.updateCompare()
 
@@ -367,17 +345,8 @@ class Gui(threading.Thread):
     ##########################################################
     def skip(self,event=None):
         splitEnd = timer()
-        totalTime = Time.Time(5,floattime=0)
-        splitTime = Time.Time(5,floattime=0)
-        self.state.currentSplits.insert(splitTime)
-        self.state.currentTotals.insert(totalTime)
-
-        for i in range(self.state.numComparisons):
-            self.state.diffs[i].insert(Time.Time(5,floattime=0))
-            self.state.diffSplits[i].insert(Time.Time(5,floattime=0))
-        self.state.splitnum = self.state.splitnum + 1
-        lowIndex = self.state.getWindowStart()
-        self.updateTimes(lowIndex)
+        self.state.skipSegment(splitEnd)
+        self.updateTimes()
         self.updateCurrentColour()
         if self.state.splitnum < len(self.state.splitnames):
             self.updateInfo()
@@ -386,14 +355,9 @@ class Gui(threading.Thread):
     def togglePause(self,event=None):
         currentTime = timer()
         if self.state.paused:
-            self.state.paused = False
-            elapsed = currentTime - self.state.pauseTime
-            self.state.starttime = self.state.starttime + elapsed
-            self.state.splitstarttime = self.state.splitstarttime + elapsed
-            self.state.pauseTime = 0
+            self.state.endPause(currentTime)
         else:
-            self.state.paused = True
-            self.state.pauseTime = currentTime
+            self.state.startPause(currentTime)
 
     def timeSaveSet(self,i):
         self.labels[self.bptstart+i][0].configure(text="Possible Time Save:")
@@ -409,20 +373,20 @@ class Gui(threading.Thread):
 
     def pbSet(self,i):
         self.labels[self.bptstart+i][0].configure(text="Personal Best:")
-        self.labels[self.bptstart+i][1].configure(text=self.state.compares[2].get(-1).__str__(precision=2))
+        self.labels[self.bptstart+i][1].configure(text=self.state.comparisons[2].getString("totals",-1,{"precision":2}))
 
     def timeSaveInfo(self,i):
-        self.labels[self.bptstart+i][1].configure(text=self.state.compareSplits[self.state.currentCompare].get(self.state.splitnum).subtract(self.state.compareSplits[0].get(self.state.splitnum)).__str__(precision=2))
+        self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(timeh.difference(self.state.currentComparison.segments[self.state.splitnum],self.state.comparisons[0].segments[self.state.splitnum]),{"precision":2}))
 
     def diffInfo(self,i):
         if self.state.splitnum > 0:
-            self.labels[self.bptstart+i][1].configure(text=self.state.currentSplits.get(-1).subtract(self.state.compareSplits[0].get(self.state.splitnum-1)).__str__(1,precision=2))
+            self.labels[self.bptstart+i][1].configure(text=self.state.comparisons[0].getString("segmentDiffs",self.state.splitnum-1,{"showSign":True,"precision":2}))
 
     def bptInfo(self,i):
-        self.labels[self.bptstart+i][1].configure(text=self.state.bptList.sum().__str__(precision=2))
+        self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(self.state.bptList.total,{"precision":2}))
 
     def sobInfo(self,i):
-        self.labels[self.bptstart+i][1].configure(text=self.state.currentBests.sum().__str__(precision=2))
+        self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(self.state.currentBests.total,{"precision":2}))
 
     def pbInfo(self,i):
         pass
