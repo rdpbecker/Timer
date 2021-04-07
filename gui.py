@@ -273,6 +273,14 @@ class Gui(threading.Thread):
             self.updateInfo()
         self.state.splitstarttime = splitEnd
 
+    def findDiffColour(self,splitIndex):
+         if timeh.greater(0,self.state.comparisons[0].segmentDiffs[splitIndex]):
+             return 'gold'
+         elif timeh.greater(0,self.state.currentComparison.totalDiffs[splitIndex]):
+             return 'green'
+         else:
+             return 'red'
+
     ##########################################################
     ## Update the times and split names in the split portion 
     ## of the GUI. This includes shifting entries as needed so
@@ -294,12 +302,7 @@ class Gui(threading.Thread):
             if self.state.splitnum > subjectSplitIndex:
                 self.labels[self.splitstart+i][1].configure(text=self.state.currentComparison.getString("totalDiffs",subjectSplitIndex,{"showSign":True,"precision":2}))
                 self.labels[self.splitstart+i][2].configure(text=timeh.timeToString(self.state.currentRun.totals[subjectSplitIndex],{"precision":2}))
-                if timeh.greater(0,self.state.comparisons[0].segmentDiffs[subjectSplitIndex]):
-                    self.labels[self.splitstart+i][1].configure(fg='gold')
-                elif timeh.greater(0,self.state.currentComparison.totalDiffs[subjectSplitIndex]):
-                    self.labels[self.splitstart+i][1].configure(fg='green')
-                else:
-                    self.labels[self.splitstart+i][1].configure(fg='red')
+                self.labels[self.splitstart+i][1].configure(fg=self.findDiffColour(subjectSplitIndex))
             else:
                 self.labels[self.splitstart+i][1].configure(text="")
                 self.labels[self.splitstart+i][2].configure(text=self.state.currentComparison.getString("totals",subjectSplitIndex,{"precision":2}))
