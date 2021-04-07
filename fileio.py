@@ -73,3 +73,17 @@ def readJson(filepath):
     with open(filepath,'r') as reader:
         data = json.load(reader)
     return data
+
+def getUserConfig():
+    defaultConfig = readJson("defaultConfig.json")
+    config = defaultConfig
+    if os.path.exists("config.json"):
+        userConfig = readJson("config.json")
+        config.update(userConfig)
+    return config
+
+def getGameConfig(baseDir,game,category):
+    cateFile = baseDir + "/" + game + "/" + category + "_config.json"
+    if os.path.exists(cateFile):
+        return readJson(cateFile)
+    return {}

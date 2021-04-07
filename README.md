@@ -119,4 +119,5 @@ and the segments are printed in descending order by this percent
 variance.
 
 The game and category are chosen in the same way as in the other
-two programs.
+two programs, and the base directory is read (as usual) from the
+user configuration.

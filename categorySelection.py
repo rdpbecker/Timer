@@ -1,4 +1,4 @@
-import csv, sys
+import csv, sys, fileio
 
 def findAllSplits(baseDir):
     csvname = baseDir + "/splitNames.csv"
@@ -43,3 +43,17 @@ def readThingInList(aList):
         thing = sys.stdin.readline()[:-1]
     return thing
 
+def getSplitNames(baseDir):
+    splitNames = findAllSplits(baseDir)
+    names = findNames(splitNames,0)
+    game = readThingInList(names)
+    restrictCategories(splitNames,game)
+    categories = findNames(splitNames,1)
+    category = readThingInList(categories)
+    splitnames = findGameSplits(splitNames,category)
+    fileio.stripEmptyStrings(splitnames)
+    return { \
+        "game": game,\
+        "category": category,\
+        "splits": splitnames\
+    }

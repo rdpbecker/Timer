@@ -79,27 +79,13 @@ class State:
             self.config["activeSplit"] = len(self.splitnames) - 2
 
     def getConfigAndSplits(self):
-        defaultConfig = fileio.readJson("defaultConfig.json")
-        config = defaultConfig
-        if os.path.exists("config.json"):
-            userConfig = fileio.readJson("config.json")
-            config.update(userConfig)
-        self.getSplitNames(config["baseDir"])
-        cateFile = config["baseDir"] + "/" + self.game + "/" + self.category + "_config.json"
-        if os.path.exists(cateFile):
-            cateConfig = fileio.readJson(cateFile)
-            config.update(cateConfig)
+        config = fileio.getUserConfig()
+        splitnames = cate.getSplitNames(config["baseDir"])
+        self.game = splitnames["game"]
+        self.category = splitnames["category"]
+        self.splitnames = splitnames["splits"]
+        config.update(fileio.getGameConfig(config["baseDir"],self.game,self.category))
         return config
-
-    def getSplitNames(self,baseDir):
-        splitNames = cate.findAllSplits(baseDir)
-        names = cate.findNames(splitNames,0)
-        self.game = cate.readThingInList(names)
-        cate.restrictCategories(splitNames,self.game)
-        categories = cate.findNames(splitNames,1)
-        self.category = cate.readThingInList(categories)
-        self.splitnames = cate.findGameSplits(splitNames,self.category)
-        fileio.stripEmptyStrings(self.splitnames)
 
     def getTimes(self,col,toCheck):
         times = []
