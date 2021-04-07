@@ -4,17 +4,6 @@ def printLines(lines):
     for line in lines:
         print(line)
 
-def getSplitNames(baseDir):
-    splitNames = cate.findAllSplits(baseDir)
-    names = cate.findNames(splitNames,0)
-    game = cate.readThingInList(names)
-    cate.restrictCategories(splitNames,game)
-    categories = cate.findNames(splitNames,1)
-    category = cate.readThingInList(categories)
-    splitnames = cate.findGameSplits(splitNames,category)
-    fileio.stripEmptyStrings(splitnames)
-    return [game,category,splitnames]
-
 def cutStart(csv):
     for i in range(len(csv)):
         csv[i] = csv[i][1:]
@@ -46,8 +35,8 @@ def sort(i):
 def main():
     global varianceList
     config = fileio.getUserConfig()
-    [game,category,splitnames] = getSplitNames(config["baseDir"])
-    completeCsv = fileio.csvReadStart(config["baseDir"],game,category,splitnames)[0]
+    splits = cate.getSplitNames(config["baseDir"])
+    completeCsv = fileio.csvReadStart(config["baseDir"],splits["game"],splits["category"],splits["splits"])[0]
     completeCsv = completeCsv[1:]
     cutStart(completeCsv)
     completeCsv = filterEven(completeCsv)
@@ -59,11 +48,11 @@ def main():
         variance = sum(varList)/len(varList)
         varianceList.append(100*variance/avg)
     print("In Order:\n\n")
-    printLines(splitnames[i]+": "+'%.3f'%(varianceList[i])+"%" for i in range(len(varianceList)))
+    printLines(splits["splits"][i]+": "+'%.3f'%(varianceList[i])+"%" for i in range(len(varianceList)))
 
     print("\n\n\nSorted:\n\n")
     sortedRange = sorted(list(range(len(varianceList))),key=sort,reverse=True)
-    printLines(splitnames[i]+": "+'%.3f'%(varianceList[i])+"%" for i in sortedRange)
+    printLines(splits["splits"][i]+": "+'%.3f'%(varianceList[i])+"%" for i in sortedRange)
 
 if __name__ == "__main__":
     import categorySelection as cate
