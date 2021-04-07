@@ -85,5 +85,5 @@ def getUserConfig():
 def getGameConfig(baseDir,game,category):
     cateFile = baseDir + "/" + game + "/" + category + "_config.json"
     if os.path.exists(cateFile):
-        return fileio.readJson(cateFile)
+        return readJson(cateFile)
     return {}
