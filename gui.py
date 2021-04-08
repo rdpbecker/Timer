@@ -274,12 +274,30 @@ class Gui(threading.Thread):
         self.state.splitstarttime = splitEnd
 
     def findDiffColour(self,splitIndex):
-         if timeh.greater(0,self.state.comparisons[0].segmentDiffs[splitIndex]):
-             return 'gold'
-         elif timeh.greater(0,self.state.currentComparison.totalDiffs[splitIndex]):
-             return 'green'
-         else:
-             return 'red'
+        if \
+            timeh.isBlank(self.state.currentRun.totals[splitIndex]) \
+            or timeh.isBlank(self.state.currentComparison.totals[splitIndex]):
+            return self.state.config["skippedColour"]
+        elif timeh.greater(0,self.state.comparisons[0].segmentDiffs[splitIndex]):
+            return self.state.config["goldColour"]
+        elif timeh.greater(0,self.state.currentComparison.totalDiffs[splitIndex]):
+            if not splitIndex:
+                return self.state.config["aheadGainingColour"]
+            elif timeh.isBlank(self.state.currentComparison.totalDiffs[splitIndex-1]):
+                return self.state.config["aheadGainingColour"]
+            elif timeh.greater(self.state.currentComparison.totalDiffs[splitIndex],self.state.currentComparison.totalDiffs[splitIndex-1]):
+                return self.state.config["aheadLosingColour"]
+            else:
+                return self.state.config["aheadGainingColour"]
+        else:
+            if not splitIndex:
+                return self.state.config["behindLosingColour"]
+            elif timeh.isBlank(self.state.currentComparison.totalDiffs[splitIndex-1]):
+                return self.state.config["behindLosingColour"]
+            elif timeh.greater(self.state.currentComparison.totalDiffs[splitIndex],self.state.currentComparison.totalDiffs[splitIndex-1]):
+                return self.state.config["behindLosingColour"]
+            else:
+                return self.state.config["behindGainingColour"]
 
     ##########################################################
     ## Update the times and split names in the split portion 
