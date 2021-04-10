@@ -92,7 +92,7 @@ class Gui(threading.Thread):
         anchorlist = ['E','']
         span = [10,12]
         fontlist = [config['segmentFont'],config['timerFont']]
-        colourlist = [config["segmentColour"],config["timerColour"]]
+        colourlist = [config["segmentColour"],config["timerMainColour"]]
         for i in range(self.timer,self.bptstart):
             label = tk.Label(self.root, bg='black', text="", fg=colourlist[i-self.timer], font=fontlist[i-self.timer])
             label.grid(row=i,column=0,columnspan=12,sticky=anchorlist[i-self.timer],padx=100)
@@ -151,11 +151,82 @@ class Gui(threading.Thread):
             if self.state.paused:
                 currentTime = self.state.pauseTime
             self.labels[self.timer+1][0].configure(text=timeh.timeToString(currentTime-self.state.starttime,{"blankToDash":False,"precision":2}))
+            self.labels[self.timer+1][0].configure(fg=self.setTimerColour(currentTime))
             self.labels[self.timer][0].configure(text=timeh.timeToString(currentTime-self.state.splitstarttime,{"blankToDash":False}))
         if self.state.splitnum < len(self.state.splitnames) and not self.state.reset:
             self.root.after(17,self.update)
         else:
             self.root.after(1,self.state.doEnd)
+
+    def setTimerColour(self,time):
+        splitnum = self.state.splitnum
+        if self.state.splitnum >= len(self.state.splitnames):
+            splitnum = len(self.state.splitnames) - 1
+        comparisonTime = self.state.currentComparison.totals[splitnum]
+        comparisonSegment = self.state.currentComparison.segments[splitnum]
+        goldSegment = self.state.comparisons[0].segments[splitnum]
+        segmentTime = time - self.state.splitstarttime
+        totalTime = time - self.state.starttime
+
+        # last split skipped
+        if self.state.splitnum \
+            and timeh.isBlank(self.state.currentRun.totals[-1]):
+            # total blank or ahead of total
+            if timeh.greater(comparisonTime,totalTime):
+                return self.state.config["timerMainColour"]
+            # behind total
+            else:
+                return self.state.config["timerBehindLosingColour"]
+        # total blank
+        if timeh.isBlank(comparisonTime):
+            # gold blank or ahead of gold
+            if timeh.greater(goldSegment,segmentTime):
+                return self.state.config["timerMainColour"]
+            # behind gold
+            else:
+                return self.state.config["timerBehindLosingColour"]
+        # ahead of total
+        elif timeh.greater(comparisonTime,totalTime):
+            # segment blank
+            if timeh.isBlank(comparisonSegment):
+                # gold blank or ahead of gold
+                if timeh.greater(goldSegment,segmentTime):
+                    return self.state.config["timerMainColour"]
+                # behind gold
+                else:
+                    return self.state.config["timerAheadLosingColour"]
+            # ahead of segment
+            elif timeh.greater(comparisonSegment,segmentTime):
+                # gold blank or ahead of gold
+                if timeh.greater(goldSegment,segmentTime):
+                    return self.state.config["timerMainColour"]
+                # behind gold
+                else:
+                    return self.state.config["timerNotGoldAheadGainingColour"]
+            # behind segment
+            else:
+                return self.state.config["timerAheadLosingColour"]
+        # behind total
+        else:
+            # segment blank
+            if timeh.isBlank(comparisonSegment):
+                # gold blank or behind gold
+                if timeh.greater(segmentTime,goldSegment):
+                    return self.state.config["timerBehindLosingColour"]
+                # ahead of gold
+                else:
+                    return self.state.config["timerBehindGainingColour"]
+            # ahead of segment
+            elif timeh.greater(comparisonSegment,segmentTime):
+                # gold blank or ahead of gold
+                if timeh.greater(goldSegment,segmentTime):
+                    return self.state.config["timerBehindGainingColour"]
+                # behind gold
+                else:
+                    return self.state.config["timerNotGoldBehindGainingColour"]
+            # behind segment
+            else:
+                return self.state.config["timerBehindLosingColour"]
 
     ##########################################################
     ## Caller to all the functions that initialize text before
