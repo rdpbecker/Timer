@@ -349,7 +349,8 @@ class Gui(threading.Thread):
             timeh.isBlank(self.state.currentRun.totals[splitIndex]) \
             or timeh.isBlank(self.state.currentComparison.totals[splitIndex]):
             return self.state.config["skippedColour"]
-        elif timeh.greater(0,self.state.comparisons[0].segmentDiffs[splitIndex]):
+        elif not timeh.isBlank(self.state.comparisons[0].segmentDiffs[splitIndex]) \
+            and timeh.greater(0,self.state.comparisons[0].segmentDiffs[splitIndex]):
             return self.state.config["goldColour"]
         elif timeh.greater(0,self.state.currentComparison.totalDiffs[splitIndex]):
             if not splitIndex:
