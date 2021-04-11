@@ -153,6 +153,13 @@ class Gui(threading.Thread):
             self.labels[self.timer+1][0].configure(text=timeh.timeToString(currentTime-self.state.starttime,{"blankToDash":False,"precision":2}))
             self.labels[self.timer+1][0].configure(fg=self.setTimerColour(currentTime))
             self.labels[self.timer][0].configure(text=timeh.timeToString(currentTime-self.state.splitstarttime,{"blankToDash":False}))
+            # if behind gold or behind current comparison total,
+            # show the diff column for the current split in the
+            # split area. If either is blank, ignore the comparison
+            if self.state.splitnum < len(self.state.splitnames) \
+                and (not timeh.greater(self.state.currentComparison.totals[self.state.splitnum],currentTime-self.state.starttime)\
+                or not timeh.greater(self.state.comparisons[0].segments[self.state.splitnum],currentTime-self.state.splitstarttime)):
+                self.showCurrentSplitDiff(currentTime)
         if self.state.splitnum < len(self.state.splitnames) and not self.state.reset:
             self.root.after(17,self.update)
         else:
@@ -227,6 +234,20 @@ class Gui(threading.Thread):
             # behind segment
             else:
                 return self.state.config["timerBehindLosingColour"]
+
+    def showCurrentSplitDiff(self,time):
+        activeSplit = self.state.splitnum - self.state.getTopSplitIndex()
+        self.labels[self.splitstart+activeSplit][1].configure(\
+            text=timeh.timeToString(\
+                timeh.difference(time - self.state.starttime,self.state.currentComparison.totals[self.state.splitnum]),\
+                {"showSign":True,"precision": 2}\
+            ),\
+            fg=self.getCurrentDiffColour(\
+                timeh.difference(time - self.state.splitstarttime,self.state.currentComparison.segments[self.state.splitnum]), \
+                timeh.difference(time - self.state.starttime,self.state.currentComparison.totals[self.state.splitnum])\
+            ),\
+            bg=self.state.config["activeBgColour"]\
+        )
 
     ##########################################################
     ## Caller to all the functions that initialize text before
@@ -344,29 +365,42 @@ class Gui(threading.Thread):
             self.updateInfo()
         self.state.splitstarttime = splitEnd
 
+    def getCurrentDiffColour(self,segmentDiff,totalDiff):
+        if timeh.greater(0,totalDiff):
+            # if comparison segment is blank or current segment is
+            # ahead
+            if timeh.greater(0,segmentDiff):
+                return self.state.config["aheadGainingColour"]
+            else:
+                return self.state.config["aheadLosingColour"]
+        else:
+            # if comparison segment is blank or current segment is
+            # behind
+            if timeh.greater(segmentDiff,0):
+                return self.state.config["behindLosingColour"]
+            else:
+                return self.state.config["behindGainingColour"]
+
     def findDiffColour(self,splitIndex):
+        # Either the split in this run is blank, or we're comparing
+        # to something that's blank
         if \
             timeh.isBlank(self.state.currentRun.totals[splitIndex]) \
             or timeh.isBlank(self.state.currentComparison.totals[splitIndex]):
             return self.state.config["skippedColour"]
+        # This split is the best ever. Mark it with the gold colour
         elif not timeh.isBlank(self.state.comparisons[0].segmentDiffs[splitIndex]) \
             and timeh.greater(0,self.state.comparisons[0].segmentDiffs[splitIndex]):
             return self.state.config["goldColour"]
         elif timeh.greater(0,self.state.currentComparison.totalDiffs[splitIndex]):
-            if not splitIndex:
+            # If this split is blank or we gained time
+            if timeh.greater(0,self.state.currentComparison.segmentDiffs[splitIndex]):
                 return self.state.config["aheadGainingColour"]
-            elif timeh.isBlank(self.state.currentComparison.totalDiffs[splitIndex-1]):
-                return self.state.config["aheadGainingColour"]
-            elif timeh.greater(self.state.currentComparison.totalDiffs[splitIndex],self.state.currentComparison.totalDiffs[splitIndex-1]):
-                return self.state.config["aheadLosingColour"]
             else:
-                return self.state.config["aheadGainingColour"]
+                return self.state.config["aheadLosingColour"]
         else:
-            if not splitIndex:
-                return self.state.config["behindLosingColour"]
-            elif timeh.isBlank(self.state.currentComparison.totalDiffs[splitIndex-1]):
-                return self.state.config["behindLosingColour"]
-            elif timeh.greater(self.state.currentComparison.totalDiffs[splitIndex],self.state.currentComparison.totalDiffs[splitIndex-1]):
+            # If this split is blank or we lost time
+            if timeh.greater(self.state.currentComparison.segmentDiffs[splitIndex],0):
                 return self.state.config["behindLosingColour"]
             else:
                 return self.state.config["behindGainingColour"]
