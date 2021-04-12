@@ -1,28 +1,38 @@
 {
     "baseDir": "../",
-    "buttonFont": ["DejaVu Sans", 10],
     "mainFont": ["DejaVu Sans", 10],
-    "segmentFont": ["Liberation Sans",18],
-    "timerFont": ["Arial Black",24],
-    "activeColour": "black",
-    "activeBgColour": "pink",
-    "buttonBgColour": "steel blue",
-    "buttonTextColour": "black",
     "endColour": "maroon1",
     "mainColour": "white",
-    "segmentColour": "gray",
-    "timerMainColour": "green",
-    "timerNotGoldAheadGainingColour": "#45ab2a",
-    "timerAheadLosingColour": "lime green",
-    "timerNotGoldBehindGainingColour": "coral",
-    "timerBehindGainingColour": "light coral",
-    "timerBehindLosingColour": "red",
-    "goldColour": "gold",
-    "aheadGainingColour": "green",
-    "aheadLosingColour": "lime green",
-    "behindGainingColour": "light coral",
-    "behindLosingColour": "red",
-    "skippedColour": "midnight blue",
+    "activeHighlight": {
+        "textColour": "black",
+        "bgColour": "pink"
+    },
+    "buttons": {
+        "font": ["DejaVu Sans", 10],
+        "textColour": "black",
+        "bgColour": "steel blue"
+    },
+    "mainTimer": {
+        "font": ["Arial Black",24],
+        "mainColour": "green",
+        "notGoldAheadGainingColour": "#45ab2a",
+        "aheadLosingColour": "lime green",
+        "notGoldBehindGainingColour": "coral",
+        "behindGainingColour": "light coral",
+        "behindLosingColour": "red"
+    },
+    "segmentTimer": {
+        "font": ["Liberation Sans",18],
+        "colour": "gray"
+    },
+    "diffColours": {
+        "gold": "gold",
+        "aheadGaining": "green",
+        "aheadLosing": "lime green",
+        "behindGaining": "light coral",
+        "behindLosing": "red",
+        "skipped": "midnight blue"
+    },
     "numSplits": 5,
     "activeSplit": 2,
     "timeSaveShow": true,
