@@ -392,18 +392,11 @@ class Gui(threading.Thread):
         elif not timeh.isBlank(self.state.comparisons[0].segmentDiffs[splitIndex]) \
             and timeh.greater(0,self.state.comparisons[0].segmentDiffs[splitIndex]):
             return self.state.config["goldColour"]
-        elif timeh.greater(0,self.state.currentComparison.totalDiffs[splitIndex]):
-            # If this split is blank or we gained time
-            if timeh.greater(0,self.state.currentComparison.segmentDiffs[splitIndex]):
-                return self.state.config["aheadGainingColour"]
-            else:
-                return self.state.config["aheadLosingColour"]
         else:
-            # If this split is blank or we lost time
-            if timeh.greater(self.state.currentComparison.segmentDiffs[splitIndex],0):
-                return self.state.config["behindLosingColour"]
-            else:
-                return self.state.config["behindGainingColour"]
+            return self.getCurrentDiffColour(\
+                self.state.currentComparison.segmentDiffs[splitIndex],\
+                self.state.currentComparison.totalDiffs[splitIndex]\
+            )
 
     ##########################################################
     ## Update the times and split names in the split portion 
