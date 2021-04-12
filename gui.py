@@ -245,8 +245,7 @@ class Gui(threading.Thread):
             fg=self.getCurrentDiffColour(\
                 timeh.difference(time - self.state.splitstarttime,self.state.currentComparison.segments[self.state.splitnum]), \
                 timeh.difference(time - self.state.starttime,self.state.currentComparison.totals[self.state.splitnum])\
-            ),\
-            bg=self.state.config["activeBgColour"]\
+            )\
         )
 
     ##########################################################
@@ -305,10 +304,12 @@ class Gui(threading.Thread):
         for i in range(0,self.pbstart-self.splitstart-1):
             if i == self.state.splitnum-lowIndex:
                 self.labels[self.splitstart+i][0].configure(fg=self.state.config["activeColour"],bg=self.state.config["activeBgColour"])
+                self.labels[self.splitstart+i][1].configure(bg=self.state.config["activeBgColour"])
                 self.labels[self.splitstart+i][2].configure(fg=self.state.config["activeColour"],bg=self.state.config["activeBgColour"])
                 self.backgrounds[i].configure(bg=self.state.config["activeBgColour"])
             else:
                 self.labels[self.splitstart+i][0].configure(fg=self.state.config["mainColour"],bg='black')
+                self.labels[self.splitstart+i][1].configure(bg='black')
                 self.labels[self.splitstart+i][2].configure(fg=self.state.config["mainColour"],bg='black')
                 self.backgrounds[i].configure(bg='black')
         self.labels[self.pbstart-2][0].configure(fg=self.state.config["endColour"])
