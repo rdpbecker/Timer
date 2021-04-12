@@ -434,12 +434,7 @@ class Gui(threading.Thread):
         if self.state.splitnum >= len(self.state.splitnames):
             self.labels[self.pbstart-2][1].configure(text=self.state.currentComparison.getString("totalDiffs",-1,{"showSign":True,"precision":2}))
             self.labels[self.pbstart-2][2].configure(text=timeh.timeToString(self.state.currentRun.totals[-1],{"precision":2}))
-            if timeh.greater(0,self.state.comparisons[0].segmentDiffs[-1]):
-                self.labels[self.pbstart-2][1].configure(fg='gold')
-            elif timeh.greater(0,self.state.currentComparison.totalDiffs[-1]):
-                self.labels[self.pbstart-2][1].configure(fg='green')
-            else:
-                self.labels[self.pbstart-2][1].configure(fg='red')
+            self.labels[self.pbstart-2][1].configure(fg=self.findDiffColour(len(self.state.splitnames)-1))
 
     ##########################################################
     ## Update information about the comparison splits when the 
