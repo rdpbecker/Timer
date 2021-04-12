@@ -13,6 +13,8 @@ class State:
     pauseTime = 0
     starttime = 0
     splitstarttime = 0
+    segmentTime = 0
+    totalTime = 0
 
     splitnum = 0
     splitnames = []
@@ -99,6 +101,10 @@ class State:
         if self.splitnum >= len(self.splitnames) - (self.config["numSplits"]-self.config["activeSplit"]):
             return len(self.splitnames) - self.config["numSplits"]
         return self.splitnum - (self.config["activeSplit"] - 1)
+
+    def setTimes(self, currentTime):
+        self.segmentTime = currentTime - self.splitstarttime
+        self.totalTime = currentTime - self.starttime
 
     def completeSegment(self,endTime):
         totalTime = endTime - self.starttime
