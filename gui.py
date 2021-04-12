@@ -150,36 +150,35 @@ class Gui(threading.Thread):
             currentTime = timer()
             if self.state.paused:
                 currentTime = self.state.pauseTime
-            self.labels[self.timer+1][0].configure(text=timeh.timeToString(currentTime-self.state.starttime,{"blankToDash":False,"precision":2}))
-            self.labels[self.timer+1][0].configure(fg=self.setTimerColour(currentTime))
-            self.labels[self.timer][0].configure(text=timeh.timeToString(currentTime-self.state.splitstarttime,{"blankToDash":False}))
+            self.state.setTimes(currentTime)
+            self.labels[self.timer+1][0].configure(text=timeh.timeToString(self.state.totalTime,{"blankToDash":False,"precision":2}))
+            self.labels[self.timer+1][0].configure(fg=self.setTimerColour())
+            self.labels[self.timer][0].configure(text=timeh.timeToString(self.state.segmentTime,{"blankToDash":False}))
             # if behind gold or behind current comparison total,
             # show the diff column for the current split in the
             # split area. If either is blank, ignore the comparison
             if self.state.splitnum < len(self.state.splitnames) \
-                and (not timeh.greater(self.state.currentComparison.totals[self.state.splitnum],currentTime-self.state.starttime)\
-                or not timeh.greater(self.state.comparisons[0].segments[self.state.splitnum],currentTime-self.state.splitstarttime)):
-                self.showCurrentSplitDiff(currentTime)
+                and (not timeh.greater(self.state.currentComparison.totals[self.state.splitnum],self.state.totalTime)\
+                or not timeh.greater(self.state.comparisons[0].segments[self.state.splitnum],self.state.segmentTime)):
+                self.showCurrentSplitDiff()
         if self.state.splitnum < len(self.state.splitnames) and not self.state.reset:
             self.root.after(17,self.update)
         else:
             self.root.after(1,self.state.doEnd)
 
-    def setTimerColour(self,time):
+    def setTimerColour(self):
         splitnum = self.state.splitnum
         if self.state.splitnum >= len(self.state.splitnames):
             splitnum = len(self.state.splitnames) - 1
         comparisonTime = self.state.currentComparison.totals[splitnum]
         comparisonSegment = self.state.currentComparison.segments[splitnum]
         goldSegment = self.state.comparisons[0].segments[splitnum]
-        segmentTime = time - self.state.splitstarttime
-        totalTime = time - self.state.starttime
 
         # last split skipped
         if self.state.splitnum \
             and timeh.isBlank(self.state.currentRun.totals[-1]):
             # total blank or ahead of total
-            if timeh.greater(comparisonTime,totalTime):
+            if timeh.greater(comparisonTime,self.state.totalTime):
                 return self.state.config["timerMainColour"]
             # behind total
             else:
@@ -187,25 +186,25 @@ class Gui(threading.Thread):
         # total blank
         if timeh.isBlank(comparisonTime):
             # gold blank or ahead of gold
-            if timeh.greater(goldSegment,segmentTime):
+            if timeh.greater(goldSegment,self.state.segmentTime):
                 return self.state.config["timerMainColour"]
             # behind gold
             else:
                 return self.state.config["timerBehindLosingColour"]
         # ahead of total
-        elif timeh.greater(comparisonTime,totalTime):
+        elif timeh.greater(comparisonTime,self.state.totalTime):
             # segment blank
             if timeh.isBlank(comparisonSegment):
                 # gold blank or ahead of gold
-                if timeh.greater(goldSegment,segmentTime):
+                if timeh.greater(goldSegment,self.state.segmentTime):
                     return self.state.config["timerMainColour"]
                 # behind gold
                 else:
                     return self.state.config["timerAheadLosingColour"]
             # ahead of segment
-            elif timeh.greater(comparisonSegment,segmentTime):
+            elif timeh.greater(comparisonSegment,self.state.segmentTime):
                 # gold blank or ahead of gold
-                if timeh.greater(goldSegment,segmentTime):
+                if timeh.greater(goldSegment,self.state.segmentTime):
                     return self.state.config["timerMainColour"]
                 # behind gold
                 else:
@@ -218,15 +217,15 @@ class Gui(threading.Thread):
             # segment blank
             if timeh.isBlank(comparisonSegment):
                 # gold blank or behind gold
-                if timeh.greater(segmentTime,goldSegment):
+                if timeh.greater(self.state.segmentTime,goldSegment):
                     return self.state.config["timerBehindLosingColour"]
                 # ahead of gold
                 else:
                     return self.state.config["timerBehindGainingColour"]
             # ahead of segment
-            elif timeh.greater(comparisonSegment,segmentTime):
+            elif timeh.greater(comparisonSegment,self.state.segmentTime):
                 # gold blank or ahead of gold
-                if timeh.greater(goldSegment,segmentTime):
+                if timeh.greater(goldSegment,self.state.segmentTime):
                     return self.state.config["timerBehindGainingColour"]
                 # behind gold
                 else:
@@ -235,16 +234,16 @@ class Gui(threading.Thread):
             else:
                 return self.state.config["timerBehindLosingColour"]
 
-    def showCurrentSplitDiff(self,time):
+    def showCurrentSplitDiff(self):
         activeSplit = self.state.splitnum - self.state.getTopSplitIndex()
         self.labels[self.splitstart+activeSplit][1].configure(\
             text=timeh.timeToString(\
-                timeh.difference(time - self.state.starttime,self.state.currentComparison.totals[self.state.splitnum]),\
+                timeh.difference(self.state.totalTime,self.state.currentComparison.totals[self.state.splitnum]),\
                 {"showSign":True,"precision": 2}\
             ),\
             fg=self.getCurrentDiffColour(\
-                timeh.difference(time - self.state.splitstarttime,self.state.currentComparison.segments[self.state.splitnum]), \
-                timeh.difference(time - self.state.starttime,self.state.currentComparison.totals[self.state.splitnum])\
+                timeh.difference(self.state.segmentTime,self.state.currentComparison.segments[self.state.splitnum]), \
+                timeh.difference(self.state.totalTime,self.state.currentComparison.totals[self.state.splitnum])\
             )\
         )
 
