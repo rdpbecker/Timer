@@ -1,33 +1,58 @@
 {
     "baseDir": "../",
-    "buttonFont": ["DejaVu Sans", 10],
-    "mainFont": ["DejaVu Sans", 10],
-    "segmentFont": ["Liberation Sans",18],
-    "timerFont": ["Arial Black",24],
-    "activeColour": "black",
-    "activeBgColour": "pink",
-    "buttonBgColour": "steel blue",
-    "buttonTextColour": "black",
     "endColour": "maroon1",
-    "mainColour": "white",
-    "segmentColour": "gray",
-    "timerMainColour": "green",
-    "timerNotGoldAheadGainingColour": "#45ab2a",
-    "timerAheadLosingColour": "lime green",
-    "timerNotGoldBehindGainingColour": "coral",
-    "timerBehindGainingColour": "light coral",
-    "timerBehindLosingColour": "red",
-    "goldColour": "gold",
-    "aheadGainingColour": "green",
-    "aheadLosingColour": "lime green",
-    "behindGainingColour": "light coral",
-    "behindLosingColour": "red",
-    "skippedColour": "midnight blue",
     "numSplits": 5,
     "activeSplit": 2,
-    "timeSaveShow": true,
-    "diffShow": true,
-    "bptShow": true,
-    "sobShow": true,
-    "pbShow": true
+    "root": {
+        "font": ["DejaVu Sans", 10],
+        "colours": {
+            "text": "white",
+            "bg": "black"
+        }
+    },
+    "activeHighlight": {
+        "colours": {
+            "text": "black",
+            "bg": "pink"
+        }
+    },
+    "mainTimer": {
+        "font": ["Arial Black",24],
+        "colours": {
+            "main": "green",
+            "notGoldAheadGaining": "#45ab2a",
+            "aheadLosing": "lime green",
+            "notGoldBehindGaining": "coral",
+            "behindGaining": "light coral",
+            "behindLosing": "red"
+        }
+    },
+    "segmentTimer": {
+        "font": ["Liberation Sans",18],
+        "colour": "gray"
+    },
+    "diff": {
+        "colours": {
+            "gold": "gold",
+            "aheadGaining": "green",
+            "aheadLosing": "lime green",
+            "behindGaining": "light coral",
+            "behindLosing": "red",
+            "skipped": "midnight blue"
+        }
+    },
+    "infoShow": {
+        "timeSave": true,
+        "diff": true,
+        "bpt": true,
+        "sob": true,
+        "pb": true
+    },
+    "buttons": {
+        "font": ["DejaVu Sans", 10],
+        "colours": {
+            "text": "black",
+            "bg": "steel blue"
+        }
+    }
 }

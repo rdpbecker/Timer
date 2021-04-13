@@ -1,9 +1,7 @@
-import gui, categorySelection as cate, fileio
+import os, gui, categorySelection as cate, fileio
+import Comparison, BptList, SumList, CurrentRun
 import timeHelpers as timeh
-import Comparison
-import BptList, SumList
-import CurrentRun
-import os
+import readConfig as rc
 
 class State:
     started = False
@@ -81,12 +79,12 @@ class State:
             self.config["activeSplit"] = len(self.splitnames) - 2
 
     def getConfigAndSplits(self):
-        config = fileio.getUserConfig()
+        config = rc.getUserConfig()
         splitnames = cate.getSplitNames(config["baseDir"])
         self.game = splitnames["game"]
         self.category = splitnames["category"]
         self.splitnames = splitnames["splits"]
-        config.update(fileio.getGameConfig(config["baseDir"],self.game,self.category))
+        config = rc.mergeConfigs(config,rc.getGameConfig(config["baseDir"],self.game,self.category))
         return config
 
     def getTimes(self,col,toCheck):

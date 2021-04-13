@@ -29,11 +29,11 @@ class Gui(threading.Thread):
         self.state = State.State()
         config = self.state.config
         generalInfo = {\
-            "timeSave": GeneralInfo.GeneralInfo(config["timeSaveShow"],self.timeSaveSet,self.timeSaveInfo),\
-            "diff": GeneralInfo.GeneralInfo(config["diffShow"],self.diffSet,self.diffInfo),\
-            "bpt": GeneralInfo.GeneralInfo(config["bptShow"],self.bptSet,self.bptInfo),\
-            "sob": GeneralInfo.GeneralInfo(config["sobShow"],self.sobSet,self.sobInfo),\
-            "pb": GeneralInfo.GeneralInfo(config["pbShow"],self.pbSet,self.pbInfo)\
+            "timeSave": GeneralInfo.GeneralInfo(config["infoShow"]["timeSave"],self.timeSaveSet,self.timeSaveInfo),\
+            "diff": GeneralInfo.GeneralInfo(config["infoShow"]["diff"],self.diffSet,self.diffInfo),\
+            "bpt": GeneralInfo.GeneralInfo(config["infoShow"]["bpt"],self.bptSet,self.bptInfo),\
+            "sob": GeneralInfo.GeneralInfo(config["infoShow"]["sob"],self.sobSet,self.sobInfo),\
+            "pb": GeneralInfo.GeneralInfo(config["infoShow"]["pb"],self.pbSet,self.pbInfo)\
         }
         generalInfoKeys = ["timeSave","diff","bpt","sob","pb"]
         self.setSectionStarts(config,generalInfo,generalInfoKeys)
@@ -42,7 +42,7 @@ class Gui(threading.Thread):
 
         self.root = tk.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.callback)
-        self.root.configure(background='black')
+        self.root.configure(background=config["root"]["colours"]["bg"])
 
         for i in range(12):
             self.root.columnconfigure(i,minsize=40,weight=1)
@@ -53,69 +53,69 @@ class Gui(threading.Thread):
 
         ## The Title rows
         for i in range(self.splitstart):
-            label = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label.grid(row=i,column=0,columnspan=2,sticky='W',ipadx=10)
-            label2 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label2 = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label2.grid(row=i,column=2,columnspan=3,sticky='W')
-            label3 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label3 = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label3.grid(row=i,column=5,columnspan=4,sticky='E')
-            label4 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label4 = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label4.grid(row=i,column=9,columnspan=3,sticky='E',ipadx=10)
             self.labels.append([label,label2,label3,label4])
 
         ## Splits and comparisons
         for i in range(self.splitstart,self.pbstart):
-            background = tk.Frame(self.root, bg='black')
+            background = tk.Frame(self.root, bg=config["root"]["colours"]["bg"])
             background.grid(row=i,column=0,columnspan=12,sticky='NSWE')
             self.backgrounds.append(background)
-            label = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label.grid(row=i,column=0,columnspan=8,sticky='W',padx=10)
-            label2 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label2 = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label2.grid(row=i,column=8,columnspan=2,sticky='E')
-            label3 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label3 = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label3.grid(row=i,column=10,columnspan=2,sticky='E',padx=10)
             self.labels.append([label,label2,label3])
 
         ## Current segment comparisons
         for i in range(self.pbstart,self.timer):
-            label = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label.grid(row=i,column=0,columnspan=3,sticky='W',padx=10)
-            label2 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label2 = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label2.grid(row=i,column=3,columnspan=3,sticky='W')
-            label3 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label3 = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label3.grid(row=i,column=6,columnspan=3,sticky='W')
-            label4 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label4 = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label4.grid(row=i,column=9,columnspan=3,sticky='E',padx=10)
             self.labels.append([label,label2,label3,label4])
 
         ## Timers (segment and overall)
         anchorlist = ['E','']
         span = [10,12]
-        fontlist = [config['segmentFont'],config['timerFont']]
-        colourlist = [config["segmentColour"],config["timerMainColour"]]
+        fontlist = [config["segmentTimer"]["font"],config["mainTimer"]["font"]]
+        colourlist = [config["segmentTimer"]["colour"],config["mainTimer"]["colours"]["main"]]
         for i in range(self.timer,self.bptstart):
-            label = tk.Label(self.root, bg='black', text="", fg=colourlist[i-self.timer], font=fontlist[i-self.timer])
+            label = tk.Label(self.root, bg=config["root"]["colours"]["bg"], text="", fg=colourlist[i-self.timer], font=fontlist[i-self.timer])
             label.grid(row=i,column=0,columnspan=12,sticky=anchorlist[i-self.timer],padx=100)
             self.labels.append([label])
 
         ## Information
         for i in range(self.bptstart,self.buttonstart):
-            label = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label.grid(row=i,column=0,columnspan=6,sticky='W',padx=10)
-            label4 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label4 = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label4.grid(row=i,column=9,columnspan=3,sticky='E',padx=10)
             self.labels.append([label,label4])
 
-        button1 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Change Compare", fg=config["buttonTextColour"],command=self.guiSwitchCompare)
-        button2 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Split", fg=config["buttonTextColour"],  command=self.onSplitEnd)
+        button1 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Change Compare", fg=config["buttons"]["colours"]["text"],command=self.guiSwitchCompare)
+        button2 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Split", fg=config["buttons"]["colours"]["text"],  command=self.onSplitEnd)
         self.root.bind('<Return>', self.onSplitEnd)
-        button3 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Reset", fg=config["buttonTextColour"],  command=self.reset)
+        button3 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Reset", fg=config["buttons"]["colours"]["text"], command=self.reset)
         self.root.bind('r', self.reset)
-        button4 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Skip Split", fg=config["buttonTextColour"], command=self.skip)
+        button4 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Skip Split", fg=config["buttons"]["colours"]["text"], command=self.skip)
         self.root.bind('s', self.skip)
-        button5 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Start Run", fg=config["buttonTextColour"], command=self.start)
+        button5 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Start Run", fg=config["buttons"]["colours"]["text"], command=self.start)
         self.root.bind('<space>', self.start)
-        button6 = tk.Button(self.root, bg=config["buttonBgColour"], font=config["buttonFont"], text="Pause", fg=config["buttonTextColour"], command=self.togglePause)
+        button6 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Pause", fg=config["buttons"]["colours"]["text"], command=self.togglePause)
         self.root.bind('p', self.togglePause)
         button3.grid(row=self.buttonstart,column=0,columnspan=6,sticky='WE')
         button4.grid(row=self.buttonstart,column=6,columnspan=6,sticky='WE')
@@ -179,60 +179,60 @@ class Gui(threading.Thread):
             and timeh.isBlank(self.state.currentRun.totals[-1]):
             # total blank or ahead of total
             if timeh.greater(comparisonTime,self.state.totalTime):
-                return self.state.config["timerMainColour"]
+                return self.state.config["mainTimer"]["colours"]["main"]
             # behind total
             else:
-                return self.state.config["timerBehindLosingColour"]
+                return self.state.config["mainTimer"]["colours"]["behindLosing"]
         # total blank
         if timeh.isBlank(comparisonTime):
             # gold blank or ahead of gold
             if timeh.greater(goldSegment,self.state.segmentTime):
-                return self.state.config["timerMainColour"]
+                return self.state.config["mainTimer"]["colours"]["main"]
             # behind gold
             else:
-                return self.state.config["timerBehindLosingColour"]
+                return self.state.config["mainTimer"]["colours"]["behindLosing"]
         # ahead of total
         elif timeh.greater(comparisonTime,self.state.totalTime):
             # segment blank
             if timeh.isBlank(comparisonSegment):
                 # gold blank or ahead of gold
                 if timeh.greater(goldSegment,self.state.segmentTime):
-                    return self.state.config["timerMainColour"]
+                    return self.state.config["mainTimer"]["colours"]["main"]
                 # behind gold
                 else:
-                    return self.state.config["timerAheadLosingColour"]
+                    return self.state.config["mainTimer"]["colours"]["aheadLosing"]
             # ahead of segment
             elif timeh.greater(comparisonSegment,self.state.segmentTime):
                 # gold blank or ahead of gold
                 if timeh.greater(goldSegment,self.state.segmentTime):
-                    return self.state.config["timerMainColour"]
+                    return self.state.config["mainTimer"]["colours"]["main"]
                 # behind gold
                 else:
-                    return self.state.config["timerNotGoldAheadGainingColour"]
+                    return self.state.config["mainTimer"]["colours"]["notGoldAheadGaining"]
             # behind segment
             else:
-                return self.state.config["timerAheadLosingColour"]
+                return self.state.config["mainTimer"]["colours"]["aheadLosing"]
         # behind total
         else:
             # segment blank
             if timeh.isBlank(comparisonSegment):
                 # gold blank or behind gold
                 if timeh.greater(self.state.segmentTime,goldSegment):
-                    return self.state.config["timerBehindLosingColour"]
+                    return self.state.config["mainTimer"]["colours"]["behindLosing"]
                 # ahead of gold
                 else:
-                    return self.state.config["timerBehindGainingColour"]
+                    return self.state.config["mainTimer"]["colours"]["behindGaining"]
             # ahead of segment
             elif timeh.greater(comparisonSegment,self.state.segmentTime):
                 # gold blank or ahead of gold
                 if timeh.greater(goldSegment,self.state.segmentTime):
-                    return self.state.config["timerBehindGainingColour"]
+                    return self.state.config["mainTimer"]["colours"]["behindGaining"]
                 # behind gold
                 else:
-                    return self.state.config["timerNotGoldBehindGainingColour"]
+                    return self.state.config["mainTimer"]["colours"]["notGoldBehindGaining"]
             # behind segment
             else:
-                return self.state.config["timerBehindLosingColour"]
+                return self.state.config["mainTimer"]["colours"]["behindLosing"]
 
     def showCurrentSplitDiff(self):
         activeSplit = self.state.splitnum - self.state.getTopSplitIndex()
@@ -302,15 +302,15 @@ class Gui(threading.Thread):
         lowIndex = self.state.getTopSplitIndex()
         for i in range(0,self.pbstart-self.splitstart-1):
             if i == self.state.splitnum-lowIndex:
-                self.labels[self.splitstart+i][0].configure(fg=self.state.config["activeColour"],bg=self.state.config["activeBgColour"])
-                self.labels[self.splitstart+i][1].configure(bg=self.state.config["activeBgColour"])
-                self.labels[self.splitstart+i][2].configure(fg=self.state.config["activeColour"],bg=self.state.config["activeBgColour"])
-                self.backgrounds[i].configure(bg=self.state.config["activeBgColour"])
+                self.labels[self.splitstart+i][0].configure(fg=self.state.config["activeHighlight"]["colours"]["text"],bg=self.state.config["activeHighlight"]["colours"]["bg"])
+                self.labels[self.splitstart+i][1].configure(bg=self.state.config["activeHighlight"]["colours"]["bg"])
+                self.labels[self.splitstart+i][2].configure(fg=self.state.config["activeHighlight"]["colours"]["text"],bg=self.state.config["activeHighlight"]["colours"]["bg"])
+                self.backgrounds[i].configure(bg=self.state.config["activeHighlight"]["colours"]["bg"])
             else:
-                self.labels[self.splitstart+i][0].configure(fg=self.state.config["mainColour"],bg='black')
-                self.labels[self.splitstart+i][1].configure(bg='black')
-                self.labels[self.splitstart+i][2].configure(fg=self.state.config["mainColour"],bg='black')
-                self.backgrounds[i].configure(bg='black')
+                self.labels[self.splitstart+i][0].configure(fg=self.state.config["root"]["colours"]["text"],bg=self.state.config["root"]["colours"]["bg"])
+                self.labels[self.splitstart+i][1].configure(bg=self.state.config["root"]["colours"]["bg"])
+                self.labels[self.splitstart+i][2].configure(fg=self.state.config["root"]["colours"]["text"],bg=self.state.config["root"]["colours"]["bg"])
+                self.backgrounds[i].configure(bg=self.state.config["root"]["colours"]["bg"])
         self.labels[self.pbstart-2][0].configure(fg=self.state.config["endColour"])
         self.labels[self.pbstart-2][2].configure(fg=self.state.config["endColour"])
 
@@ -370,16 +370,16 @@ class Gui(threading.Thread):
             # if comparison segment is blank or current segment is
             # ahead
             if timeh.greater(0,segmentDiff):
-                return self.state.config["aheadGainingColour"]
+                return self.state.config["diff"]["colours"]["aheadGaining"]
             else:
-                return self.state.config["aheadLosingColour"]
+                return self.state.config["diff"]["colours"]["aheadLosing"]
         else:
             # if comparison segment is blank or current segment is
             # behind
             if timeh.greater(segmentDiff,0):
-                return self.state.config["behindLosingColour"]
+                return self.state.config["diff"]["colours"]["behindLosing"]
             else:
-                return self.state.config["behindGainingColour"]
+                return self.state.config["diff"]["colours"]["behindGaining"]
 
     def findDiffColour(self,splitIndex):
         # Either the split in this run is blank, or we're comparing
@@ -387,11 +387,11 @@ class Gui(threading.Thread):
         if \
             timeh.isBlank(self.state.currentRun.totals[splitIndex]) \
             or timeh.isBlank(self.state.currentComparison.totals[splitIndex]):
-            return self.state.config["skippedColour"]
+            return self.state.config["diff"]["colours"]["skipped"]
         # This split is the best ever. Mark it with the gold colour
         elif not timeh.isBlank(self.state.comparisons[0].segmentDiffs[splitIndex]) \
             and timeh.greater(0,self.state.comparisons[0].segmentDiffs[splitIndex]):
-            return self.state.config["goldColour"]
+            return self.state.config["diff"]["colours"]["gold"]
         else:
             return self.getCurrentDiffColour(\
                 self.state.currentComparison.segmentDiffs[splitIndex],\
