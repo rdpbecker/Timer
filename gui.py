@@ -92,7 +92,7 @@ class Gui(threading.Thread):
         anchorlist = ['E','']
         span = [10,12]
         fontlist = [config["segmentTimer"]["font"],config["mainTimer"]["font"]]
-        colourlist = [config["segmentTimer"]["colour"],config["mainTimer"]["mainColour"]]
+        colourlist = [config["segmentTimer"]["colour"],config["mainTimer"]["colours"]["main"]]
         for i in range(self.timer,self.bptstart):
             label = tk.Label(self.root, bg='black', text="", fg=colourlist[i-self.timer], font=fontlist[i-self.timer])
             label.grid(row=i,column=0,columnspan=12,sticky=anchorlist[i-self.timer],padx=100)
@@ -106,16 +106,16 @@ class Gui(threading.Thread):
             label4.grid(row=i,column=9,columnspan=3,sticky='E',padx=10)
             self.labels.append([label,label4])
 
-        button1 = tk.Button(self.root, bg=config["buttons"]["bgColour"], font=config["buttons"]["font"], text="Change Compare", fg=config["buttons"]["textColour"],command=self.guiSwitchCompare)
-        button2 = tk.Button(self.root, bg=config["buttons"]["bgColour"], font=config["buttons"]["font"], text="Split", fg=config["buttons"]["textColour"],  command=self.onSplitEnd)
+        button1 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Change Compare", fg=config["buttons"]["colours"]["text"],command=self.guiSwitchCompare)
+        button2 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Split", fg=config["buttons"]["colours"]["text"],  command=self.onSplitEnd)
         self.root.bind('<Return>', self.onSplitEnd)
-        button3 = tk.Button(self.root, bg=config["buttons"]["bgColour"], font=config["buttons"]["font"], text="Reset", fg=config["buttons"]["textColour"], command=self.reset)
+        button3 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Reset", fg=config["buttons"]["colours"]["text"], command=self.reset)
         self.root.bind('r', self.reset)
-        button4 = tk.Button(self.root, bg=config["buttons"]["bgColour"], font=config["buttons"]["font"], text="Skip Split", fg=config["buttons"]["textColour"], command=self.skip)
+        button4 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Skip Split", fg=config["buttons"]["colours"]["text"], command=self.skip)
         self.root.bind('s', self.skip)
-        button5 = tk.Button(self.root, bg=config["buttons"]["bgColour"], font=config["buttons"]["font"], text="Start Run", fg=config["buttons"]["textColour"], command=self.start)
+        button5 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Start Run", fg=config["buttons"]["colours"]["text"], command=self.start)
         self.root.bind('<space>', self.start)
-        button6 = tk.Button(self.root, bg=config["buttons"]["bgColour"], font=config["buttons"]["font"], text="Pause", fg=config["buttons"]["textColour"], command=self.togglePause)
+        button6 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Pause", fg=config["buttons"]["colours"]["text"], command=self.togglePause)
         self.root.bind('p', self.togglePause)
         button3.grid(row=self.buttonstart,column=0,columnspan=6,sticky='WE')
         button4.grid(row=self.buttonstart,column=6,columnspan=6,sticky='WE')
@@ -179,60 +179,60 @@ class Gui(threading.Thread):
             and timeh.isBlank(self.state.currentRun.totals[-1]):
             # total blank or ahead of total
             if timeh.greater(comparisonTime,self.state.totalTime):
-                return self.state.config["mainTimer"]["mainColour"]
+                return self.state.config["mainTimer"]["colours"]["main"]
             # behind total
             else:
-                return self.state.config["mainTimer"]["behindLosingColour"]
+                return self.state.config["mainTimer"]["colours"]["behindLosing"]
         # total blank
         if timeh.isBlank(comparisonTime):
             # gold blank or ahead of gold
             if timeh.greater(goldSegment,self.state.segmentTime):
-                return self.state.config["mainTimer"]["mainColour"]
+                return self.state.config["mainTimer"]["colours"]["main"]
             # behind gold
             else:
-                return self.state.config["mainTimer"]["behindLosingColour"]
+                return self.state.config["mainTimer"]["colours"]["behindLosing"]
         # ahead of total
         elif timeh.greater(comparisonTime,self.state.totalTime):
             # segment blank
             if timeh.isBlank(comparisonSegment):
                 # gold blank or ahead of gold
                 if timeh.greater(goldSegment,self.state.segmentTime):
-                    return self.state.config["mainTimer"]["mainColour"]
+                    return self.state.config["mainTimer"]["colours"]["main"]
                 # behind gold
                 else:
-                    return self.state.config["mainTimer"]["aheadLosingColour"]
+                    return self.state.config["mainTimer"]["colours"]["aheadLosing"]
             # ahead of segment
             elif timeh.greater(comparisonSegment,self.state.segmentTime):
                 # gold blank or ahead of gold
                 if timeh.greater(goldSegment,self.state.segmentTime):
-                    return self.state.config["mainTimer"]["mainColour"]
+                    return self.state.config["mainTimer"]["colours"]["main"]
                 # behind gold
                 else:
-                    return self.state.config["mainTimer"]["notGoldAheadGainingColour"]
+                    return self.state.config["mainTimer"]["colours"]["notGoldAheadGaining"]
             # behind segment
             else:
-                return self.state.config["mainTimer"]["aheadLosingColour"]
+                return self.state.config["mainTimer"]["colours"]["aheadLosing"]
         # behind total
         else:
             # segment blank
             if timeh.isBlank(comparisonSegment):
                 # gold blank or behind gold
                 if timeh.greater(self.state.segmentTime,goldSegment):
-                    return self.state.config["mainTimer"]["behindLosingColour"]
+                    return self.state.config["mainTimer"]["colours"]["behindLosing"]
                 # ahead of gold
                 else:
-                    return self.state.config["mainTimer"]["behindGainingColour"]
+                    return self.state.config["mainTimer"]["colours"]["behindGaining"]
             # ahead of segment
             elif timeh.greater(comparisonSegment,self.state.segmentTime):
                 # gold blank or ahead of gold
                 if timeh.greater(goldSegment,self.state.segmentTime):
-                    return self.state.config["mainTimer"]["behindGainingColour"]
+                    return self.state.config["mainTimer"]["colours"]["behindGaining"]
                 # behind gold
                 else:
-                    return self.state.config["mainTimer"]["notGoldBehindGainingColour"]
+                    return self.state.config["mainTimer"]["colours"]["notGoldBehindGaining"]
             # behind segment
             else:
-                return self.state.config["mainTimer"]["behindLosingColour"]
+                return self.state.config["mainTimer"]["colours"]["behindLosing"]
 
     def showCurrentSplitDiff(self):
         activeSplit = self.state.splitnum - self.state.getTopSplitIndex()
@@ -302,10 +302,10 @@ class Gui(threading.Thread):
         lowIndex = self.state.getTopSplitIndex()
         for i in range(0,self.pbstart-self.splitstart-1):
             if i == self.state.splitnum-lowIndex:
-                self.labels[self.splitstart+i][0].configure(fg=self.state.config["activeHighlight"]["textColour"],bg=self.state.config["activeHighlight"]["bgColour"])
-                self.labels[self.splitstart+i][1].configure(bg=self.state.config["activeHighlight"]["bgColour"])
-                self.labels[self.splitstart+i][2].configure(fg=self.state.config["activeHighlight"]["textColour"],bg=self.state.config["activeHighlight"]["bgColour"])
-                self.backgrounds[i].configure(bg=self.state.config["activeHighlight"]["bgColour"])
+                self.labels[self.splitstart+i][0].configure(fg=self.state.config["activeHighlight"]["colours"]["text"],bg=self.state.config["activeHighlight"]["colours"]["bg"])
+                self.labels[self.splitstart+i][1].configure(bg=self.state.config["activeHighlight"]["colours"]["bg"])
+                self.labels[self.splitstart+i][2].configure(fg=self.state.config["activeHighlight"]["colours"]["text"],bg=self.state.config["activeHighlight"]["colours"]["bg"])
+                self.backgrounds[i].configure(bg=self.state.config["activeHighlight"]["colours"]["bg"])
             else:
                 self.labels[self.splitstart+i][0].configure(fg=self.state.config["mainColour"],bg='black')
                 self.labels[self.splitstart+i][1].configure(bg='black')
@@ -370,16 +370,16 @@ class Gui(threading.Thread):
             # if comparison segment is blank or current segment is
             # ahead
             if timeh.greater(0,segmentDiff):
-                return self.state.config["diffColours"]["aheadGaining"]
+                return self.state.config["diff"]["colours"]["aheadGaining"]
             else:
-                return self.state.config["diffColours"]["aheadLosing"]
+                return self.state.config["diff"]["colours"]["aheadLosing"]
         else:
             # if comparison segment is blank or current segment is
             # behind
             if timeh.greater(segmentDiff,0):
-                return self.state.config["diffColours"]["behindLosing"]
+                return self.state.config["diff"]["colours"]["behindLosing"]
             else:
-                return self.state.config["diffColours"]["behindGaining"]
+                return self.state.config["diff"]["colours"]["behindGaining"]
 
     def findDiffColour(self,splitIndex):
         # Either the split in this run is blank, or we're comparing
@@ -387,11 +387,11 @@ class Gui(threading.Thread):
         if \
             timeh.isBlank(self.state.currentRun.totals[splitIndex]) \
             or timeh.isBlank(self.state.currentComparison.totals[splitIndex]):
-            return self.state.config["diffColours"]["skipped"]
+            return self.state.config["diff"]["colours"]["skipped"]
         # This split is the best ever. Mark it with the gold colour
         elif not timeh.isBlank(self.state.comparisons[0].segmentDiffs[splitIndex]) \
             and timeh.greater(0,self.state.comparisons[0].segmentDiffs[splitIndex]):
-            return self.state.config["diffColours"]["gold"]
+            return self.state.config["diff"]["colours"]["gold"]
         else:
             return self.getCurrentDiffColour(\
                 self.state.currentComparison.segmentDiffs[splitIndex],\

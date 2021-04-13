@@ -4,34 +4,42 @@
     "endColour": "maroon1",
     "mainColour": "white",
     "activeHighlight": {
-        "textColour": "black",
-        "bgColour": "pink"
+        "colours": {
+            "text": "black",
+            "bg": "pink"
+        }
     },
     "buttons": {
         "font": ["DejaVu Sans", 10],
-        "textColour": "black",
-        "bgColour": "steel blue"
+        "colours": {
+            "text": "black",
+            "bg": "steel blue"
+        }
     },
     "mainTimer": {
         "font": ["Arial Black",24],
-        "mainColour": "green",
-        "notGoldAheadGainingColour": "#45ab2a",
-        "aheadLosingColour": "lime green",
-        "notGoldBehindGainingColour": "coral",
-        "behindGainingColour": "light coral",
-        "behindLosingColour": "red"
+        "colours": {
+            "main": "green",
+            "notGoldAheadGaining": "#45ab2a",
+            "aheadLosing": "lime green",
+            "notGoldBehindGaining": "coral",
+            "behindGaining": "light coral",
+            "behindLosing": "red"
+        }
     },
     "segmentTimer": {
         "font": ["Liberation Sans",18],
         "colour": "gray"
     },
-    "diffColours": {
-        "gold": "gold",
-        "aheadGaining": "green",
-        "aheadLosing": "lime green",
-        "behindGaining": "light coral",
-        "behindLosing": "red",
-        "skipped": "midnight blue"
+    "diff": {
+        "colours": {
+            "gold": "gold",
+            "aheadGaining": "green",
+            "aheadLosing": "lime green",
+            "behindGaining": "light coral",
+            "behindLosing": "red",
+            "skipped": "midnight blue"
+        }
     },
     "numSplits": 5,
     "activeSplit": 2,
