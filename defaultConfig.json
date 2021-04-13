@@ -1,19 +1,18 @@
 {
     "baseDir": "../",
-    "mainFont": ["DejaVu Sans", 10],
     "endColour": "maroon1",
-    "mainColour": "white",
+    "numSplits": 5,
+    "activeSplit": 2,
+    "root": {
+        "font": ["DejaVu Sans", 10],
+        "colours": {
+            "text": "white"
+        }
+    },
     "activeHighlight": {
         "colours": {
             "text": "black",
             "bg": "pink"
-        }
-    },
-    "buttons": {
-        "font": ["DejaVu Sans", 10],
-        "colours": {
-            "text": "black",
-            "bg": "steel blue"
         }
     },
     "mainTimer": {
@@ -41,13 +40,18 @@
             "skipped": "midnight blue"
         }
     },
-    "numSplits": 5,
-    "activeSplit": 2,
     "infoShow": {
         "timeSave": true,
         "diff": true,
         "bpt": true,
         "sob": true,
         "pb": true
+    },
+    "buttons": {
+        "font": ["DejaVu Sans", 10],
+        "colours": {
+            "text": "black",
+            "bg": "steel blue"
+        }
     }
 }

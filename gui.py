@@ -53,13 +53,13 @@ class Gui(threading.Thread):
 
         ## The Title rows
         for i in range(self.splitstart):
-            label = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label = tk.Label(self.root, bg='black', font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label.grid(row=i,column=0,columnspan=2,sticky='W',ipadx=10)
-            label2 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label2 = tk.Label(self.root, bg='black', font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label2.grid(row=i,column=2,columnspan=3,sticky='W')
-            label3 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label3 = tk.Label(self.root, bg='black', font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label3.grid(row=i,column=5,columnspan=4,sticky='E')
-            label4 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label4 = tk.Label(self.root, bg='black', font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label4.grid(row=i,column=9,columnspan=3,sticky='E',ipadx=10)
             self.labels.append([label,label2,label3,label4])
 
@@ -68,23 +68,23 @@ class Gui(threading.Thread):
             background = tk.Frame(self.root, bg='black')
             background.grid(row=i,column=0,columnspan=12,sticky='NSWE')
             self.backgrounds.append(background)
-            label = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label = tk.Label(self.root, bg='black', font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label.grid(row=i,column=0,columnspan=8,sticky='W',padx=10)
-            label2 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label2 = tk.Label(self.root, bg='black', font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label2.grid(row=i,column=8,columnspan=2,sticky='E')
-            label3 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label3 = tk.Label(self.root, bg='black', font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label3.grid(row=i,column=10,columnspan=2,sticky='E',padx=10)
             self.labels.append([label,label2,label3])
 
         ## Current segment comparisons
         for i in range(self.pbstart,self.timer):
-            label = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label = tk.Label(self.root, bg='black', font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label.grid(row=i,column=0,columnspan=3,sticky='W',padx=10)
-            label2 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label2 = tk.Label(self.root, bg='black', font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label2.grid(row=i,column=3,columnspan=3,sticky='W')
-            label3 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label3 = tk.Label(self.root, bg='black', font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label3.grid(row=i,column=6,columnspan=3,sticky='W')
-            label4 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label4 = tk.Label(self.root, bg='black', font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label4.grid(row=i,column=9,columnspan=3,sticky='E',padx=10)
             self.labels.append([label,label2,label3,label4])
 
@@ -100,9 +100,9 @@ class Gui(threading.Thread):
 
         ## Information
         for i in range(self.bptstart,self.buttonstart):
-            label = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label = tk.Label(self.root, bg='black', font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label.grid(row=i,column=0,columnspan=6,sticky='W',padx=10)
-            label4 = tk.Label(self.root, bg='black', font=config["mainFont"], text="", fg=config["mainColour"])
+            label4 = tk.Label(self.root, bg='black', font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
             label4.grid(row=i,column=9,columnspan=3,sticky='E',padx=10)
             self.labels.append([label,label4])
 
@@ -307,9 +307,9 @@ class Gui(threading.Thread):
                 self.labels[self.splitstart+i][2].configure(fg=self.state.config["activeHighlight"]["colours"]["text"],bg=self.state.config["activeHighlight"]["colours"]["bg"])
                 self.backgrounds[i].configure(bg=self.state.config["activeHighlight"]["colours"]["bg"])
             else:
-                self.labels[self.splitstart+i][0].configure(fg=self.state.config["mainColour"],bg='black')
+                self.labels[self.splitstart+i][0].configure(fg=self.state.config["root"]["colours"]["text"],bg='black')
                 self.labels[self.splitstart+i][1].configure(bg='black')
-                self.labels[self.splitstart+i][2].configure(fg=self.state.config["mainColour"],bg='black')
+                self.labels[self.splitstart+i][2].configure(fg=self.state.config["root"]["colours"]["text"],bg='black')
                 self.backgrounds[i].configure(bg='black')
         self.labels[self.pbstart-2][0].configure(fg=self.state.config["endColour"])
         self.labels[self.pbstart-2][2].configure(fg=self.state.config["endColour"])
