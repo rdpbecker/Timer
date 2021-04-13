@@ -107,18 +107,11 @@ class Gui(threading.Thread):
             self.labels.append([label,label4])
 
         button1 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Change Compare", fg=config["buttons"]["colours"]["text"],command=self.guiSwitchCompareCW)
-        self.root.bind('<Left>',self.guiSwitchCompareCCW)
-        self.root.bind('<Right>',self.guiSwitchCompareCW)
         button2 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Split", fg=config["buttons"]["colours"]["text"],  command=self.onSplitEnd)
-        self.root.bind('<Return>', self.onSplitEnd)
         button3 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Reset", fg=config["buttons"]["colours"]["text"], command=self.reset)
-        self.root.bind('r', self.reset)
         button4 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Skip Split", fg=config["buttons"]["colours"]["text"], command=self.skip)
-        self.root.bind('s', self.skip)
         button5 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Start Run", fg=config["buttons"]["colours"]["text"], command=self.start)
-        self.root.bind('<space>', self.start)
         button6 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Pause", fg=config["buttons"]["colours"]["text"], command=self.togglePause)
-        self.root.bind('p', self.togglePause)
         button3.grid(row=self.buttonstart,column=0,columnspan=6,sticky='WE')
         button4.grid(row=self.buttonstart,column=6,columnspan=6,sticky='WE')
         button1.grid(row=self.buttonstart+1,column=0,columnspan=6,sticky='WE')
@@ -126,6 +119,14 @@ class Gui(threading.Thread):
         button2.grid(row=self.buttonstart+2,column=0,columnspan=6,sticky='WE')
         button5.grid(row=self.buttonstart+2,column=6,columnspan=6,sticky='WE')
         self.buttons.append([button1,button2,button3,button4,button5,button6])
+
+        self.root.bind(config["hotkeys"]["decreaseComparison"],self.guiSwitchCompareCCW)
+        self.root.bind(config["hotkeys"]["increaseComparison"],self.guiSwitchCompareCW)
+        self.root.bind(config["hotkeys"]["endSegment"], self.onSplitEnd)
+        self.root.bind(config["hotkeys"]["reset"], self.reset)
+        self.root.bind(config["hotkeys"]["skip"], self.skip)
+        self.root.bind(config["hotkeys"]["start"], self.start)
+        self.root.bind(config["hotkeys"]["pause"], self.togglePause)
 
         ## Initialize the text in the gui and set the timer to update 
         ## at 125ish FPS
