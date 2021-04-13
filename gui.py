@@ -29,11 +29,11 @@ class Gui(threading.Thread):
         self.state = State.State()
         config = self.state.config
         generalInfo = {\
-            "timeSave": GeneralInfo.GeneralInfo(config["timeSaveShow"],self.timeSaveSet,self.timeSaveInfo),\
-            "diff": GeneralInfo.GeneralInfo(config["diffShow"],self.diffSet,self.diffInfo),\
-            "bpt": GeneralInfo.GeneralInfo(config["bptShow"],self.bptSet,self.bptInfo),\
-            "sob": GeneralInfo.GeneralInfo(config["sobShow"],self.sobSet,self.sobInfo),\
-            "pb": GeneralInfo.GeneralInfo(config["pbShow"],self.pbSet,self.pbInfo)\
+            "timeSave": GeneralInfo.GeneralInfo(config["infoShow"]["timeSave"],self.timeSaveSet,self.timeSaveInfo),\
+            "diff": GeneralInfo.GeneralInfo(config["infoShow"]["diff"],self.diffSet,self.diffInfo),\
+            "bpt": GeneralInfo.GeneralInfo(config["infoShow"]["bpt"],self.bptSet,self.bptInfo),\
+            "sob": GeneralInfo.GeneralInfo(config["infoShow"]["sob"],self.sobSet,self.sobInfo),\
+            "pb": GeneralInfo.GeneralInfo(config["infoShow"]["pb"],self.pbSet,self.pbInfo)\
         }
         generalInfoKeys = ["timeSave","diff","bpt","sob","pb"]
         self.setSectionStarts(config,generalInfo,generalInfoKeys)

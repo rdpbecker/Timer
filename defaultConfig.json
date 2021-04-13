@@ -35,9 +35,11 @@
     },
     "numSplits": 5,
     "activeSplit": 2,
-    "timeSaveShow": true,
-    "diffShow": true,
-    "bptShow": true,
-    "sobShow": true,
-    "pbShow": true
+    "infoShow": {
+        "timeSave": true,
+        "diff": true,
+        "bpt": true,
+        "sob": true,
+        "pb": true
+    }
 }
