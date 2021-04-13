@@ -5,6 +5,7 @@ import tkinter as tk
 import threading
 from timeit import default_timer as timer
 import State, GeneralInfo, fileio 
+import readConfig as rc
 
 class Gui(threading.Thread):
     labels = []
@@ -120,13 +121,7 @@ class Gui(threading.Thread):
         button5.grid(row=self.buttonstart+2,column=6,columnspan=6,sticky='WE')
         self.buttons.append([button1,button2,button3,button4,button5,button6])
 
-        self.root.bind(config["hotkeys"]["decreaseComparison"],self.guiSwitchCompareCCW)
-        self.root.bind(config["hotkeys"]["increaseComparison"],self.guiSwitchCompareCW)
-        self.root.bind(config["hotkeys"]["endSegment"], self.onSplitEnd)
-        self.root.bind(config["hotkeys"]["reset"], self.reset)
-        self.root.bind(config["hotkeys"]["skip"], self.skip)
-        self.root.bind(config["hotkeys"]["start"], self.start)
-        self.root.bind(config["hotkeys"]["pause"], self.togglePause)
+        self.setHotkeys()
 
         ## Initialize the text in the gui and set the timer to update 
         ## at 125ish FPS
@@ -144,6 +139,16 @@ class Gui(threading.Thread):
             if generalInfo[key].show:
                 count = count + 1
         self.buttonstart = self.bptstart + count
+
+    def setHotkeys(self):
+        rc.validateHotkeys(self.state.config)
+        self.root.bind(self.state.config["hotkeys"]["decreaseComparison"],self.guiSwitchCompareCCW)
+        self.root.bind(self.state.config["hotkeys"]["increaseComparison"],self.guiSwitchCompareCW)
+        self.root.bind(self.state.config["hotkeys"]["endSegment"], self.onSplitEnd)
+        self.root.bind(self.state.config["hotkeys"]["reset"], self.reset)
+        self.root.bind(self.state.config["hotkeys"]["skip"], self.skip)
+        self.root.bind(self.state.config["hotkeys"]["start"], self.start)
+        self.root.bind(self.state.config["hotkeys"]["pause"], self.togglePause)
 
     ##########################################################
     ## Set the timer to update every time this is called
