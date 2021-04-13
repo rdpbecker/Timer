@@ -106,7 +106,9 @@ class Gui(threading.Thread):
             label4.grid(row=i,column=9,columnspan=3,sticky='E',padx=10)
             self.labels.append([label,label4])
 
-        button1 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Change Compare", fg=config["buttons"]["colours"]["text"],command=self.guiSwitchCompare)
+        button1 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Change Compare", fg=config["buttons"]["colours"]["text"],command=self.guiSwitchCompareCW)
+        self.root.bind('<Left>',self.guiSwitchCompareCCW)
+        self.root.bind('<Right>',self.guiSwitchCompareCW)
         button2 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Split", fg=config["buttons"]["colours"]["text"],  command=self.onSplitEnd)
         self.root.bind('<Return>', self.onSplitEnd)
         button3 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Reset", fg=config["buttons"]["colours"]["text"], command=self.reset)
@@ -438,12 +440,18 @@ class Gui(threading.Thread):
         self.labels[self.pbstart][0].configure(text=self.state.currentComparison.segmentHeader+":")
         self.labels[self.pbstart-2][2].configure(text=self.state.currentComparison.getString("totals",-1,{"precision":2}))
 
+    def guiSwitchCompareCCW(self,event=None):
+        self.rotateCompare(-1)
+
+    def guiSwitchCompareCW(self,event=None):
+        self.rotateCompare(1)
+
     ##########################################################
     ## The function called when the 'Switch Compare' button is
     ## clicked
     ##########################################################
-    def guiSwitchCompare(self,event=None):
-        self.state.compareNum = (self.state.compareNum+1)%self.state.numComparisons
+    def rotateCompare(self,rotation):
+        self.state.compareNum = (self.state.compareNum+rotation)%self.state.numComparisons
         self.state.currentComparison = self.state.comparisons[self.state.compareNum]
         self.updateTimes()
         self.updateInfo()
