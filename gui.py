@@ -4,7 +4,7 @@ import timeHelpers as timeh
 import tkinter as tk
 import threading
 from timeit import default_timer as timer
-import State, GeneralInfo, fileio 
+import GeneralInfo
 import readConfig as rc
 
 class Gui(threading.Thread):
@@ -18,16 +18,14 @@ class Gui(threading.Thread):
     buttonstart = 18
     state = None
 
-    def __init__(self):
+    def __init__(self,state):
         threading.Thread.__init__(self)
-        self.run()
+        self.state = state
 
     def callback(self):
         self.root.quit()
 
-    def run(self):
-        ## Initialize the state. This picks the game and category
-        self.state = State.State()
+    def setupGui(self):
         config = self.state.config
         generalInfo = {\
             "timeSave": GeneralInfo.GeneralInfo(config["infoShow"]["timeSave"],self.timeSaveSet,self.timeSaveInfo),\
@@ -126,6 +124,8 @@ class Gui(threading.Thread):
         ## Initialize the text in the gui and set the timer to update 
         ## at 125ish FPS
         self.initialize()
+
+    def startGui(self):
         self.root.after(8,self.update)
 
         self.root.mainloop()
