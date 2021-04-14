@@ -27,7 +27,7 @@ class Gui(threading.Thread):
         self.root.quit()
 
     def addComponent(self,component):
-        component.grid(row=self.numComponents,column=0,columnspan=12,sticky='WE',padx=10)
+        component.grid(row=self.numComponents,column=0,columnspan=12,sticky='WE')
         self.numComponents = self.numComponents + 1
         self.components.append(component)
 
@@ -127,20 +127,6 @@ class Gui(threading.Thread):
             label4.grid(row=i,column=9,columnspan=3,sticky='E',padx=10)
             self.labels.append([label,label4])
 
-        button1 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Change Compare", fg=config["buttons"]["colours"]["text"],command=self.guiSwitchCompareCW)
-        button2 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Split", fg=config["buttons"]["colours"]["text"],  command=self.onSplitEnd)
-        button3 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Reset", fg=config["buttons"]["colours"]["text"], command=self.reset)
-        button4 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Skip Split", fg=config["buttons"]["colours"]["text"], command=self.skip)
-        button5 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Start Run", fg=config["buttons"]["colours"]["text"], command=self.start)
-        button6 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Pause", fg=config["buttons"]["colours"]["text"], command=self.togglePause)
-        button3.grid(row=self.buttonstart,column=0,columnspan=6,sticky='WE')
-        button4.grid(row=self.buttonstart,column=6,columnspan=6,sticky='WE')
-        button1.grid(row=self.buttonstart+1,column=0,columnspan=6,sticky='WE')
-        button6.grid(row=self.buttonstart+1,column=6,columnspan=6,sticky='WE')
-        button2.grid(row=self.buttonstart+2,column=0,columnspan=6,sticky='WE')
-        button5.grid(row=self.buttonstart+2,column=6,columnspan=6,sticky='WE')
-        self.buttons.append([button1,button2,button3,button4,button5,button6])
-
         self.setHotkeys()
 
         ## Initialize the text in the gui and set the timer to update 
@@ -161,7 +147,7 @@ class Gui(threading.Thread):
             if generalInfo[key].show:
                 count = count + 1
         self.buttonstart = self.bptstart + count
-        self.numComponents = self.buttonstart + 3
+        self.numComponents = self.buttonstart
 
     def setHotkeys(self):
         rc.validateHotkeys(self.state.config)
