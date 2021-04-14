@@ -3,6 +3,15 @@
     "endColour": "maroon1",
     "numSplits": 5,
     "activeSplit": 2,
+    "hotkeys": {
+        "decreaseComparison": "<Left>",
+        "split": "<Return>",
+        "increaseComparison": "<Right>",
+        "pause": "p",
+        "reset": "r",
+        "skip": "s",
+        "start": "<space>"
+    },
     "root": {
         "font": ["DejaVu Sans", 10],
         "colours": {

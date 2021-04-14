@@ -5,6 +5,7 @@ import tkinter as tk
 import threading
 from timeit import default_timer as timer
 import State, GeneralInfo, fileio 
+import readConfig as rc
 
 class Gui(threading.Thread):
     labels = []
@@ -106,17 +107,12 @@ class Gui(threading.Thread):
             label4.grid(row=i,column=9,columnspan=3,sticky='E',padx=10)
             self.labels.append([label,label4])
 
-        button1 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Change Compare", fg=config["buttons"]["colours"]["text"],command=self.guiSwitchCompare)
+        button1 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Change Compare", fg=config["buttons"]["colours"]["text"],command=self.guiSwitchCompareCW)
         button2 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Split", fg=config["buttons"]["colours"]["text"],  command=self.onSplitEnd)
-        self.root.bind('<Return>', self.onSplitEnd)
         button3 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Reset", fg=config["buttons"]["colours"]["text"], command=self.reset)
-        self.root.bind('r', self.reset)
         button4 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Skip Split", fg=config["buttons"]["colours"]["text"], command=self.skip)
-        self.root.bind('s', self.skip)
         button5 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Start Run", fg=config["buttons"]["colours"]["text"], command=self.start)
-        self.root.bind('<space>', self.start)
         button6 = tk.Button(self.root, bg=config["buttons"]["colours"]["bg"], font=config["buttons"]["font"], text="Pause", fg=config["buttons"]["colours"]["text"], command=self.togglePause)
-        self.root.bind('p', self.togglePause)
         button3.grid(row=self.buttonstart,column=0,columnspan=6,sticky='WE')
         button4.grid(row=self.buttonstart,column=6,columnspan=6,sticky='WE')
         button1.grid(row=self.buttonstart+1,column=0,columnspan=6,sticky='WE')
@@ -124,6 +120,8 @@ class Gui(threading.Thread):
         button2.grid(row=self.buttonstart+2,column=0,columnspan=6,sticky='WE')
         button5.grid(row=self.buttonstart+2,column=6,columnspan=6,sticky='WE')
         self.buttons.append([button1,button2,button3,button4,button5,button6])
+
+        self.setHotkeys()
 
         ## Initialize the text in the gui and set the timer to update 
         ## at 125ish FPS
@@ -141,6 +139,16 @@ class Gui(threading.Thread):
             if generalInfo[key].show:
                 count = count + 1
         self.buttonstart = self.bptstart + count
+
+    def setHotkeys(self):
+        rc.validateHotkeys(self.state.config)
+        self.root.bind(self.state.config["hotkeys"]["decreaseComparison"],self.guiSwitchCompareCCW)
+        self.root.bind(self.state.config["hotkeys"]["increaseComparison"],self.guiSwitchCompareCW)
+        self.root.bind(self.state.config["hotkeys"]["split"], self.onSplitEnd)
+        self.root.bind(self.state.config["hotkeys"]["reset"], self.reset)
+        self.root.bind(self.state.config["hotkeys"]["skip"], self.skip)
+        self.root.bind(self.state.config["hotkeys"]["start"], self.start)
+        self.root.bind(self.state.config["hotkeys"]["pause"], self.togglePause)
 
     ##########################################################
     ## Set the timer to update every time this is called
@@ -334,7 +342,6 @@ class Gui(threading.Thread):
     def start(self, event=None):
         currentTime = timer()
         if self.state.started:
-            self.onSplitEnd()
             return
         self.state.starttime = currentTime
         self.state.splitstarttime = currentTime
@@ -348,7 +355,6 @@ class Gui(threading.Thread):
     def onSplitEnd(self,event=None):
         splitEnd = timer()
         if not self.state.started:
-            self.start()
             return
 
         if self.state.paused:
@@ -438,12 +444,18 @@ class Gui(threading.Thread):
         self.labels[self.pbstart][0].configure(text=self.state.currentComparison.segmentHeader+":")
         self.labels[self.pbstart-2][2].configure(text=self.state.currentComparison.getString("totals",-1,{"precision":2}))
 
+    def guiSwitchCompareCCW(self,event=None):
+        self.rotateCompare(-1)
+
+    def guiSwitchCompareCW(self,event=None):
+        self.rotateCompare(1)
+
     ##########################################################
     ## The function called when the 'Switch Compare' button is
     ## clicked
     ##########################################################
-    def guiSwitchCompare(self,event=None):
-        self.state.compareNum = (self.state.compareNum+1)%self.state.numComparisons
+    def rotateCompare(self,rotation):
+        self.state.compareNum = (self.state.compareNum+rotation)%self.state.numComparisons
         self.state.currentComparison = self.state.comparisons[self.state.compareNum]
         self.updateTimes()
         self.updateInfo()
