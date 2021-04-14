@@ -115,6 +115,7 @@ class State:
         if timeh.greater(self.currentBests.bests[self.splitnum],splitTime):
             self.currentBests.update(splitTime,self.splitnum)
         self.splitnum = self.splitnum + 1
+        self.splitstarttime = endTime
 
     def skipSegment(self,splitEnd):
         self.currentRun.addSegment("BLANK","BLANK")
@@ -122,6 +123,7 @@ class State:
         for i in range(self.numComparisons):
             self.comparisons[i].updateDiffs("BLANK","BLANK")
         self.splitnum = self.splitnum + 1
+        self.splitstarttime = splitEnd
 
     def endPause(self,time):
             self.paused = False

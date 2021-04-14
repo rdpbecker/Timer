@@ -17,6 +17,7 @@ class Gui(threading.Thread):
     bptstart = 14
     buttonstart = 18
     state = None
+    components = []
 
     def __init__(self,state):
         threading.Thread.__init__(self)
@@ -28,6 +29,23 @@ class Gui(threading.Thread):
     def addComponent(self,component):
         component.grid(row=self.numComponents,column=0,columnspan=12,sticky='WE',padx=10)
         self.numComponents = self.numComponents + 1
+        self.components.append(component)
+
+    def switchSignal(self,component,signalType):
+        signals = {
+            "frame": component.frameUpdate,
+            "start": component.onStarted,
+            "split": component.onSplit,
+            "comp": component.onComparisonChanged,
+            "pause": component.onPaused,
+            "skip": component.onSplitSkipped,
+            "reset": component.onReset
+        }
+        signals.get(signalType)()
+
+    def updateComponents(self,signalType):
+        for component in self.components:
+            self.switchSignal(component,signalType)
 
     def setupGui(self):
         config = self.state.config
@@ -174,6 +192,7 @@ class Gui(threading.Thread):
                 and (not timeh.greater(self.state.currentComparison.totals[self.state.splitnum],self.state.totalTime)\
                 or not timeh.greater(self.state.comparisons[0].segments[self.state.splitnum],self.state.segmentTime)):
                 self.showCurrentSplitDiff()
+            self.updateComponents("frame")
         if self.state.splitnum < len(self.state.splitnames) and not self.state.reset:
             self.root.after(17,self.update)
         else:
@@ -351,6 +370,7 @@ class Gui(threading.Thread):
         self.state.starttime = currentTime
         self.state.splitstarttime = currentTime
         self.state.started = True
+        self.updateComponents("start")
 
     ##########################################################
     ## At the end of each split, record and store the times, 
@@ -374,7 +394,7 @@ class Gui(threading.Thread):
         self.updateCurrentColour()
         if self.state.splitnum < len(self.state.splitnames):
             self.updateInfo()
-        self.state.splitstarttime = splitEnd
+        self.updateComponents("split")
 
     def getCurrentDiffColour(self,segmentDiff,totalDiff):
         if timeh.greater(0,totalDiff):
@@ -465,12 +485,14 @@ class Gui(threading.Thread):
         self.updateTimes()
         self.updateInfo()
         self.updateCompare()
+        self.updateComponents("comp")
 
     ##########################################################
     ## Stop the run here
     ##########################################################
     def reset(self, event=None):
         self.state.reset = True
+        self.updateComponents("reset")
 
     ##########################################################
     ## Skip a split
@@ -482,7 +504,7 @@ class Gui(threading.Thread):
         self.updateCurrentColour()
         if self.state.splitnum < len(self.state.splitnames):
             self.updateInfo()
-        self.state.splitstarttime = splitEnd
+        self.updateComponents("skip")
 
     def togglePause(self,event=None):
         currentTime = timer()
@@ -490,6 +512,7 @@ class Gui(threading.Thread):
             self.state.endPause(currentTime)
         else:
             self.state.startPause(currentTime)
+        self.updateComponents("pause")
 
     def timeSaveSet(self,i):
         self.labels[self.bptstart+i][0].configure(text="Possible Time Save:")

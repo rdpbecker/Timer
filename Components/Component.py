@@ -11,3 +11,24 @@ class Component(tk.Frame):
     def configureColumns(self):
         for i in range(12):
             self.columnconfigure(i,weight=1)
+
+    def frameUpdate(self):
+        pass
+
+    def onStarted(self):
+        pass
+
+    def onSplit(self):
+        pass
+
+    def onComparisonChanged(self):
+        pass
+
+    def onPaused(self):
+        pass
+
+    def onSplitSkipped(self):
+        pass
+
+    def onReset(self):
+        pass
