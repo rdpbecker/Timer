@@ -7,3 +7,6 @@ class SobInfo(Info.Info):
         Info.Info.__init__(self,parent,state)
         self.header.configure(text="Sum of Bests:")
         self.info.configure(text=timeh.timeToString(self.state.currentBests.total,{"precision":2}))
+
+    def onSplit(self):
+        self.info.configure(text=timeh.timeToString(self.state.currentBests.total,{"precision":2}))
