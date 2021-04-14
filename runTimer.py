@@ -1,6 +1,6 @@
 import gui
 import State
-from Components import CompareInfo, PbInfo, ControlButtons
+from Components import CompareInfo, PbInfo, SobInfo, ControlButtons
 import tkinter as tk
 
 ## Initialize the state. This picks the game and category
@@ -10,6 +10,8 @@ app = gui.Gui(state)
 app.setupGui()
 
 rootWindow = app.root
+if (state.config["infoShow"]["sob"]):
+    app.addComponent(SobInfo.SobInfo(rootWindow,state))
 if (state.config["infoShow"]["pb"]):
     app.addComponent(PbInfo.PbInfo(rootWindow,state))
 if (state.config["infoShow"]["comparison"]):

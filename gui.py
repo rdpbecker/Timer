@@ -52,10 +52,9 @@ class Gui(threading.Thread):
         generalInfo = {\
             "timeSave": GeneralInfo.GeneralInfo(config["infoShow"]["timeSave"],self.timeSaveSet,self.timeSaveInfo),\
             "diff": GeneralInfo.GeneralInfo(config["infoShow"]["diff"],self.diffSet,self.diffInfo),\
-            "bpt": GeneralInfo.GeneralInfo(config["infoShow"]["bpt"],self.bptSet,self.bptInfo),\
-            "sob": GeneralInfo.GeneralInfo(config["infoShow"]["sob"],self.sobSet,self.sobInfo)\
+            "bpt": GeneralInfo.GeneralInfo(config["infoShow"]["bpt"],self.bptSet,self.bptInfo)\
         }
-        generalInfoKeys = ["timeSave","diff","bpt","sob"]
+        generalInfoKeys = ["timeSave","diff","bpt"]
         self.setSectionStarts(config,generalInfo,generalInfoKeys)
         self.state.generalInfo = generalInfo
         self.state.generalInfoKeys = generalInfoKeys
@@ -508,9 +507,6 @@ class Gui(threading.Thread):
     def bptSet(self,i):
         self.labels[self.bptstart+i][0].configure(text="Best Possible Time:")
 
-    def sobSet(self,i):
-        self.labels[self.bptstart+i][0].configure(text="Sum of Bests:")
-
     def timeSaveInfo(self,i):
         self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(timeh.difference(self.state.currentComparison.segments[self.state.splitnum],self.state.comparisons[0].segments[self.state.splitnum]),{"precision":2}))
 
@@ -520,6 +516,3 @@ class Gui(threading.Thread):
 
     def bptInfo(self,i):
         self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(self.state.bptList.total,{"precision":2}))
-
-    def sobInfo(self,i):
-        self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(self.state.currentBests.total,{"precision":2}))
