@@ -88,11 +88,6 @@ of whether all segments have been completed|`r`|
 |`Change Compare`|Changes to the next comparison|`<Left>` for counter-clockwise, and `<Right>` for clockwise|
 |`Pause`|Toggles whether the timer is paused|`p`|
 
-The key bindings for `Start Run` and `Split` are different, but
-they will actually both do the same thing. Pressing `Split` before
-the run has started will start the run, and pressing `Start Run`
-after the run has started will end the current segment.
-
 A couple notes about the key bindings:
 
 1. `Start Run` is disabled after the run has started, and `Split`
