@@ -190,4 +190,5 @@ class State:
         self.replaceCsvLines(pbSplits,5,self.comparesCsv)
         self.insertCsvLines(lastRun,1)
         fileio.writeCSV(self.config["baseDir"],self.game,self.category,self.completeCsv,self.comparesCsv)
+        print("Saved data successfully.")
         print("Close the window to end the program")
