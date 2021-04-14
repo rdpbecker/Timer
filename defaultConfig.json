@@ -56,7 +56,9 @@
         "diff": true,
         "bpt": true,
         "sob": true,
-        "pb": true
+        "pb": true,
+        "comparison": true,
+        "buttons": true
     },
     "buttons": {
         "font": ["DejaVu Sans", 10],

@@ -10,6 +10,8 @@ app = gui.Gui(state)
 app.setupGui()
 
 rootWindow = app.root
-app.addComponent(CompareInfo.CompareInfo(rootWindow,state))
-app.addComponent(ControlButtons.Buttons(rootWindow,state,app))
+if (state.config["infoShow"]["comparison"]):
+    app.addComponent(CompareInfo.CompareInfo(rootWindow,state))
+if (state.config["infoShow"]["buttons"]):
+    app.addComponent(ControlButtons.Buttons(rootWindow,state,app))
 app.startGui()
