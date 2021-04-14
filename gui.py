@@ -25,6 +25,10 @@ class Gui(threading.Thread):
     def callback(self):
         self.root.quit()
 
+    def addComponent(self,component):
+        component.grid(row=self.numComponents,column=0,columnspan=12,sticky='WE',ipadx=10)
+        self.numComponents = self.numComponents + 1
+
     def setupGui(self):
         config = self.state.config
         generalInfo = {\
@@ -139,6 +143,7 @@ class Gui(threading.Thread):
             if generalInfo[key].show:
                 count = count + 1
         self.buttonstart = self.bptstart + count
+        self.numComponents = self.buttonstart + 3
 
     def setHotkeys(self):
         rc.validateHotkeys(self.state.config)
