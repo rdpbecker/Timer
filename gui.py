@@ -342,7 +342,6 @@ class Gui(threading.Thread):
     def start(self, event=None):
         currentTime = timer()
         if self.state.started:
-            self.onSplitEnd()
             return
         self.state.starttime = currentTime
         self.state.splitstarttime = currentTime
@@ -356,7 +355,6 @@ class Gui(threading.Thread):
     def onSplitEnd(self,event=None):
         splitEnd = timer()
         if not self.state.started:
-            self.start()
             return
 
         if self.state.paused:
