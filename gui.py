@@ -26,7 +26,7 @@ class Gui(threading.Thread):
         self.root.quit()
 
     def addComponent(self,component):
-        component.grid(row=self.numComponents,column=0,columnspan=12,sticky='WE',ipadx=10)
+        component.grid(row=self.numComponents,column=0,columnspan=12,sticky='WE',padx=10)
         self.numComponents = self.numComponents + 1
 
     def setupGui(self):
