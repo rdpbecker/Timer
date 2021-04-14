@@ -1,5 +1,6 @@
 {
     "baseDir": "../",
+    "padx": 10,
     "endColour": "maroon1",
     "numSplits": 5,
     "activeSplit": 2,
