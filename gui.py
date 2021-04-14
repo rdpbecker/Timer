@@ -144,7 +144,7 @@ class Gui(threading.Thread):
         rc.validateHotkeys(self.state.config)
         self.root.bind(self.state.config["hotkeys"]["decreaseComparison"],self.guiSwitchCompareCCW)
         self.root.bind(self.state.config["hotkeys"]["increaseComparison"],self.guiSwitchCompareCW)
-        self.root.bind(self.state.config["hotkeys"]["endSegment"], self.onSplitEnd)
+        self.root.bind(self.state.config["hotkeys"]["split"], self.onSplitEnd)
         self.root.bind(self.state.config["hotkeys"]["reset"], self.reset)
         self.root.bind(self.state.config["hotkeys"]["skip"], self.skip)
         self.root.bind(self.state.config["hotkeys"]["start"], self.start)

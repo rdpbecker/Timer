@@ -5,7 +5,7 @@
     "activeSplit": 2,
     "hotkeys": {
         "decreaseComparison": "<Left>",
-        "endSegment": "<Return>",
+        "split": "<Return>",
         "increaseComparison": "<Right>",
         "pause": "p",
         "reset": "r",
