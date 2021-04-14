@@ -1,18 +1,11 @@
 import tkinter as tk
-from Components import Component
+from Components import Info
 
-class CompareInfo(Component.Component):
-    header = ""
-    compare = ""
-
+class CompareInfo(Info.Info):
     def __init__(self,parent,state):
-        Component.Component.__init__(self,parent,state)
-        self.configure(bg=state.config["root"]["colours"]["bg"])
-        self.state = state
-        self.header = tk.Label(self, text="Comparing Against:", fg=state.config["root"]["colours"]["text"], bg=state.config["root"]["colours"]["bg"])
-        self.compare = tk.Label(self, text=state.currentComparison.totalHeader, fg=state.config["root"]["colours"]["text"], bg=state.config["root"]["colours"]["bg"])
-        self.header.grid(row=0,column=0,columnspan=8,sticky='W',ipadx=state.config["padx"])
-        self.compare.grid(row=0,column=8,columnspan=4,sticky='E',ipadx=state.config["padx"])
+        Info.Info.__init__(self,parent,state)
+        self.header.configure(text="Comparing Against:")
+        self.info.configure(text=state.currentComparison.totalHeader)
 
     def onComparisonChanged(self):
-        self.compare.configure(text=self.state.currentComparison.totalHeader)
+        self.info.configure(text=self.state.currentComparison.totalHeader)
