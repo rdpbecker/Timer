@@ -1,7 +1,7 @@
 import tkinter as tk
 from Components import Component
 
-class CompareName(Component.Component):
+class CompareInfo(Component.Component):
     header = ""
     compare = ""
 
