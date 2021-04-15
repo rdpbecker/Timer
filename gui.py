@@ -12,7 +12,6 @@ class Gui(threading.Thread):
     splitstart = 2
     pbstart = 10
     timer = 12
-    bptstart = 14
     state = None
     components = []
 
@@ -96,16 +95,6 @@ class Gui(threading.Thread):
             label4.grid(row=i,column=9,columnspan=3,sticky='E',padx=10)
             self.labels.append([label,label2,label3,label4])
 
-        ## Timers (segment and overall)
-        anchorlist = ['E','']
-        span = [10,12]
-        fontlist = [config["segmentTimer"]["font"],config["mainTimer"]["font"]]
-        colourlist = [config["segmentTimer"]["colour"],config["mainTimer"]["colours"]["main"]]
-        for i in range(self.timer,self.bptstart):
-            label = tk.Label(self.root, bg=config["root"]["colours"]["bg"], text="", fg=colourlist[i-self.timer], font=fontlist[i-self.timer])
-            label.grid(row=i,column=0,columnspan=12,sticky=anchorlist[i-self.timer],padx=100)
-            self.labels.append([label])
-
         self.setHotkeys()
 
         ## Initialize the text in the gui and set the timer to update 
@@ -120,8 +109,7 @@ class Gui(threading.Thread):
     def setSectionStarts(self,config):
         self.pbstart = self.splitstart + config["numSplits"] + 1
         self.timer = self.pbstart + 2
-        self.bptstart = self.timer + 2
-        self.numComponents = self.bptstart
+        self.numComponents = self.timer + 2
 
     def setHotkeys(self):
         rc.validateHotkeys(self.state.config)
@@ -142,9 +130,6 @@ class Gui(threading.Thread):
             if self.state.paused:
                 currentTime = self.state.pauseTime
             self.state.setTimes(currentTime)
-            self.labels[self.timer+1][0].configure(text=timeh.timeToString(self.state.totalTime,{"blankToDash":False,"precision":2}))
-            self.labels[self.timer+1][0].configure(fg=self.setTimerColour())
-            self.labels[self.timer][0].configure(text=timeh.timeToString(self.state.segmentTime,{"blankToDash":False}))
             # if behind gold or behind current comparison total,
             # show the diff column for the current split in the
             # split area. If either is blank, ignore the comparison
@@ -157,74 +142,6 @@ class Gui(threading.Thread):
             self.root.after(17,self.update)
         else:
             self.root.after(1,self.state.doEnd)
-
-    def setTimerColour(self):
-        splitnum = self.state.splitnum
-        if self.state.splitnum >= len(self.state.splitnames):
-            splitnum = len(self.state.splitnames) - 1
-        comparisonTime = self.state.currentComparison.totals[splitnum]
-        comparisonSegment = self.state.currentComparison.segments[splitnum]
-        goldSegment = self.state.comparisons[0].segments[splitnum]
-
-        # last split skipped
-        if self.state.splitnum \
-            and timeh.isBlank(self.state.currentRun.totals[-1]):
-            # total blank or ahead of total
-            if timeh.greater(comparisonTime,self.state.totalTime):
-                return self.state.config["mainTimer"]["colours"]["main"]
-            # behind total
-            else:
-                return self.state.config["mainTimer"]["colours"]["behindLosing"]
-        # total blank
-        if timeh.isBlank(comparisonTime):
-            # gold blank or ahead of gold
-            if timeh.greater(goldSegment,self.state.segmentTime):
-                return self.state.config["mainTimer"]["colours"]["main"]
-            # behind gold
-            else:
-                return self.state.config["mainTimer"]["colours"]["behindLosing"]
-        # ahead of total
-        elif timeh.greater(comparisonTime,self.state.totalTime):
-            # segment blank
-            if timeh.isBlank(comparisonSegment):
-                # gold blank or ahead of gold
-                if timeh.greater(goldSegment,self.state.segmentTime):
-                    return self.state.config["mainTimer"]["colours"]["main"]
-                # behind gold
-                else:
-                    return self.state.config["mainTimer"]["colours"]["aheadLosing"]
-            # ahead of segment
-            elif timeh.greater(comparisonSegment,self.state.segmentTime):
-                # gold blank or ahead of gold
-                if timeh.greater(goldSegment,self.state.segmentTime):
-                    return self.state.config["mainTimer"]["colours"]["main"]
-                # behind gold
-                else:
-                    return self.state.config["mainTimer"]["colours"]["notGoldAheadGaining"]
-            # behind segment
-            else:
-                return self.state.config["mainTimer"]["colours"]["aheadLosing"]
-        # behind total
-        else:
-            # segment blank
-            if timeh.isBlank(comparisonSegment):
-                # gold blank or behind gold
-                if timeh.greater(self.state.segmentTime,goldSegment):
-                    return self.state.config["mainTimer"]["colours"]["behindLosing"]
-                # ahead of gold
-                else:
-                    return self.state.config["mainTimer"]["colours"]["behindGaining"]
-            # ahead of segment
-            elif timeh.greater(comparisonSegment,self.state.segmentTime):
-                # gold blank or ahead of gold
-                if timeh.greater(goldSegment,self.state.segmentTime):
-                    return self.state.config["mainTimer"]["colours"]["behindGaining"]
-                # behind gold
-                else:
-                    return self.state.config["mainTimer"]["colours"]["notGoldBehindGaining"]
-            # behind segment
-            else:
-                return self.state.config["mainTimer"]["colours"]["behindLosing"]
 
     def showCurrentSplitDiff(self):
         activeSplit = self.state.splitnum - self.state.getTopSplitIndex()
