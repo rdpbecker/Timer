@@ -11,9 +11,9 @@ class Gui(threading.Thread):
     backgrounds = []
     splitstart = 2
     pbstart = 10
-    timer = 12
     state = None
     components = []
+    numComponents = 0
 
     def __init__(self,state):
         threading.Thread.__init__(self)
@@ -83,18 +83,6 @@ class Gui(threading.Thread):
             label3.grid(row=i,column=10,columnspan=2,sticky='E',padx=10)
             self.labels.append([label,label2,label3])
 
-        ## Current segment comparisons
-        for i in range(self.pbstart,self.timer):
-            label = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
-            label.grid(row=i,column=0,columnspan=3,sticky='W',padx=10)
-            label2 = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
-            label2.grid(row=i,column=3,columnspan=3,sticky='W')
-            label3 = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
-            label3.grid(row=i,column=6,columnspan=3,sticky='W')
-            label4 = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
-            label4.grid(row=i,column=9,columnspan=3,sticky='E',padx=10)
-            self.labels.append([label,label2,label3,label4])
-
         self.setHotkeys()
 
         ## Initialize the text in the gui and set the timer to update 
@@ -108,8 +96,7 @@ class Gui(threading.Thread):
 
     def setSectionStarts(self,config):
         self.pbstart = self.splitstart + config["numSplits"] + 1
-        self.timer = self.pbstart + 2
-        self.numComponents = self.timer + 2
+        self.numComponents = self.pbstart + 2
 
     def setHotkeys(self):
         rc.validateHotkeys(self.state.config)
@@ -163,7 +150,6 @@ class Gui(threading.Thread):
     def initialize(self):
         self.initHeader()
         self.initTimes()
-        self.initInfo()
         self.updateCurrentColour()
 
     ##########################################################
@@ -188,16 +174,6 @@ class Gui(threading.Thread):
         self.labels[self.pbstart-2][2].configure(text=self.state.currentComparison.getString("totals",-1,{"precision":2}))
 
     ##########################################################
-    ## Initialize all the info on the bottom, including split
-    ## comparisons, time save, BPT, and PB
-    ##########################################################
-    def initInfo(self):
-        self.labels[self.pbstart][0].configure(text=self.state.currentComparison.segmentHeader+":")
-        self.labels[self.pbstart+1][0].configure(text="Best Split:")
-
-        self.updateInfo()
-
-    ##########################################################
     ## Set the colours for the current and last splits based
     ## on the current split number
     ##########################################################
@@ -216,14 +192,6 @@ class Gui(threading.Thread):
                 self.backgrounds[i].configure(bg=self.state.config["root"]["colours"]["bg"])
         self.labels[self.pbstart-2][0].configure(fg=self.state.config["endColour"])
         self.labels[self.pbstart-2][2].configure(fg=self.state.config["endColour"])
-
-    ##########################################################
-    ## Update current split and BPT information based on the
-    ## current split
-    ##########################################################
-    def updateInfo(self):
-        self.labels[self.pbstart][1].configure(text=self.state.currentComparison.getString("segments",self.state.splitnum,{"precision":2}))
-        self.labels[self.pbstart+1][1].configure(text=self.state.comparisons[0].getString("segments",self.state.splitnum,{"precision":2}))
 
     ##########################################################
     ## Initialize the start and first split times when the run
@@ -258,8 +226,6 @@ class Gui(threading.Thread):
         self.state.completeSegment(splitEnd)
         self.updateTimes()
         self.updateCurrentColour()
-        if self.state.splitnum < len(self.state.splitnames):
-            self.updateInfo()
         self.updateComponents("split")
 
     def getCurrentDiffColour(self,segmentDiff,totalDiff):
@@ -332,7 +298,6 @@ class Gui(threading.Thread):
     ##########################################################
     def updateCompare(self):
         self.labels[0][3].configure(text=self.state.currentComparison.totalHeader)
-        self.labels[self.pbstart][0].configure(text=self.state.currentComparison.segmentHeader+":")
         self.labels[self.pbstart-2][2].configure(text=self.state.currentComparison.getString("totals",-1,{"precision":2}))
 
     def guiSwitchCompareCCW(self,event=None):
@@ -349,7 +314,6 @@ class Gui(threading.Thread):
         self.state.compareNum = (self.state.compareNum+rotation)%self.state.numComparisons
         self.state.currentComparison = self.state.comparisons[self.state.compareNum]
         self.updateTimes()
-        self.updateInfo()
         self.updateCompare()
         self.updateComponents("comp")
 
@@ -368,8 +332,6 @@ class Gui(threading.Thread):
         self.state.skipSegment(splitEnd)
         self.updateTimes()
         self.updateCurrentColour()
-        if self.state.splitnum < len(self.state.splitnames):
-            self.updateInfo()
         self.updateComponents("skip")
 
     def togglePause(self,event=None):
