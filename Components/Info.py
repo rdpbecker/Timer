@@ -8,7 +8,6 @@ class Info(Component.Component):
     def __init__(self,parent,state):
         Component.Component.__init__(self,parent,state)
         self.configure(bg=state.config["root"]["colours"]["bg"])
-        self.state = state
         self.header = tk.Label(self, fg=state.config["root"]["colours"]["text"], bg=state.config["root"]["colours"]["bg"])
         self.info = tk.Label(self, fg=state.config["root"]["colours"]["text"], bg=state.config["root"]["colours"]["bg"])
         self.header.grid(row=0,column=0,columnspan=8,sticky='W',ipadx=state.config["padx"])
