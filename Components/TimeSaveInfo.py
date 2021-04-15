@@ -9,6 +9,15 @@ class TimeSaveInfo(Info.Info):
         self.setInfo()
 
     def onSplit(self):
+        self.updateIfNecessary()
+    
+    def onComparisonChanged(self):
+        self.updateIfNecessary()
+
+    def onSplitSkipped(self):
+        self.updateIfNecessary()
+
+    def updateIfNecessary(self):
         if self.state.runEnded:
             return
         self.setInfo()
