@@ -4,18 +4,15 @@ import timeHelpers as timeh
 import tkinter as tk
 import threading
 from timeit import default_timer as timer
-import GeneralInfo
 import readConfig as rc
 
 class Gui(threading.Thread):
     labels = []
-    buttons = []
     backgrounds = []
     splitstart = 2
     pbstart = 10
     timer = 12
     bptstart = 14
-    buttonstart = 18
     state = None
     components = []
 
@@ -49,11 +46,7 @@ class Gui(threading.Thread):
 
     def setupGui(self):
         config = self.state.config
-        generalInfo = {}
-        generalInfoKeys = []
-        self.setSectionStarts(config,generalInfo,generalInfoKeys)
-        self.state.generalInfo = generalInfo
-        self.state.generalInfoKeys = generalInfoKeys
+        self.setSectionStarts(config)
 
         self.root = tk.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.callback)
@@ -113,14 +106,6 @@ class Gui(threading.Thread):
             label.grid(row=i,column=0,columnspan=12,sticky=anchorlist[i-self.timer],padx=100)
             self.labels.append([label])
 
-        ## Information
-        for i in range(self.bptstart,self.buttonstart):
-            label = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
-            label.grid(row=i,column=0,columnspan=6,sticky='W',padx=10)
-            label4 = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
-            label4.grid(row=i,column=9,columnspan=3,sticky='E',padx=10)
-            self.labels.append([label,label4])
-
         self.setHotkeys()
 
         ## Initialize the text in the gui and set the timer to update 
@@ -132,16 +117,11 @@ class Gui(threading.Thread):
 
         self.root.mainloop()
 
-    def setSectionStarts(self,config,generalInfo,generalInfoKeys):
+    def setSectionStarts(self,config):
         self.pbstart = self.splitstart + config["numSplits"] + 1
         self.timer = self.pbstart + 2
         self.bptstart = self.timer + 2
-        count = 0
-        for key in generalInfoKeys:
-            if generalInfo[key].show:
-                count = count + 1
-        self.buttonstart = self.bptstart + count
-        self.numComponents = self.buttonstart
+        self.numComponents = self.bptstart
 
     def setHotkeys(self):
         rc.validateHotkeys(self.state.config)
@@ -295,14 +275,8 @@ class Gui(threading.Thread):
     ## comparisons, time save, BPT, and PB
     ##########################################################
     def initInfo(self):
-        self.labels[self.pbstart][0].configure(text=self.state.currentComparison.segmentHeader)
+        self.labels[self.pbstart][0].configure(text=self.state.currentComparison.segmentHeader+":")
         self.labels[self.pbstart+1][0].configure(text="Best Split:")
-
-        count = 0
-        for key in self.state.generalInfoKeys:
-            if self.state.generalInfo[key].show:
-                self.state.generalInfo[key].startCallback(count)
-                count = count + 1
 
         self.updateInfo()
 
@@ -333,11 +307,6 @@ class Gui(threading.Thread):
     def updateInfo(self):
         self.labels[self.pbstart][1].configure(text=self.state.currentComparison.getString("segments",self.state.splitnum,{"precision":2}))
         self.labels[self.pbstart+1][1].configure(text=self.state.comparisons[0].getString("segments",self.state.splitnum,{"precision":2}))
-        count = 0
-        for key in self.state.generalInfoKeys:
-            if self.state.generalInfo[key].show:
-                self.state.generalInfo[key].generalCallback(count)
-                count = count + 1
 
     ##########################################################
     ## Initialize the start and first split times when the run

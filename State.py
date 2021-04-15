@@ -34,9 +34,6 @@ class State:
     compareNum = 2
     numComparisons = 0
 
-    generalInfo = None
-    generalInfoKeys = []
-
     config = None
 
     def __init__(self):
