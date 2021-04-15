@@ -50,10 +50,9 @@ class Gui(threading.Thread):
     def setupGui(self):
         config = self.state.config
         generalInfo = {\
-            "timeSave": GeneralInfo.GeneralInfo(config["infoShow"]["timeSave"],self.timeSaveSet,self.timeSaveInfo),\
-            "diff": GeneralInfo.GeneralInfo(config["infoShow"]["diff"],self.diffSet,self.diffInfo)\
+            "timeSave": GeneralInfo.GeneralInfo(config["infoShow"]["timeSave"],self.timeSaveSet,self.timeSaveInfo)\
         }
-        generalInfoKeys = ["timeSave","diff"]
+        generalInfoKeys = ["timeSave"]
         self.setSectionStarts(config,generalInfo,generalInfoKeys)
         self.state.generalInfo = generalInfo
         self.state.generalInfoKeys = generalInfoKeys
@@ -500,12 +499,5 @@ class Gui(threading.Thread):
     def timeSaveSet(self,i):
         self.labels[self.bptstart+i][0].configure(text="Possible Time Save:")
 
-    def diffSet(self,i):
-        self.labels[self.bptstart+i][0].configure(text="Last Split (vs Best):")
-
     def timeSaveInfo(self,i):
         self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(timeh.difference(self.state.currentComparison.segments[self.state.splitnum],self.state.comparisons[0].segments[self.state.splitnum]),{"precision":2}))
-
-    def diffInfo(self,i):
-        if self.state.splitnum > 0:
-            self.labels[self.bptstart+i][1].configure(text=self.state.comparisons[0].getString("segmentDiffs",self.state.splitnum-1,{"showSign":True,"precision":2}))
