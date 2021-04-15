@@ -21,4 +21,3 @@ class BptInfo(Info.Info):
 
     def onSplit(self):
         self.info.configure(text=timeh.timeToString(self.state.bptList.total,{"precision":2}))
-

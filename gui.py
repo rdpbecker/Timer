@@ -49,10 +49,8 @@ class Gui(threading.Thread):
 
     def setupGui(self):
         config = self.state.config
-        generalInfo = {\
-            "timeSave": GeneralInfo.GeneralInfo(config["infoShow"]["timeSave"],self.timeSaveSet,self.timeSaveInfo)\
-        }
-        generalInfoKeys = ["timeSave"]
+        generalInfo = {}
+        generalInfoKeys = []
         self.setSectionStarts(config,generalInfo,generalInfoKeys)
         self.state.generalInfo = generalInfo
         self.state.generalInfoKeys = generalInfoKeys
@@ -495,9 +493,3 @@ class Gui(threading.Thread):
         else:
             self.state.startPause(currentTime)
         self.updateComponents("pause")
-
-    def timeSaveSet(self,i):
-        self.labels[self.bptstart+i][0].configure(text="Possible Time Save:")
-
-    def timeSaveInfo(self,i):
-        self.labels[self.bptstart+i][1].configure(text=timeh.timeToString(timeh.difference(self.state.currentComparison.segments[self.state.splitnum],self.state.comparisons[0].segments[self.state.splitnum]),{"precision":2}))
