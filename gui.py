@@ -70,19 +70,6 @@ class Gui(threading.Thread):
             label4.grid(row=i,column=9,columnspan=3,sticky='E',ipadx=10)
             self.labels.append([label,label2,label3,label4])
 
-        ## Splits and comparisons
-        for i in range(self.splitstart,self.pbstart):
-            background = tk.Frame(self.root, bg=config["root"]["colours"]["bg"])
-            background.grid(row=i,column=0,columnspan=12,sticky='NSWE')
-            self.backgrounds.append(background)
-            label = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
-            label.grid(row=i,column=0,columnspan=8,sticky='W',padx=10)
-            label2 = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
-            label2.grid(row=i,column=8,columnspan=2,sticky='E')
-            label3 = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
-            label3.grid(row=i,column=10,columnspan=2,sticky='E',padx=10)
-            self.labels.append([label,label2,label3])
-
         self.setHotkeys()
 
         ## Initialize the text in the gui and set the timer to update 
@@ -117,31 +104,11 @@ class Gui(threading.Thread):
             if self.state.paused:
                 currentTime = self.state.pauseTime
             self.state.setTimes(currentTime)
-            # if behind gold or behind current comparison total,
-            # show the diff column for the current split in the
-            # split area. If either is blank, ignore the comparison
-            if self.state.splitnum < len(self.state.splitnames) \
-                and (not timeh.greater(self.state.currentComparison.totals[self.state.splitnum],self.state.totalTime)\
-                or not timeh.greater(self.state.comparisons[0].segments[self.state.splitnum],self.state.segmentTime)):
-                self.showCurrentSplitDiff()
             self.updateComponents("frame")
         if self.state.splitnum < len(self.state.splitnames) and not self.state.reset:
             self.root.after(17,self.update)
         else:
             self.root.after(1,self.state.doEnd)
-
-    def showCurrentSplitDiff(self):
-        activeSplit = self.state.splitnum - self.state.getTopSplitIndex()
-        self.labels[self.splitstart+activeSplit][1].configure(\
-            text=timeh.timeToString(\
-                timeh.difference(self.state.totalTime,self.state.currentComparison.totals[self.state.splitnum]),\
-                {"showSign":True,"precision": 2}\
-            ),\
-            fg=self.getCurrentDiffColour(\
-                timeh.difference(self.state.segmentTime,self.state.currentComparison.segments[self.state.splitnum]), \
-                timeh.difference(self.state.totalTime,self.state.currentComparison.totals[self.state.splitnum])\
-            )\
-        )
 
     ##########################################################
     ## Caller to all the functions that initialize text before
@@ -149,8 +116,6 @@ class Gui(threading.Thread):
     ##########################################################
     def initialize(self):
         self.initHeader()
-        self.initTimes()
-        self.updateCurrentColour()
 
     ##########################################################
     ## Initialize the header with game, category, and
@@ -161,37 +126,6 @@ class Gui(threading.Thread):
         self.labels[0][1].configure(text=self.state.category)
         self.labels[0][2].configure(text="Comparing Against")
         self.labels[0][3].configure(text=self.state.currentComparison.totalHeader)
-
-    ##########################################################
-    ## Initialize the split names and times for the first few
-    ## splits and the last one. This is based on the PB time
-    ##########################################################
-    def initTimes(self):
-        for i in range(0,self.pbstart-self.splitstart-2):
-            self.labels[self.splitstart+i][0].configure(text=self.state.splitnames[i])
-            self.labels[self.splitstart+i][2].configure(text=self.state.currentComparison.getString("totals",i,{"precision":2}))
-        self.labels[self.pbstart-2][0].configure(text=self.state.splitnames[-1])
-        self.labels[self.pbstart-2][2].configure(text=self.state.currentComparison.getString("totals",-1,{"precision":2}))
-
-    ##########################################################
-    ## Set the colours for the current and last splits based
-    ## on the current split number
-    ##########################################################
-    def updateCurrentColour(self):
-        lowIndex = self.state.getTopSplitIndex()
-        for i in range(0,self.pbstart-self.splitstart-1):
-            if i == self.state.splitnum-lowIndex:
-                self.labels[self.splitstart+i][0].configure(fg=self.state.config["activeHighlight"]["colours"]["text"],bg=self.state.config["activeHighlight"]["colours"]["bg"])
-                self.labels[self.splitstart+i][1].configure(bg=self.state.config["activeHighlight"]["colours"]["bg"])
-                self.labels[self.splitstart+i][2].configure(fg=self.state.config["activeHighlight"]["colours"]["text"],bg=self.state.config["activeHighlight"]["colours"]["bg"])
-                self.backgrounds[i].configure(bg=self.state.config["activeHighlight"]["colours"]["bg"])
-            else:
-                self.labels[self.splitstart+i][0].configure(fg=self.state.config["root"]["colours"]["text"],bg=self.state.config["root"]["colours"]["bg"])
-                self.labels[self.splitstart+i][1].configure(bg=self.state.config["root"]["colours"]["bg"])
-                self.labels[self.splitstart+i][2].configure(fg=self.state.config["root"]["colours"]["text"],bg=self.state.config["root"]["colours"]["bg"])
-                self.backgrounds[i].configure(bg=self.state.config["root"]["colours"]["bg"])
-        self.labels[self.pbstart-2][0].configure(fg=self.state.config["endColour"])
-        self.labels[self.pbstart-2][2].configure(fg=self.state.config["endColour"])
 
     ##########################################################
     ## Initialize the start and first split times when the run
@@ -224,73 +158,7 @@ class Gui(threading.Thread):
             self.togglePause()
 
         self.state.completeSegment(splitEnd)
-        self.updateTimes()
-        self.updateCurrentColour()
         self.updateComponents("split")
-
-    def getCurrentDiffColour(self,segmentDiff,totalDiff):
-        if timeh.greater(0,totalDiff):
-            # if comparison segment is blank or current segment is
-            # ahead
-            if timeh.greater(0,segmentDiff):
-                return self.state.config["diff"]["colours"]["aheadGaining"]
-            else:
-                return self.state.config["diff"]["colours"]["aheadLosing"]
-        else:
-            # if comparison segment is blank or current segment is
-            # behind
-            if timeh.greater(segmentDiff,0):
-                return self.state.config["diff"]["colours"]["behindLosing"]
-            else:
-                return self.state.config["diff"]["colours"]["behindGaining"]
-
-    def findDiffColour(self,splitIndex):
-        # Either the split in this run is blank, or we're comparing
-        # to something that's blank
-        if \
-            timeh.isBlank(self.state.currentRun.totals[splitIndex]) \
-            or timeh.isBlank(self.state.currentComparison.totals[splitIndex]):
-            return self.state.config["diff"]["colours"]["skipped"]
-        # This split is the best ever. Mark it with the gold colour
-        elif not timeh.isBlank(self.state.comparisons[0].segmentDiffs[splitIndex]) \
-            and timeh.greater(0,self.state.comparisons[0].segmentDiffs[splitIndex]):
-            return self.state.config["diff"]["colours"]["gold"]
-        else:
-            return self.getCurrentDiffColour(\
-                self.state.currentComparison.segmentDiffs[splitIndex],\
-                self.state.currentComparison.totalDiffs[splitIndex]\
-            )
-
-    ##########################################################
-    ## Update the times and split names in the split portion 
-    ## of the GUI. This includes shifting entries as needed so
-    ## the current split is the third entry in the list, and 
-    ## colouring the diff numbers properly
-    ##########################################################
-    def updateTimes(self):
-        ## i is the number from the top of the list of splits. For the 
-        ## top entry i=0, the next one down has i=1, and so on
-        ##
-        ## lowIndex is the index in the list of splits of the top split
-        ## in the gui - if split #5 is at the top of the view area in
-        ## the gui, then lowIndex=5
-        lowIndex = self.state.getTopSplitIndex()
-        for i in range(0,self.pbstart-self.splitstart-2):
-            ## The index of the split we're looking at currently
-            subjectSplitIndex = i+lowIndex
-            self.labels[self.splitstart+i][0].configure(text=self.state.splitnames[subjectSplitIndex])
-            if self.state.splitnum > subjectSplitIndex:
-                self.labels[self.splitstart+i][1].configure(text=self.state.currentComparison.getString("totalDiffs",subjectSplitIndex,{"showSign":True,"precision":2}))
-                self.labels[self.splitstart+i][2].configure(text=timeh.timeToString(self.state.currentRun.totals[subjectSplitIndex],{"precision":2}))
-                self.labels[self.splitstart+i][1].configure(fg=self.findDiffColour(subjectSplitIndex))
-            else:
-                self.labels[self.splitstart+i][1].configure(text="")
-                self.labels[self.splitstart+i][2].configure(text=self.state.currentComparison.getString("totals",subjectSplitIndex,{"precision":2}))
-
-        if self.state.splitnum >= len(self.state.splitnames):
-            self.labels[self.pbstart-2][1].configure(text=self.state.currentComparison.getString("totalDiffs",-1,{"showSign":True,"precision":2}))
-            self.labels[self.pbstart-2][2].configure(text=timeh.timeToString(self.state.currentRun.totals[-1],{"precision":2}))
-            self.labels[self.pbstart-2][1].configure(fg=self.findDiffColour(len(self.state.splitnames)-1))
 
     ##########################################################
     ## Update information about the comparison splits when the 
@@ -298,7 +166,6 @@ class Gui(threading.Thread):
     ##########################################################
     def updateCompare(self):
         self.labels[0][3].configure(text=self.state.currentComparison.totalHeader)
-        self.labels[self.pbstart-2][2].configure(text=self.state.currentComparison.getString("totals",-1,{"precision":2}))
 
     def guiSwitchCompareCCW(self,event=None):
         self.rotateCompare(-1)
@@ -313,7 +180,6 @@ class Gui(threading.Thread):
     def rotateCompare(self,rotation):
         self.state.compareNum = (self.state.compareNum+rotation)%self.state.numComparisons
         self.state.currentComparison = self.state.comparisons[self.state.compareNum]
-        self.updateTimes()
         self.updateCompare()
         self.updateComponents("comp")
 
@@ -330,8 +196,6 @@ class Gui(threading.Thread):
     def skip(self,event=None):
         splitEnd = timer()
         self.state.skipSegment(splitEnd)
-        self.updateTimes()
-        self.updateCurrentColour()
         self.updateComponents("skip")
 
     def togglePause(self,event=None):

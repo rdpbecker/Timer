@@ -17,6 +17,7 @@ class State:
 
     splitnum = 0
     splitnames = []
+    numSplits = 0
 
     game = ""
     category = ""
@@ -82,6 +83,7 @@ class State:
         self.game = splitnames["game"]
         self.category = splitnames["category"]
         self.splitnames = splitnames["splits"]
+        self.numSplits = len(self.splitnames)
         config = rc.mergeConfigs(config,rc.getGameConfig(config["baseDir"],self.game,self.category))
         return config
 
@@ -90,13 +92,6 @@ class State:
         for i in range(1,len(toCheck)):
             times.append(timeh.stringToTime(toCheck[i][col]))
         return times
-
-    def getTopSplitIndex(self):
-        if self.splitnum <= self.config["activeSplit"] - 1:
-            return 0
-        if self.splitnum >= len(self.splitnames) - (self.config["numSplits"]-self.config["activeSplit"]):
-            return len(self.splitnames) - self.config["numSplits"]
-        return self.splitnum - (self.config["activeSplit"] - 1)
 
     def setTimes(self, currentTime):
         self.segmentTime = currentTime - self.splitstarttime
