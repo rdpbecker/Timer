@@ -1,6 +1,6 @@
 import gui
 import State
-from Components import SegmentArea, SegmentCompare, DetailedTimer, CompareInfo, PbInfo, SobInfo, BptInfo, DiffInfo, TimeSaveInfo, ControlButtons
+from Components import Spacer, SegmentArea, SegmentCompare, DetailedTimer, CompareInfo, PbInfo, SobInfo, BptInfo, DiffInfo, TimeSaveInfo, ControlButtons
 import tkinter as tk
 
 ## Initialize the state. This picks the game and category
@@ -12,6 +12,7 @@ app.setupGui()
 rootWindow = app.root
 
 app.addComponent(SegmentArea.SegmentArea(rootWindow,state))
+app.addComponent(Spacer.Spacer(rootWindow,state))
 app.addComponent(SegmentCompare.SegmentCompare(rootWindow,state))
 app.addComponent(DetailedTimer.DetailedTimer(rootWindow,state))
 if (state.config["infoShow"]["timeSave"]):

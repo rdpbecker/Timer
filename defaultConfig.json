@@ -4,6 +4,7 @@
     "endColour": "maroon1",
     "numSplits": 5,
     "activeSplit": 2,
+    "spacerHeight": 20,
     "hotkeys": {
         "decreaseComparison": "<Left>",
         "split": "<Return>",
