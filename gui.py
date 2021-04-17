@@ -9,8 +9,6 @@ import readConfig as rc
 class Gui(threading.Thread):
     labels = []
     backgrounds = []
-    splitstart = 2
-    pbstart = 10
     state = None
     components = []
     numComponents = 0
@@ -45,7 +43,6 @@ class Gui(threading.Thread):
 
     def setupGui(self):
         config = self.state.config
-        self.setSectionStarts(config)
 
         self.root = tk.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.callback)
@@ -54,36 +51,11 @@ class Gui(threading.Thread):
         for i in range(12):
             self.root.columnconfigure(i,minsize=40,weight=1)
 
-        ## Initialize the format of the gui and store references to all
-        ## the labels so we can change them. References are stored in
-        ## a grid
-
-        ## The Title rows
-        for i in range(self.splitstart):
-            label = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
-            label.grid(row=i,column=0,columnspan=2,sticky='W',ipadx=10)
-            label2 = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
-            label2.grid(row=i,column=2,columnspan=3,sticky='W')
-            label3 = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
-            label3.grid(row=i,column=5,columnspan=4,sticky='E')
-            label4 = tk.Label(self.root, bg=config["root"]["colours"]["bg"], font=config["root"]["font"], text="", fg=config["root"]["colours"]["text"])
-            label4.grid(row=i,column=9,columnspan=3,sticky='E',ipadx=10)
-            self.labels.append([label,label2,label3,label4])
-
         self.setHotkeys()
-
-        ## Initialize the text in the gui and set the timer to update 
-        ## at 125ish FPS
-        self.initialize()
 
     def startGui(self):
         self.root.after(8,self.update)
-
         self.root.mainloop()
-
-    def setSectionStarts(self,config):
-        self.pbstart = self.splitstart + config["numSplits"] + 1
-        self.numComponents = self.pbstart + 2
 
     def setHotkeys(self):
         rc.validateHotkeys(self.state.config)
@@ -109,23 +81,6 @@ class Gui(threading.Thread):
             self.root.after(17,self.update)
         else:
             self.root.after(1,self.state.doEnd)
-
-    ##########################################################
-    ## Caller to all the functions that initialize text before
-    ## the run is started
-    ##########################################################
-    def initialize(self):
-        self.initHeader()
-
-    ##########################################################
-    ## Initialize the header with game, category, and
-    ## comparison name
-    ##########################################################
-    def initHeader(self):
-        self.labels[0][0].configure(text=self.state.game)
-        self.labels[0][1].configure(text=self.state.category)
-        self.labels[0][2].configure(text="Comparing Against")
-        self.labels[0][3].configure(text=self.state.currentComparison.totalHeader)
 
     ##########################################################
     ## Initialize the start and first split times when the run
@@ -160,13 +115,6 @@ class Gui(threading.Thread):
         self.state.completeSegment(splitEnd)
         self.updateComponents("split")
 
-    ##########################################################
-    ## Update information about the comparison splits when the 
-    ## comparison is changed
-    ##########################################################
-    def updateCompare(self):
-        self.labels[0][3].configure(text=self.state.currentComparison.totalHeader)
-
     def guiSwitchCompareCCW(self,event=None):
         self.rotateCompare(-1)
 
@@ -180,7 +128,6 @@ class Gui(threading.Thread):
     def rotateCompare(self,rotation):
         self.state.compareNum = (self.state.compareNum+rotation)%self.state.numComparisons
         self.state.currentComparison = self.state.comparisons[self.state.compareNum]
-        self.updateCompare()
         self.updateComponents("comp")
 
     ##########################################################
