@@ -1,30 +1,44 @@
 # Run tkinter code in another thread
 
-import timeHelpers as timeh
 import tkinter as tk
 import threading
 from timeit import default_timer as timer
-import readConfig as rc
 
 class App(threading.Thread):
-    labels = []
-    backgrounds = []
     state = None
     components = []
     numComponents = 0
 
+    ##########################################################
+    ## Initialize the app in a different thread than the state
+    ##
+    ## Parameters: state - the state of the program
+    ##########################################################
     def __init__(self,state):
         threading.Thread.__init__(self)
         self.state = state
 
-    def callback(self):
-        self.root.quit()
-
+    ##########################################################
+    ## Add a component to the bottom of the app, and track the
+    ## new component.
+    ##
+    ## Parameters: component - the component to add to the app.
+    ##                         Must extend the
+    ##                         Component.Component class so it
+    ##                         has the appropriate signals.
+    ##########################################################
     def addComponent(self,component):
         component.grid(row=self.numComponents,column=0,columnspan=12,sticky='WE')
         self.numComponents = self.numComponents + 1
         self.components.append(component)
 
+    ##########################################################
+    ## Calls the signal on the given component of the
+    ## specified type.
+    ##
+    ## Parameters: component - the component to update
+    ##             signalType - the signal to dispatch
+    ##########################################################
     def switchSignal(self,component,signalType):
         signals = {
             "frame": component.frameUpdate,
@@ -37,24 +51,36 @@ class App(threading.Thread):
         }
         signals.get(signalType)()
 
+    ##########################################################
+    ## Updates all the components with a given signal type.
+    ##
+    ## Parameters: signalType - the type of signal to dispatch
+    ##########################################################
     def updateComponents(self,signalType):
         for component in self.components:
             self.switchSignal(component,signalType)
 
+    ##########################################################
+    ## Creates the window with the destruction callback, and
+    ## sets control callbacks.
+    ##########################################################
     def setupGui(self):
-        config = self.state.config
-
         self.root = tk.Tk()
-        self.root.protocol("WM_DELETE_WINDOW", self.callback)
-        self.root.configure(background=config["root"]["colours"]["bg"])
+        self.root.protocol("WM_DELETE_WINDOW", self.root.quit)
         self.setHotkeys()
 
+    ##########################################################
+    ## Show the window, and call the first update after one
+    ## frame.
+    ##########################################################
     def startGui(self):
-        self.root.after(8,self.update)
+        self.root.after(17,self.update)
         self.root.mainloop()
 
+    ##########################################################
+    ## Sets the hotkeys for the window.
+    ##########################################################
     def setHotkeys(self):
-        rc.validateHotkeys(self.state.config)
         self.root.bind(self.state.config["hotkeys"]["decreaseComparison"],self.guiSwitchCompareCCW)
         self.root.bind(self.state.config["hotkeys"]["increaseComparison"],self.guiSwitchCompareCW)
         self.root.bind(self.state.config["hotkeys"]["split"], self.onSplitEnd)

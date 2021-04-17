@@ -104,7 +104,7 @@ class State:
     ## Sets the segment and total times. Should be used only
     ## for frame updates.
     ## Parameter: time - the current time according to the
-    ##                          system clock
+    ##                   system clock
     ##########################################################
     def setTimes(self, time):
         self.segmentTime = time - self.splitstarttime

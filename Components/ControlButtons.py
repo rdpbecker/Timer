@@ -8,17 +8,16 @@ class Buttons(Component.Component):
     def __init__(self,parent,state,rootWindow):
         Component.Component.__init__(self,parent,state)
         self.rootWindow = rootWindow
-        button1 = tk.Button(self, bg=state.config["buttons"]["colours"]["bg"], font=state.config["buttons"]["font"], text="Change Compare", fg=state.config["buttons"]["colours"]["text"],command=rootWindow.guiSwitchCompareCW)
+        bg = state.config["buttons"]["colours"]["bg"]
+        fg = state.config["buttons"]["colours"]["text"]
+        font = state.config["buttons"]["font"]
 
-        button2 = tk.Button(self, bg=state.config["buttons"]["colours"]["bg"], font=state.config["buttons"]["font"], text="Split", fg=state.config["buttons"]["colours"]["text"], command=rootWindow.onSplitEnd)
-
-        button3 = tk.Button(self, bg=state.config["buttons"]["colours"]["bg"], font=state.config["buttons"]["font"], text="Reset", fg=state.config["buttons"]["colours"]["text"], command=rootWindow.reset)
-
-        button4 = tk.Button(self, bg=state.config["buttons"]["colours"]["bg"], font=state.config["buttons"]["font"], text="Skip Split", fg=state.config["buttons"]["colours"]["text"], command=rootWindow.skip)
-
-        button5 = tk.Button(self, bg=state.config["buttons"]["colours"]["bg"], font=state.config["buttons"]["font"], text="Start Run", fg=state.config["buttons"]["colours"]["text"], command=rootWindow.start)
-
-        button6 = tk.Button(self, bg=state.config["buttons"]["colours"]["bg"], font=state.config["buttons"]["font"], text="Pause", fg=state.config["buttons"]["colours"]["text"], command=rootWindow.togglePause)
+        button1 = tk.Button(self, bg=bg, font=font, text="Change Compare", fg=fg,command=rootWindow.guiSwitchCompareCW)
+        button2 = tk.Button(self, bg=bg, font=font, text="Split", fg=fg, command=rootWindow.onSplitEnd)
+        button3 = tk.Button(self, bg=bg, font=font, text="Reset", fg=fg, command=rootWindow.reset)
+        button4 = tk.Button(self, bg=bg, font=font, text="Skip Split", fg=fg, command=rootWindow.skip)
+        button5 = tk.Button(self, bg=bg, font=font, text="Start Run", fg=fg, command=rootWindow.start)
+        button6 = tk.Button(self, bg=bg, font=font, text="Pause", fg=fg, command=rootWindow.togglePause)
 
         button3.grid(row=0,column=0,columnspan=6,sticky='WE')
         button4.grid(row=0,column=6,columnspan=6,sticky='WE')
