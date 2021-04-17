@@ -1,4 +1,4 @@
-import gui
+import app
 import State
 from Components import DetailedTitle, Spacer, SegmentArea, SegmentCompare, DetailedTimer, CompareInfo, PbInfo, SobInfo, BptInfo, DiffInfo, TimeSaveInfo, ControlButtons
 import tkinter as tk
@@ -6,7 +6,7 @@ import tkinter as tk
 ## Initialize the state. This picks the game and category
 state = State.State()
 
-app = gui.Gui(state)
+app = app.App(state)
 app.setupGui()
 
 rootWindow = app.root

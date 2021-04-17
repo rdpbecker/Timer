@@ -6,7 +6,7 @@ import threading
 from timeit import default_timer as timer
 import readConfig as rc
 
-class Gui(threading.Thread):
+class App(threading.Thread):
     labels = []
     backgrounds = []
     state = None
@@ -47,10 +47,6 @@ class Gui(threading.Thread):
         self.root = tk.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.callback)
         self.root.configure(background=config["root"]["colours"]["bg"])
-
-        for i in range(12):
-            self.root.columnconfigure(i,minsize=40,weight=1)
-
         self.setHotkeys()
 
     def startGui(self):
@@ -102,22 +98,24 @@ class Gui(threading.Thread):
     ##########################################################
     def onSplitEnd(self,event=None):
         splitEnd = timer()
-        if not self.state.started:
+        if not self.state.started or self.state.paused:
             return
 
-        if self.state.paused:
-            self.togglePause()
-            return
-        
         if self.state.splitnames[self.state.splitnum][-3:] == "[P]" and not self.state.splitnum == len(self.state.splitnames) and not self.state.paused:
             self.togglePause()
 
         self.state.completeSegment(splitEnd)
         self.updateComponents("split")
 
+    ##########################################################
+    ## Move the comparison counter-clockwise (backwards)
+    ##########################################################
     def guiSwitchCompareCCW(self,event=None):
         self.rotateCompare(-1)
 
+    ##########################################################
+    ## Move the comparison clockwise (forwards)
+    ##########################################################
     def guiSwitchCompareCW(self,event=None):
         self.rotateCompare(1)
 
@@ -145,6 +143,9 @@ class Gui(threading.Thread):
         self.state.skipSegment(splitEnd)
         self.updateComponents("skip")
 
+    ##########################################################
+    ## If paused, unpause. If not paused, pause.
+    ##########################################################
     def togglePause(self,event=None):
         currentTime = timer()
         if self.state.paused:
