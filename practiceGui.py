@@ -1,6 +1,5 @@
 # Run tkinter code in another thread
 
-import Time
 import tkinter as tk
 import threading
 from timeit import default_timer as timer
