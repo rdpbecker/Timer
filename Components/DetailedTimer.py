@@ -12,14 +12,37 @@ class DetailedTimer(Component.Component):
         self.state = state
         self.segment = tk.Label(self, bg=state.config["root"]["colours"]["bg"], fg=state.config["segmentTimer"]["colour"], font=state.config["segmentTimer"]["font"])
         self.main = tk.Label(self, bg=state.config["root"]["colours"]["bg"], fg=state.config["mainTimer"]["colours"]["main"], font=state.config["mainTimer"]["font"])
-        self.segment.grid(row=0,column=9,columnspan=1)
+        self.segment.grid(row=0,column=0,columnspan=10,sticky="E")
         self.main.grid(row=1,column=0,columnspan=12)
 
     def frameUpdate(self):
-        self.main.configure(text=timeh.timeToString(self.state.totalTime,{"blankToDash":False,"precision":2}))
-        self.segment.configure(text=timeh.timeToString(self.state.segmentTime,{"blankToDash":False}))
         if not self.state.runEnded:
+            self.main.configure(\
+                text=timeh.timeToString(\
+                    self.state.totalTime,\
+                    {"blankToDash":False,"precision":2}\
+                )\
+            )
+            self.segment.configure(\
+                text=timeh.timeToString(\
+                    self.state.segmentTime,\
+                    {"blankToDash":False}\
+                )\
+            )
             self.main.configure(fg=self.timerColour())
+        else:
+            self.main.configure(\
+                text=timeh.timeToString(\
+                    self.state.currentRun.totals[-1],\
+                    {"blankToDash":False,"precision":2}\
+                )\
+            )
+            self.segment.configure(\
+                text=timeh.timeToString(\
+                    self.state.currentRun.segments[-1],\
+                    {"blankToDash":False}\
+                )\
+            )
 
     def timerColour(self):
         splitnum = self.state.splitnum
