@@ -1,6 +1,6 @@
 import app
 import State
-from Components import Title, DetailedTitle, Spacer, SegmentArea, SegmentCompare, DetailedTimer, CompareInfo, PbInfo, SobInfo, BptInfo, DiffInfo, TimeSaveInfo, ControlButtons
+from Components import Title, DetailedTitle, Spacer, SegmentArea, SegmentCompare, Timer, DetailedTimer, CompareInfo, PbInfo, SobInfo, BptInfo, DiffInfo, TimeSaveInfo, ControlButtons
 import tkinter as tk
 
 ## Initialize the state. This picks the game and category
