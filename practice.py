@@ -1,3 +1,4 @@
 import practiceGui
 
-gui = practiceGui.Gui()
+state = practiceState.State()
+gui = practiceGui.Gui(state)
