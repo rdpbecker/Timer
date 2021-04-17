@@ -19,5 +19,5 @@ class Title(Component.Component):
         self.game.configure(text=self.state.game)
         self.category.configure(text=self.state.category)
 
-        self.game.grid(row=0,column=3,columnspan=3,sticky='W')
-        self.category.grid(row=0,column=6,columnspan=3,sticky='E')
+        self.game.grid(row=0,column=2,columnspan=4,sticky='W')
+        self.category.grid(row=0,column=6,columnspan=4,sticky='E')
