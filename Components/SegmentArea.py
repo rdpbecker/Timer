@@ -54,6 +54,8 @@ class SegmentArea(Component.Component):
         self.setMainHeaders()
         self.setAllDiffs()
         self.setMainComparisons()
+        if self.state.runEnded:
+            self.setLastComparison()
 
     def setMainHeaders(self):
         for i in range(self.numRows-1):
