@@ -10,5 +10,5 @@ class Info(Component.Component):
         self.configure(bg=state.config["root"]["colours"]["bg"])
         self.header = tk.Label(self, fg=state.config["root"]["colours"]["text"], bg=state.config["root"]["colours"]["bg"])
         self.info = tk.Label(self, fg=state.config["root"]["colours"]["text"], bg=state.config["root"]["colours"]["bg"])
-        self.header.grid(row=0,column=0,columnspan=8,sticky='W',ipadx=state.config["padx"])
-        self.info.grid(row=0,column=8,columnspan=4,sticky='E',ipadx=state.config["padx"])
+        self.header.grid(row=0,column=0,columnspan=7,sticky='W',ipadx=state.config["padx"])
+        self.info.grid(row=0,column=7,columnspan=5,sticky='E',ipadx=state.config["padx"])

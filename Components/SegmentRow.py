@@ -14,12 +14,12 @@ class SegmentRow(tk.Frame):
         self.comparison = tk.Label(self, bg=bg, font=font, fg=fg)
 
         self.header.grid(row=0,column=0,columnspan=8,sticky='W',padx=10)
-        self.diff.grid(row=0,column=8,columnspan=2,sticky='E')
-        self.comparison.grid(row=0,column=10,columnspan=2,sticky='E',padx=10)
+        self.diff.grid(row=0,column=7,columnspan=2,sticky='E')
+        self.comparison.grid(row=0,column=9,columnspan=3,sticky='E',padx=10)
 
     def configureColumns(self):
         for i in range(12):
-            self.columnconfigure(i,minsize=30,weight=1)
+            self.columnconfigure(i,minsize=25,weight=1)
 
     def setHeader(self,**kwargs):
         self.header.configure(kwargs)
