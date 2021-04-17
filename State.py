@@ -1,4 +1,4 @@
-import os, gui, categorySelection as cate, fileio
+import os, categorySelection as cate, fileio
 import Comparison, BptList, SumList, CurrentRun
 import timeHelpers as timeh
 import readConfig as rc
@@ -7,6 +7,7 @@ class State:
     started = False
     paused = False
     reset = False
+    runEnded = False
 
     pauseTime = 0
     starttime = 0
@@ -16,6 +17,7 @@ class State:
 
     splitnum = 0
     splitnames = []
+    numSplits = 0
 
     game = ""
     category = ""
@@ -32,9 +34,6 @@ class State:
     currentComparison = None
     compareNum = 2
     numComparisons = 0
-
-    generalInfo = None
-    generalInfoKeys = []
 
     config = None
 
@@ -56,11 +55,6 @@ class State:
                 self.getTimes(2*i+2,self.comparesCsv) \
              ))
 
-        ## There's no way to take out a comparison at the moment, and we
-        ## set all the comparisons for the first run of a category when
-        ## we read the CSV file, so if there isn't a run already we just
-        ## set the last run to be the PB splits. It doesn't matter 
-        ## because the PB splits are all '-' anyway
         if len(self.completeCsv[0]) > 1:
             self.comparisons.append(Comparison.Comparison( \
                 "Last Run Splits", \
@@ -78,35 +72,54 @@ class State:
             self.config["numSplits"] = len(self.splitnames)
             self.config["activeSplit"] = len(self.splitnames) - 2
 
+    ##########################################################
+    ## Gets the global configuration, game, category, and splits.
+    ## Sets the game, category, and splitnames.
+    ##
+    ## Returns: The final version of the configuration
+    ##########################################################
     def getConfigAndSplits(self):
         config = rc.getUserConfig()
         splitnames = cate.getSplitNames(config["baseDir"])
         self.game = splitnames["game"]
         self.category = splitnames["category"]
         self.splitnames = splitnames["splits"]
+        self.numSplits = len(self.splitnames)
         config = rc.mergeConfigs(config,rc.getGameConfig(config["baseDir"],self.game,self.category))
         return config
 
-    def getTimes(self,col,toCheck):
+    ##########################################################
+    ## Reads a column of times in from a specified array
+    ##
+    ## Parameters: col - the column to read
+    ##             csv_ref - the array to read from
+    ##########################################################
+    def getTimes(self,col,csv_ref):
         times = []
-        for i in range(1,len(toCheck)):
-            times.append(timeh.stringToTime(toCheck[i][col]))
+        for i in range(1,len(csv_ref)):
+            times.append(timeh.stringToTime(csv_ref[i][col]))
         return times
 
-    def getTopSplitIndex(self):
-        if self.splitnum <= self.config["activeSplit"] - 1:
-            return 0
-        if self.splitnum >= len(self.splitnames) - (self.config["numSplits"]-self.config["activeSplit"]):
-            return len(self.splitnames) - self.config["numSplits"]
-        return self.splitnum - (self.config["activeSplit"] - 1)
+    ##########################################################
+    ## Sets the segment and total times. Should be used only
+    ## for frame updates.
+    ## Parameter: time - the current time according to the
+    ##                   system clock
+    ##########################################################
+    def setTimes(self, time):
+        self.segmentTime = time - self.splitstarttime
+        self.totalTime = time - self.starttime
 
-    def setTimes(self, currentTime):
-        self.segmentTime = currentTime - self.splitstarttime
-        self.totalTime = currentTime - self.starttime
-
-    def completeSegment(self,endTime):
-        totalTime = endTime - self.starttime
-        splitTime = endTime - self.splitstarttime
+    ##########################################################
+    ## Does all the state updates necessary to end a split. Uses
+    ## the system clock at the exact time that the button/key was
+    ## pressed for higher accuracy than the frame timer.
+    ## 
+    ## Parameters: time - the current system time
+    ##########################################################
+    def completeSegment(self,time):
+        totalTime = time - self.starttime
+        splitTime = time - self.splitstarttime
         self.currentRun.addSegment(splitTime,totalTime)
         self.bptList.update(totalTime)
 
@@ -115,25 +128,49 @@ class State:
         if timeh.greater(self.currentBests.bests[self.splitnum],splitTime):
             self.currentBests.update(splitTime,self.splitnum)
         self.splitnum = self.splitnum + 1
+        if self.splitnum >= len(self.splitnames):
+            self.runEnded = True
+        self.splitstarttime = time
 
-    def skipSegment(self,splitEnd):
+    ##########################################################
+    ## Does all the state updates necessary to skip a split.
+    ## 
+    ## Parameters: time - the current system time
+    ##########################################################
+    def skipSegment(self,time):
         self.currentRun.addSegment("BLANK","BLANK")
-        self.bptList.update(splitEnd-self.starttime)
+        self.bptList.update(time-self.starttime)
         for i in range(self.numComparisons):
             self.comparisons[i].updateDiffs("BLANK","BLANK")
         self.splitnum = self.splitnum + 1
+        if self.splitnum >= len(self.splitnames):
+            self.runEnded = True
+        self.splitstarttime = time
 
+    ##########################################################
+    ## Unpause
+    ##
+    ## Parameters: time - the current system time
+    ##########################################################
     def endPause(self,time):
-            self.paused = False
-            elapsed = time - self.pauseTime
-            self.starttime = self.starttime + elapsed
-            self.splitstarttime = self.splitstarttime + elapsed
-            self.pauseTime = 0
+        self.paused = False
+        elapsed = time - self.pauseTime
+        self.starttime = self.starttime + elapsed
+        self.splitstarttime = self.splitstarttime + elapsed
+        self.pauseTime = 0
 
+    ##########################################################
+    ## Pause
+    ## 
+    ## Parameters: time - the current system time
+    ##########################################################
     def startPause(self,time):
-            self.paused = True
-            self.pauseTime = time
+        self.paused = True
+        self.pauseTime = time
 
+    ##########################################################
+    ## Compute the average for each split
+    ##########################################################
     def getAverages(self):
         averages = []
         for i in range(len(self.splitnames)):
@@ -148,20 +185,40 @@ class State:
             averages.append(averageTime/len(average))
         return SumList.SumList(averages)
 
+    ##########################################################
+    ## Determines whether the current run is a PB or not
+    ##
+    ## Returns: True if the current run is a PB, False if not
+    ##########################################################
     def isPB(self):
         if self.currentRun.lastNonBlank() > self.comparisons[2].lastNonBlank():
-            return 1
+            return True
         if self.currentRun.lastNonBlank() < self.comparisons[2].lastNonBlank():
-            return 0
+            return False
         if timeh.greater(0,self.comparisons[2].totalDiffs[-1]):
-            return 1
-        return 0
+            return True
+        return False
 
-    def replaceCsvLines(self,lines,start,csv_ref):
+    ##########################################################
+    ## Replaces the elements of a CSV, starting with a specified
+    ## column.
+    ## 
+    ## Parameters: lines - the new data to put in
+    ##             startIndex - the column to start replacing at
+    ##             csv_ref - the CSV to replace data in
+    ##########################################################
+    def replaceCsvLines(self,lines,startIndex,csv_ref):
         for i in range(1,len(csv_ref)):
             for j in range(len(lines)):
-                csv_ref[i][start+j]=lines[j][i-1]
+                csv_ref[i][startIndex+j]=lines[j][i-1]
 
+    ##########################################################
+    ## Inserts new lines into the completeCsv starting with a
+    ## specified column.
+    ##
+    ## Parameters: lines - the new data to put in
+    ##             startIndex - the column to start inserting at
+    ##########################################################
     def insertCsvLines(self,lines,startIndex):
         for i in range(1,len(self.completeCsv)):
             for j in range(len(lines)):
