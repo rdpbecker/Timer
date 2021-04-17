@@ -16,7 +16,9 @@ app.addComponent(Spacer.Spacer(rootWindow,state))
 app.addComponent(SegmentArea.SegmentArea(rootWindow,state))
 app.addComponent(Spacer.Spacer(rootWindow,state))
 app.addComponent(SegmentCompare.SegmentCompare(rootWindow,state))
+app.addComponent(Spacer.Spacer(rootWindow,state))
 app.addComponent(DetailedTimer.DetailedTimer(rootWindow,state))
+app.addComponent(Spacer.Spacer(rootWindow,state))
 if (state.config["infoShow"]["timeSave"]):
     app.addComponent(TimeSaveInfo.TimeSaveInfo(rootWindow,state))
 if (state.config["infoShow"]["diff"]):
