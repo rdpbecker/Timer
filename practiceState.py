@@ -1,6 +1,7 @@
-import categorySelection as cate, fileio
+from util import fileio
+from util import categorySelection as cate
+from util import timeHelpers as timeh
 import SumList
-import timeHelpers as timeh
 import BaseState
 
 class State(BaseState.State):

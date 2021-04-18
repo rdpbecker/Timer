@@ -1,4 +1,4 @@
-import timeHelpers as timeh
+from util import timeHelpers as timeh
 
 class SumList:
     total = 0

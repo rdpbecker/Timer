@@ -1,4 +1,5 @@
-import csv, sys, fileio
+import csv, sys
+from util import fileio
 
 def findAllSplits(baseDir):
     csvname = baseDir + "/splitNames.csv"

@@ -1,6 +1,6 @@
 import tkinter as tk
 from Components import Component
-import timeHelpers as timeh
+from util import timeHelpers as timeh
 
 class Timer(Component.Component):
     main = None

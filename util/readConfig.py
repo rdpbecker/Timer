@@ -1,4 +1,5 @@
-import os, fileio
+import os
+from util import fileio
 
 validHotkeys = [
     'a','b','c','d','e','f','g','h','i','j','k','l','m',\

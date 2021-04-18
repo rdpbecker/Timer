@@ -1,6 +1,6 @@
 import app, State
 from Components import Title, DetailedTitle, Spacer, SegmentArea, SegmentCompare, Timer, DetailedTimer, CompareInfo, PbInfo, SobInfo, BptInfo, DiffInfo, TimeSaveInfo, ControlButtons
-import readConfig as rc
+from util import readConfig as rc
 
 def setHotkeys(app,state):
     app.root.bind(state.config["hotkeys"]["decreaseComparison"],app.guiSwitchCompareCCW)

@@ -1,7 +1,9 @@
-import os, categorySelection as cate, fileio
+import os
+from util import fileio
+from util import categorySelection as cate
+from util import readConfig as rc
+from util import timeHelpers as timeh
 import Comparison, BptList, SumList, CurrentRun
-import timeHelpers as timeh
-import readConfig as rc
 import BaseState
 
 class State(BaseState.State):

@@ -1,6 +1,6 @@
 import tkinter as tk
 from Components import Info
-import timeHelpers as timeh
+from util import timeHelpers as timeh
 
 class TimeSaveInfo(Info.Info):
     def __init__(self,parent,state):
