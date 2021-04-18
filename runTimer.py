@@ -27,13 +27,25 @@ rootWindow = app.root
 loader = ComponentLoader.ComponentLoader(app,state,rootWindow)
 
 app.addComponent(Title.Title(rootWindow,state))
-app.addComponent(Spacer.Spacer(rootWindow,state))
+try:
+    app.addComponent(loader.loadComponent("spacer"))
+except Errors.ComponentTypeError as e:
+    print(e)
 app.addComponent(SegmentArea.SegmentArea(rootWindow,state))
-app.addComponent(Spacer.Spacer(rootWindow,state))
+try:
+    app.addComponent(loader.loadComponent("spacer"))
+except Errors.ComponentTypeError as e:
+    print(e)
 app.addComponent(SegmentCompare.SegmentCompare(rootWindow,state))
-app.addComponent(Spacer.Spacer(rootWindow,state))
+try:
+    app.addComponent(loader.loadComponent("spacer"))
+except Errors.ComponentTypeError as e:
+    print(e)
 app.addComponent(DetailedTimer.Timer(rootWindow,state))
-app.addComponent(Spacer.Spacer(rootWindow,state))
+try:
+    app.addComponent(loader.loadComponent("spacer"))
+except Errors.ComponentTypeError as e:
+    print(e)
 if (state.config["infoShow"]["timeSave"]):
     try:
         app.addComponent(loader.loadComponent("timeSaveInfo"))
