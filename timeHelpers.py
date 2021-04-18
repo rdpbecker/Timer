@@ -6,7 +6,10 @@ def zeroPad(finalLength,string):
     return string
 
 def adjustEnd(fracsecs):
-    string = str(fracsecs)
+    if fracsecs:
+        string = str(fracsecs)
+    else:
+        string = "0.0"
     while (len(string) < 11):
         string = string + "0"
     return string

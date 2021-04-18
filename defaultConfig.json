@@ -12,7 +12,9 @@
         "pause": "p",
         "reset": "r",
         "skip": "s",
-        "start": "<space>"
+        "start": "<space>",
+        "restart": "R",
+        "finish": "f"
     },
     "root": {
         "font": ["DejaVu Sans", 10],

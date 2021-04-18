@@ -1,62 +1,65 @@
-import Time, Timelist, categorySelection as cate, fileio
+import categorySelection as cate, fileio
+import SumList
+import timeHelpers as timeh
+import BaseState
 
-class State:
-    started = False
-    finished = False
-    starttime = 0
-    splitstarttime = 0
-    splitnum = 0
-    splitnames = []
-    game = ""
-    category = ""
-    completeCsv = None
-    bptList = None
-    diffs = None
-    diffSplits = None
-    currentSplits = None
-    currentTotals = None
-    windowStart = 0
+class State(BaseState.State):
+    bestTime = 0
+    currentTime = 0
 
     def __init__(self):
-        self.getSplitNames()
-
-        self.completeCsv = fileio.csvReadStart(self.game,self.category,self.splitnames)
-
-        self.bptList = self.getTimes(1)
-        
+        BaseState.State.__init__(self)
         self.getPracticeSplits()
 
-        self.diffs = Timelist.Timelist()
-        self.diffSplits = Timelist.Timelist()
-        
-        self.currentSplits = Timelist.Timelist()
-        self.currentTotals = Timelist.Timelist()
-
-    def getSplitNames(self):
-        splitNames = cate.findAllSplits()
-        names = cate.findNames(splitNames,0)
-        self.game = cate.readThingInList(names)
-        cate.restrictCategories(splitNames,self.game)
-        categories = cate.findNames(splitNames,1)
-        self.category = cate.readThingInList(categories)
-        self.splitnames = cate.findGameSplits(splitNames,self.category)
-        fileio.stripEmptyStrings(self.splitnames)
-
-    def getTimes(self,col):
-        times = Timelist.Timelist()
-        for i in range(1,len(self.completeCsv)):
-            times.insert(Time.Time(5,timestring=self.completeCsv[i][col]))
-        return times
-
+    ##########################################################
+    ## Get the split number and the best time for that split,
+    ## and set the appropriate values in the state.
+    ##########################################################
     def getPracticeSplits(self):
         startSplitName = cate.readThingInList(self.splitnames)
-        self.startSplitIndex = self.splitnames.index(startSplitName)
-        self.splitnames = self.splitnames[self.startSplitIndex]
-        newBptList = Timelist.Timelist()
-        newBptList.insert(self.bptList.get(self.startSplitIndex))
-        self.bptList = newBptList
+        self.splitnum = self.splitnames.index(startSplitName)
+        bestTimes = self.getTimes(1,self.comparesCsv)
+        self.bestTime = bestTimes[self.splitnum]
 
-    def replaceCsvLines(self,lines,start):
-        for i in range(1,len(self.completeCsv)):
-            for j in range(len(lines)):
-                self.completeCsv[i][start+j]=lines[j][i-1]
+    def frameUpdate(self,time):
+        if not (self.started and not self.finished):
+            return 1
+        self.segmentTime = time - self.starttime
+
+    ##########################################################
+    ## Do the state update when the run starts
+    ##
+    ## Parameters: time - the time the run started
+    ##########################################################
+    def onStarted(self,time):
+        self.starttime = time
+        self.started = True
+        self.finished = False
+
+    ##########################################################
+    ## Do the state update when the split is ended
+    ##
+    ## Parameters: time - the time the split was ended
+    ##########################################################
+    def onSplit(self,time):
+        self.finished = True
+        splitTime = time - self.starttime
+        self.currentTime = splitTime
+        if timeh.greater(self.bestTime,splitTime):
+            self.bestTime = splitTime
+
+    ##########################################################
+    ## Restart the run
+    ##########################################################
+    def onRestart(self):
+        self.started = False
+
+    ##########################################################
+    ## Save the times when we close the window.
+    ##########################################################
+    def saveTimes(self):
+        bests = SumList.SumList(self.getTimes(1,self.comparesCsv))
+        bests.update(self.bestTime,self.splitnum)
+        bestSplits = [timeh.timesToStringList(bests.bests,{"precision":5}), timeh.timesToStringList(bests.totalBests,{"precision":5})]
+        self.replaceCsvLines(bestSplits,1,self.comparesCsv)
+        fileio.writeCSV(self.config["baseDir"],self.game,self.category,self.completeCsv,self.comparesCsv)
