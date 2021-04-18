@@ -20,6 +20,11 @@ class State(BaseState.State):
         bestTimes = self.getTimes(1,self.comparesCsv)
         self.bestTime = bestTimes[self.splitnum]
 
+    def frameUpdate(self,time):
+        if self.started and not self.finished:
+            return 1
+        self.segmentTime = time - self.starttime
+
     ##########################################################
     ## Do the state update when the run starts
     ##

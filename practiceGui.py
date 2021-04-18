@@ -60,7 +60,7 @@ class Gui(threading.Thread):
     ## Set the timer to update every time this is called
     ##########################################################
     def update(self):
-        if self.state.started and not self.state.finished:
+        if not self.state.frameUpdate(timer()):
             self.labels[1][0].configure(text=timeh.timeToString(timer()-self.state.starttime,{"precision":2}))
         self.root.after(17,self.update)
 
