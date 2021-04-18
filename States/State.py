@@ -3,8 +3,11 @@ from util import fileio
 from util import categorySelection as cate
 from util import readConfig as rc
 from util import timeHelpers as timeh
-import Comparison, BptList, SumList, CurrentRun
-import BaseState
+from DataClasses import BptList
+from DataClasses import Comparison
+from DataClasses import CurrentRun
+from DataClasses import SumList
+from States import BaseState
 
 class State(BaseState.State):
     pauseTime = 0
