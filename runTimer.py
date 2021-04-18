@@ -4,6 +4,15 @@ from Components import Title, DetailedTitle, Spacer, SegmentArea, SegmentCompare
 import tkinter as tk
 import readConfig as rc
 
+def setHotkeys(app,state):
+    app.root.bind(state.config["hotkeys"]["decreaseComparison"],app.guiSwitchCompareCCW)
+    app.root.bind(state.config["hotkeys"]["increaseComparison"],app.guiSwitchCompareCW)
+    app.root.bind(state.config["hotkeys"]["split"], app.onSplitEnd)
+    app.root.bind(state.config["hotkeys"]["reset"], app.reset)
+    app.root.bind(state.config["hotkeys"]["skip"], app.skip)
+    app.root.bind(state.config["hotkeys"]["start"], app.start)
+    app.root.bind(state.config["hotkeys"]["pause"], app.togglePause)
+
 ## Initialize the state. This picks the game and category
 state = State.State()
 rc.validateHotkeys(state.config)
@@ -11,6 +20,7 @@ rc.validateHotkeys(state.config)
 app = app.App(state)
 app.setupGui()
 
+setHotkeys(app,state)
 rootWindow = app.root
 
 app.addComponent(Title.Title(rootWindow,state))

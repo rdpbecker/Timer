@@ -1,4 +1,18 @@
-import practiceGui, practiceState
+import app, practiceState
+from Components import Timer
+
+def setHotkeys(app,state):
+    app.root.bind(state.config["hotkeys"]["split"], app.onSplitEnd)
+    app.root.bind(state.config["hotkeys"]["start"], app.start)
+    app.root.bind(state.config["hotkeys"]["restart"], app.restart)
+    app.root.bind(state.config["hotkeys"]["finish"], app.finish)
 
 state = practiceState.State()
-gui = practiceGui.Gui(state)
+app = app.App(state)
+app.setupGui()
+
+setHotkeys(app,state)
+rootWindow = app.root
+
+
+app.startGui()

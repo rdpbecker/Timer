@@ -67,7 +67,6 @@ class App(threading.Thread):
     def setupGui(self):
         self.root = tk.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.root.quit)
-        self.setHotkeys()
 
     ##########################################################
     ## Show the window, and call the first update after one
@@ -76,18 +75,6 @@ class App(threading.Thread):
     def startGui(self):
         self.root.after(17,self.update)
         self.root.mainloop()
-
-    ##########################################################
-    ## Sets the hotkeys for the window.
-    ##########################################################
-    def setHotkeys(self):
-        self.root.bind(self.state.config["hotkeys"]["decreaseComparison"],self.guiSwitchCompareCCW)
-        self.root.bind(self.state.config["hotkeys"]["increaseComparison"],self.guiSwitchCompareCW)
-        self.root.bind(self.state.config["hotkeys"]["split"], self.onSplitEnd)
-        self.root.bind(self.state.config["hotkeys"]["reset"], self.reset)
-        self.root.bind(self.state.config["hotkeys"]["skip"], self.skip)
-        self.root.bind(self.state.config["hotkeys"]["start"], self.start)
-        self.root.bind(self.state.config["hotkeys"]["pause"], self.togglePause)
 
     ##########################################################
     ## Set the timer to update every time this is called
@@ -158,3 +145,18 @@ class App(threading.Thread):
     def togglePause(self,event=None):
         self.state.onPaused(timer())
         self.updateComponents("pause")
+
+    ##########################################################
+    ## Restart the run by resetting the timer state.
+    ##########################################################
+    def restart(self,event=None):
+        self.state.onRestart()
+        self.labels[1][0].configure(text=timeh.timeToString(0,{"blankToDash":False,"precision":2}))
+
+    ##########################################################
+    ## Finish the run by saving the splits and closing the
+    ## window.
+    ##########################################################
+    def finish(self,event=None):
+        self.state.saveTimes()
+        self.root.quit()
