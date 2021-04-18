@@ -13,27 +13,21 @@ class Timer(Component.Component):
         self.main.grid(row=0,column=0,columnspan=12)
 
     def frameUpdate(self):
-        if not self.state.runEnded:
-            self.main.configure(\
-                text=timeh.timeToString(\
-                    self.state.segmentTime,\
-                    {"blankToDash":False,"precision":2}\
-                )\
-            )
-            self.main.configure(fg=self.timerColour())
-        else:
-            self.main.configure(\
-                text=timeh.timeToString(\
-                    self.state.currentTime,\
-                    {"blankToDash":False,"precision":2}\
-                )\
-            )
+        self.updateTimer(self.state.segmentTime)
 
-    def timerColour(self):
+    def onSplit(self):
+        self.updateTimer(self.state.currentTime)
+
+    def updateTimer(self,time):
+        self.main.configure(\
+            text=timeh.timeToString(time, {"blankToDash":False,"precision":2}))
+        self.main.configure(fg=self.timerColour(time))
+
+    def timerColour(self,time):
         goldSegment = self.state.bestTime
 
         # ahead of gold
-        if timeh.greater(goldSegment,self.state.segmentTime):
+        if goldSegment >= time:
             return self.state.config["mainTimer"]["colours"]["main"]
         # behind gold
         else:
