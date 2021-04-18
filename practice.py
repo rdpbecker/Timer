@@ -1,5 +1,6 @@
 import app, practiceState
 from PracticeComponents import Buttons, Timer, Segment
+import readConfig as rc
 
 def setHotkeys(app,state):
     app.root.bind(state.config["hotkeys"]["split"], app.onSplitEnd)
@@ -8,6 +9,8 @@ def setHotkeys(app,state):
     app.root.bind(state.config["hotkeys"]["finish"], app.finish)
 
 state = practiceState.State()
+rc.validateHotkeys(state.config)
+
 app = app.App(state)
 app.setupGui()
 

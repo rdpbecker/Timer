@@ -1,5 +1,4 @@
 import categorySelection as cate, fileio
-import Comparison, BptList, SumList, CurrentRun
 import timeHelpers as timeh
 import readConfig as rc
 

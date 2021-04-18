@@ -1,7 +1,5 @@
-import app
-import State
+import app, State
 from Components import Title, DetailedTitle, Spacer, SegmentArea, SegmentCompare, Timer, DetailedTimer, CompareInfo, PbInfo, SobInfo, BptInfo, DiffInfo, TimeSaveInfo, ControlButtons
-import tkinter as tk
 import readConfig as rc
 
 def setHotkeys(app,state):
