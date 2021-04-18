@@ -7,10 +7,11 @@ class SegmentCompare(Component.Component):
     goldHeader = None
     goldTime = None
 
-    def __init__(self,parent,state):
-        Component.Component.__init__(self,parent,state)
-        fg = state.config["root"]["colours"]["text"]
-        bg = state.config["root"]["colours"]["bg"]
+    def __init__(self,parent,state,config):
+        Component.Component.__init__(self,parent,state,config)
+        fg = config["colours"]["text"]
+        bg = config["colours"]["bg"]
+        font = config["font"]
 
         self.configure(bg=bg)
         self.leftFrame = tk.Frame(self,bg=bg)

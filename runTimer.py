@@ -36,7 +36,10 @@ try:
     app.addComponent(loader.loadComponent("spacer"))
 except Errors.ComponentTypeError as e:
     print(e)
-app.addComponent(SegmentCompare.SegmentCompare(rootWindow,state))
+try:
+    app.addComponent(loader.loadComponent("segmentCompare"))
+except Errors.ComponentTypeError as e:
+    print(e)
 try:
     app.addComponent(loader.loadComponent("spacer"))
 except Errors.ComponentTypeError as e:
