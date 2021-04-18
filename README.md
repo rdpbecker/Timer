@@ -82,8 +82,7 @@ also have key bindings.
 |:------:|:---------:|:----:|
 |`Start Run`|Starts the timer|`<Space>`|
 |`Split`|Ends the current segment and starts the next one|`<Return>`|
-|`Reset`|Ends the timer and writes the completed segments, regardless
-of whether all segments have been completed|`r`|
+|`Reset`|Ends the timer and writes the completed segments, regardless of whether all segments have been completed|`r`|
 |`Skip Split`|Skips the current segment|`s`|
 |`Change Compare`|Changes to the next comparison|`<Left>` for counter-clockwise, and `<Right>` for clockwise|
 |`Pause`|Toggles whether the timer is paused|`p`|
