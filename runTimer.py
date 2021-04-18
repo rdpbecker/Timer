@@ -31,7 +31,10 @@ try:
     app.addComponent(loader.loadComponent("spacer"))
 except Errors.ComponentTypeError as e:
     print(e)
-app.addComponent(SegmentArea.SegmentArea(rootWindow,state))
+try:
+    app.addComponent(loader.loadComponent("segmentArea"))
+except Errors.ComponentTypeError as e:
+    print(e)
 try:
     app.addComponent(loader.loadComponent("spacer"))
 except Errors.ComponentTypeError as e:

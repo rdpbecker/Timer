@@ -1,0 +1,28 @@
+{
+    "endColour": "maroon1",
+    "numSplits": 5,
+    "activeSplit": 2,
+    "main": {
+        "font": ["DejaVu Sans", 10],
+        "colours": {
+            "text": "white",
+            "bg": "black"
+        }
+    },
+    "diff": {
+        "colours": {
+            "gold": "gold",
+            "aheadGaining": "green",
+            "aheadLosing": "lime green",
+            "behindGaining": "light coral",
+            "behindLosing": "red",
+            "skipped": "midnight blue"
+        }
+    },
+    "activeHighlight": {
+        "colours": {
+            "text": "black",
+            "bg": "pink"
+        }
+    }
+}

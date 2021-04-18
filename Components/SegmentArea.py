@@ -8,18 +8,18 @@ class SegmentArea(Component.Component):
     topRowSplitnum = 0
     activeIndex = 0
 
-    def __init__(self,parent,state):
-        Component.Component.__init__(self,parent,state)
-        self.numRows = state.config["numSplits"]
+    def __init__(self,parent,state,config):
+        Component.Component.__init__(self,parent,state,config)
+        self.numRows = config["numSplits"]
         for i in range(self.numRows):
-            row = SegmentRow.SegmentRow(self, state.config["root"]["colours"]["bg"], state.config["root"]["font"], state.config["root"]["colours"]["text"])
+            row = SegmentRow.SegmentRow(self, config["main"]["colours"]["bg"], config["main"]["font"], config["main"]["colours"]["text"])
             row.grid(row=i,column=0,columnspan=12,sticky='NSWE')
             self.rows.append(row)
         self.setAllHeaders()
         self.setAllComparisons()
         self.setHighlight()
-        self.rows[-1].setHeader(fg=state.config["endColour"])
-        self.rows[-1].setComparison(fg=state.config["endColour"])
+        self.rows[-1].setHeader(fg=config["endColour"])
+        self.rows[-1].setComparison(fg=config["endColour"])
 
     def frameUpdate(self):
         if not self.state.runEnded\
@@ -40,11 +40,11 @@ class SegmentArea(Component.Component):
         self.setAllComparisons()
 
     def getTopSplitIndex(self):
-        if self.state.splitnum <= self.state.config["activeSplit"] - 1:
+        if self.state.splitnum <= self.config["activeSplit"] - 1:
             return 0
-        if self.state.splitnum >= self.state.numSplits - (self.state.config["numSplits"]-self.state.config["activeSplit"]):
-            return self.state.numSplits - self.state.config["numSplits"]
-        return self.state.splitnum - (self.state.config["activeSplit"] - 1)
+        if self.state.splitnum >= self.state.numSplits - (self.config["numSplits"]-self.config["activeSplit"]):
+            return self.state.numSplits - self.config["numSplits"]
+        return self.state.splitnum - (self.config["activeSplit"] - 1)
 
     def toNextSplit(self):
         self.topRowSplitnum = self.getTopSplitIndex()
@@ -129,16 +129,16 @@ class SegmentArea(Component.Component):
             # if comparison segment is blank or current segment is
             # ahead
             if timeh.greater(0,segmentDiff):
-                return self.state.config["diff"]["colours"]["aheadGaining"]
+                return self.config["diff"]["colours"]["aheadGaining"]
             else:
-                return self.state.config["diff"]["colours"]["aheadLosing"]
+                return self.config["diff"]["colours"]["aheadLosing"]
         else:
             # if comparison segment is blank or current segment is
             # behind
             if timeh.greater(segmentDiff,0):
-                return self.state.config["diff"]["colours"]["behindLosing"]
+                return self.config["diff"]["colours"]["behindLosing"]
             else:
-                return self.state.config["diff"]["colours"]["behindGaining"]
+                return self.config["diff"]["colours"]["behindGaining"]
 
     def findDiffColour(self,splitIndex):
         # Either the split in this run is blank, or we're comparing
@@ -146,11 +146,11 @@ class SegmentArea(Component.Component):
         if \
             timeh.isBlank(self.state.currentRun.totals[splitIndex]) \
             or timeh.isBlank(self.state.currentComparison.totals[splitIndex]):
-            return self.state.config["diff"]["colours"]["skipped"]
+            return self.config["diff"]["colours"]["skipped"]
         # This split is the best ever. Mark it with the gold colour
         elif not timeh.isBlank(self.state.comparisons[0].segmentDiffs[splitIndex]) \
             and timeh.greater(0,self.state.comparisons[0].segmentDiffs[splitIndex]):
-            return self.state.config["diff"]["colours"]["gold"]
+            return self.config["diff"]["colours"]["gold"]
         else:
             return self.getCurrentDiffColour(\
                 self.state.currentComparison.segmentDiffs[splitIndex],\
@@ -164,9 +164,9 @@ class SegmentArea(Component.Component):
 
     def setBackground(self,index):
         if(index == self.activeIndex):
-            colour = self.state.config["activeHighlight"]["colours"]["bg"]
+            colour = self.config["activeHighlight"]["colours"]["bg"]
         else:
-            colour = self.state.config["root"]["colours"]["bg"]
+            colour = self.config["main"]["colours"]["bg"]
         self.rows[index].configure(bg=colour)
         self.rows[index].setHeader(bg=colour)
         self.rows[index].setDiff(bg=colour)
@@ -174,10 +174,10 @@ class SegmentArea(Component.Component):
 
     def setTextColour(self,index):
         if(index == self.activeIndex):
-            colour = self.state.config["activeHighlight"]["colours"]["text"]
+            colour = self.config["activeHighlight"]["colours"]["text"]
         elif index < self.numRows-1:
-            colour = self.state.config["root"]["colours"]["text"]
+            colour = self.config["main"]["colours"]["text"]
         else:
-            colour = self.state.config["endColour"]
+            colour = self.config["endColour"]
         self.rows[index].setHeader(fg=colour)
         self.rows[index].setComparison(fg=colour)
