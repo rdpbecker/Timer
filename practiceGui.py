@@ -61,7 +61,7 @@ class Gui(threading.Thread):
     ##########################################################
     def update(self):
         if not self.state.frameUpdate(timer()):
-            self.labels[1][0].configure(text=timeh.timeToString(timer()-self.state.starttime,{"precision":2}))
+            self.labels[1][0].configure(text=timeh.timeToString(self.state.segmentTime,{"precision":2}))
         self.root.after(17,self.update)
 
     def restart(self,event=None):
