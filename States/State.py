@@ -81,9 +81,10 @@ class State(BaseState.State):
         if timeh.greater(self.currentBests.bests[self.splitnum],splitTime):
             self.currentBests.update(splitTime,self.splitnum)
         self.splitnum = self.splitnum + 1
+        self.splitstarttime = time
         if self.splitnum >= len(self.splitnames):
             self.runEnded = True
-        self.splitstarttime = time
+            self.saveTimes()
 
     ##########################################################
     ## Does all the state updates necessary to skip a split.
@@ -96,9 +97,10 @@ class State(BaseState.State):
         for i in range(self.numComparisons):
             self.comparisons[i].updateDiffs("BLANK","BLANK")
         self.splitnum = self.splitnum + 1
+        self.splitstarttime = time
         if self.splitnum >= len(self.splitnames):
             self.runEnded = True
-        self.splitstarttime = time
+            self.saveTimes()
 
     ##########################################################
     ## Unpause
