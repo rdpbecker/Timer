@@ -1,7 +1,7 @@
 import tkinter as tk
 from Components import Component
 from Components import SegmentRow
-import timeHelpers as timeh
+from util import timeHelpers as timeh
 
 class SegmentArea(Component.Component):
     rows = []

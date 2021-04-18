@@ -55,7 +55,7 @@ def main():
     printLines(splits["splits"][i]+": "+'%.3f'%(varianceList[i])+"%" for i in sortedRange)
 
 if __name__ == "__main__":
-    import categorySelection as cate
-    import fileio
-    import timeHelpers as timeh
+    from util import categorySelection as cate
+    from util import fileio
+    from util import timeHelpers as timeh
     main()

@@ -1,0 +1,14 @@
+BASE="/usr/local/bin"
+echo "Choose a directory to install in. Enter nothing to use /usr/local/bin"
+read NEWBASE
+if [[ $NEWBASE ]]; then
+    BASE=$NEWBASE
+fi
+
+echo "python3 $PWD/runTimer.py" | sudo sed -n "1w $BASE/runTimer" 
+echo "python3 $PWD/practice.py" | sudo sed -n "1w $BASE/practiceTimer" 
+echo "python3 $PWD/variance.py" | sudo sed -n "1w $BASE/timeVariance" 
+
+sudo chmod +x $BASE/runTimer
+sudo chmod +x $BASE/practiceTimer
+sudo chmod +x $BASE/timeVariance

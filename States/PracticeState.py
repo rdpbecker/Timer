@@ -1,7 +1,8 @@
-import categorySelection as cate, fileio
-import SumList
-import timeHelpers as timeh
-import BaseState
+from util import fileio
+from util import categorySelection as cate
+from util import timeHelpers as timeh
+from DataClasses import SumList
+from States import BaseState
 
 class State(BaseState.State):
     bestTime = 0

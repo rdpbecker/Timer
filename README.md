@@ -124,3 +124,15 @@ variance.
 The game and category are chosen in the same way as in the other
 two programs, and the base directory is read (as usual) from the
 user configuration.
+
+# Installation (Linux-only)
+
+If you are using this timer on a Linux machine, there is a simple
+install script to add this program to a `bin` folder for easier
+use. To install the program, run `./install` in the home directory,
+and choose where to install the program. The three executables
+created in this case are `runTimer`, `practiceTimer`, and
+`timeVariance`. Note that this won't work with the default
+configuration, since the default base directory is a relative path.
+Instead, set the base directory in the user config to a static
+path.
