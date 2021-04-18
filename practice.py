@@ -1,5 +1,5 @@
 import app, practiceState
-from Components import PracticeButtons, Timer
+from Components import PracticeButtons, PracticeTimer
 
 def setHotkeys(app,state):
     app.root.bind(state.config["hotkeys"]["split"], app.onSplitEnd)
@@ -14,6 +14,7 @@ app.setupGui()
 setHotkeys(app,state)
 rootWindow = app.root
 
+app.addComponent(PracticeTimer.Timer(rootWindow,state))
 app.addComponent(PracticeButtons.Buttons(rootWindow,state,app))
 
 app.startGui()

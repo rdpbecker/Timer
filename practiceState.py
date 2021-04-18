@@ -5,6 +5,7 @@ import BaseState
 
 class State(BaseState.State):
     bestTime = 0
+    currentTime = 0
 
     def __init__(self):
         BaseState.State.__init__(self)
@@ -43,6 +44,7 @@ class State(BaseState.State):
     def onSplit(self,time):
         self.finished = True
         splitTime = time - self.starttime
+        self.currentTime = splitTime
         if timeh.greater(self.bestTime,splitTime):
             self.bestTime = splitTime
 
