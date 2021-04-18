@@ -21,7 +21,7 @@ class State(BaseState.State):
         self.bestTime = bestTimes[self.splitnum]
 
     def frameUpdate(self,time):
-        if self.started and not self.finished:
+        if not (self.started and not self.finished):
             return 1
         self.segmentTime = time - self.starttime
 
