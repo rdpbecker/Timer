@@ -11,14 +11,5 @@
         "start": "<space>",
         "restart": "R",
         "finish": "f"
-    },
-    "infoShow": {
-        "timeSave": true,
-        "diff": true,
-        "bpt": true,
-        "sob": true,
-        "pb": true,
-        "comparison": true,
-        "buttons": true
     }
 }
