@@ -93,29 +93,17 @@ class App(threading.Thread):
     ## Set the timer to update every time this is called
     ##########################################################
     def update(self):
-        if self.state.started:
-            currentTime = timer()
-            if self.state.paused:
-                currentTime = self.state.pauseTime
-            self.state.setTimes(currentTime)
+        if not self.state.frameUpdate(timer()):
             self.updateComponents("frame")
-        if self.state.splitnum < len(self.state.splitnames) and not self.state.reset:
-            self.root.after(17,self.update)
-        else:
-            self.root.after(1,self.state.doEnd)
+        self.root.after(17,self.update)
 
     ##########################################################
     ## Initialize the start and first split times when the run
     ## starts
     ##########################################################
     def start(self, event=None):
-        currentTime = timer()
-        if self.state.started:
-            return
-        self.state.starttime = currentTime
-        self.state.splitstarttime = currentTime
-        self.state.started = True
-        self.updateComponents("start")
+        if not self.state.onStarted(timer()):
+            self.updateComponents("start")
 
     ##########################################################
     ## At the end of each split, record and store the times, 
@@ -123,14 +111,11 @@ class App(threading.Thread):
     ## to update the GUI
     ##########################################################
     def onSplitEnd(self,event=None):
-        splitEnd = timer()
-        if not self.state.started or self.state.paused:
+        exitCode = self.state.onSplit(timer())
+        if exitCode == 1:
             return
-
-        if self.state.splitnames[self.state.splitnum][-3:] == "[P]" and not self.state.splitnum == len(self.state.splitnames) and not self.state.paused:
+        elif exitCode == 2:
             self.togglePause()
-
-        self.state.completeSegment(splitEnd)
         self.updateComponents("split")
 
     ##########################################################
@@ -150,32 +135,26 @@ class App(threading.Thread):
     ## clicked
     ##########################################################
     def rotateCompare(self,rotation):
-        self.state.compareNum = (self.state.compareNum+rotation)%self.state.numComparisons
-        self.state.currentComparison = self.state.comparisons[self.state.compareNum]
+        self.state.onComparisonChanged(rotation)
         self.updateComponents("comp")
 
     ##########################################################
     ## Stop the run here
     ##########################################################
     def reset(self, event=None):
-        self.state.reset = True
+        self.state.onReset()
         self.updateComponents("reset")
 
     ##########################################################
     ## Skip a split
     ##########################################################
     def skip(self,event=None):
-        splitEnd = timer()
-        self.state.skipSegment(splitEnd)
+        self.state.onSplitSkipped(timer())
         self.updateComponents("skip")
 
     ##########################################################
     ## If paused, unpause. If not paused, pause.
     ##########################################################
     def togglePause(self,event=None):
-        currentTime = timer()
-        if self.state.paused:
-            self.state.endPause(currentTime)
-        else:
-            self.state.startPause(currentTime)
+        self.state.onPaused(timer())
         self.updateComponents("pause")
