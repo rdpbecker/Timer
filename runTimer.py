@@ -26,7 +26,10 @@ rootWindow = app.root
 
 loader = ComponentLoader.ComponentLoader(app,state,rootWindow)
 
-app.addComponent(Title.Title(rootWindow,state))
+try:
+    app.addComponent(loader.loadComponent("title"))
+except Errors.ComponentTypeError as e:
+    print(e)
 try:
     app.addComponent(loader.loadComponent("spacer"))
 except Errors.ComponentTypeError as e:
