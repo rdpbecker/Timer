@@ -5,12 +5,12 @@ class Buttons(Component.Component):
     buttons = []
     rootWindow = None
 
-    def __init__(self,parent,state,rootWindow):
-        Component.Component.__init__(self,parent,state)
+    def __init__(self,parent,state,config,rootWindow):
+        Component.Component.__init__(self,parent,state,config)
         self.rootWindow = rootWindow
-        bg = state.config["buttons"]["colours"]["bg"]
-        fg = state.config["buttons"]["colours"]["text"]
-        font = state.config["buttons"]["font"]
+        bg = config["colours"]["bg"]
+        fg = config["colours"]["text"]
+        font = config["font"]
 
         button1 = tk.Button(self, bg=bg, font=font, text="Change Compare", fg=fg,command=rootWindow.guiSwitchCompareCW)
         button2 = tk.Button(self, bg=bg, font=font, text="Split", fg=fg, command=rootWindow.onSplitEnd)

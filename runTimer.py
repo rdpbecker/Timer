@@ -2,6 +2,8 @@ import app
 from States import State
 from Components import Title, DetailedTitle, Spacer, SegmentArea, SegmentCompare, Timer, DetailedTimer, CompareInfo, PbInfo, SobInfo, BptInfo, DiffInfo, TimeSaveInfo, ControlButtons
 from util import readConfig as rc
+import ComponentLoader
+import errors as Errors
 
 def setHotkeys(app,state):
     app.root.bind(state.config["hotkeys"]["decreaseComparison"],app.guiSwitchCompareCCW)
@@ -21,6 +23,8 @@ app.setupGui()
 
 setHotkeys(app,state)
 rootWindow = app.root
+
+loader = ComponentLoader.ComponentLoader(app,state,rootWindow)
 
 app.addComponent(Title.Title(rootWindow,state))
 app.addComponent(Spacer.Spacer(rootWindow,state))
@@ -43,6 +47,9 @@ if (state.config["infoShow"]["pb"]):
 if (state.config["infoShow"]["comparison"]):
     app.addComponent(CompareInfo.CompareInfo(rootWindow,state))
 if (state.config["infoShow"]["buttons"]):
-    app.addComponent(ControlButtons.Buttons(rootWindow,state,app))
+    try:
+        app.addComponent(loader.loadComponent("controlButtons"))
+    except Errors.ComponentTypeError as e:
+        print(e)
 
 app.startGui()
