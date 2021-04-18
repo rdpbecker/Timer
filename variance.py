@@ -34,7 +34,7 @@ def sort(i):
 
 def main():
     global varianceList
-    config = fileio.getUserConfig()
+    config = rc.getUserConfig()
     splits = cate.getSplitNames(config["baseDir"])
     completeCsv = fileio.csvReadStart(config["baseDir"],splits["game"],splits["category"],splits["splits"])[0]
     completeCsv = completeCsv[1:]
@@ -58,4 +58,5 @@ if __name__ == "__main__":
     from util import categorySelection as cate
     from util import fileio
     from util import timeHelpers as timeh
+    from util import readConfig as rc
     main()
