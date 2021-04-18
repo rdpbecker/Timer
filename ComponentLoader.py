@@ -15,7 +15,7 @@ class ComponentLoader:
         self.state = state
         self.rootWindow = rootWindow
         self.configDict = fileio.readJson("Components/componentList.json")
-        self.configKeys = self.configDict.key()
+        self.configKeys = self.configDict.keys()
         for key in self.configKeys:
             self.configDict[key]["numLoaded"] = 0
 
@@ -28,6 +28,6 @@ class ComponentLoader:
         config = rc.getCUserConfig(ctype,self.configDict[ctype]["numLoaded"])
         self.configDict[ctype]["numLoaded"] = self.configDict[ctype]["numLoaded"] + 1
         if self.configDict[ctype]["class_name"] == "Buttons":
-            return myClass(self.app,self.state,self.rootWindow)
+            return myClass(self.rootWindow,self.state,config,self.app)
         else:
-            return myClass(self.app,self.state)
+            return myClass(self.rootWindow,self.state,config)

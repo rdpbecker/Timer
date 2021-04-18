@@ -24,7 +24,6 @@ def getUserConfig():
 
 def getCUserConfig(ctype,number):
     defaultConfig = fileio.readJson("defaults/"+ctype+".json")
-    setDefaultHotkeys(defaultConfig)
     numString = ""
     if number:
         numString = str(number+1)
