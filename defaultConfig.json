@@ -1,10 +1,6 @@
 {
     "baseDir": "../",
     "padx": 10,
-    "endColour": "maroon1",
-    "numSplits": 5,
-    "activeSplit": 2,
-    "spacerHeight": 20,
     "hotkeys": {
         "decreaseComparison": "<Left>",
         "split": "<Return>",
@@ -16,44 +12,6 @@
         "restart": "R",
         "finish": "f"
     },
-    "root": {
-        "font": ["DejaVu Sans", 10],
-        "colours": {
-            "text": "white",
-            "bg": "black"
-        }
-    },
-    "activeHighlight": {
-        "colours": {
-            "text": "black",
-            "bg": "pink"
-        }
-    },
-    "mainTimer": {
-        "font": ["Arial Black",24],
-        "colours": {
-            "main": "green",
-            "notGoldAheadGaining": "#45ab2a",
-            "aheadLosing": "lime green",
-            "notGoldBehindGaining": "coral",
-            "behindGaining": "light coral",
-            "behindLosing": "red"
-        }
-    },
-    "segmentTimer": {
-        "font": ["Liberation Sans",18],
-        "colour": "gray"
-    },
-    "diff": {
-        "colours": {
-            "gold": "gold",
-            "aheadGaining": "green",
-            "aheadLosing": "lime green",
-            "behindGaining": "light coral",
-            "behindLosing": "red",
-            "skipped": "midnight blue"
-        }
-    },
     "infoShow": {
         "timeSave": true,
         "diff": true,
@@ -62,12 +20,5 @@
         "pb": true,
         "comparison": true,
         "buttons": true
-    },
-    "buttons": {
-        "font": ["DejaVu Sans", 10],
-        "colours": {
-            "text": "black",
-            "bg": "steel blue"
-        }
     }
 }

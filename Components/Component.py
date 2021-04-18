@@ -4,7 +4,7 @@ class Component(tk.Frame):
     state = None
     config = None
 
-    def __init__(self,parent,state,config={}):
+    def __init__(self,parent,state,config):
         tk.Frame.__init__(self,parent)
         self.state = state
         self.config = config

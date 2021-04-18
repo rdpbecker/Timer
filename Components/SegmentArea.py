@@ -10,6 +10,10 @@ class SegmentArea(Component.Component):
 
     def __init__(self,parent,state,config):
         Component.Component.__init__(self,parent,state,config)
+        if config["numSplits"] > len(self.state.splitnames):
+            config["numSplits"] = len(self.state.splitnames)
+            config["activeSplit"] = len(self.state.splitnames) - 2
+
         self.numRows = config["numSplits"]
         for i in range(self.numRows):
             row = SegmentRow.SegmentRow(self, config["main"]["colours"]["bg"], config["main"]["font"], config["main"]["colours"]["text"])
