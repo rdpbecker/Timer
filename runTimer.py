@@ -4,6 +4,7 @@ from Components import Title, DetailedTitle, Spacer, SegmentArea, SegmentCompare
 from util import readConfig as rc
 import ComponentLoader
 import errors as Errors
+from util import fileio
 
 def setHotkeys(app,state):
     app.root.bind(state.config["hotkeys"]["decreaseComparison"],app.guiSwitchCompareCCW)
@@ -25,72 +26,14 @@ setHotkeys(app,state)
 rootWindow = app.root
 
 loader = ComponentLoader.ComponentLoader(app,state,rootWindow)
+layout = fileio.getLayout()
 
-try:
-    app.addComponent(loader.loadComponent("title"))
-except Errors.ComponentTypeError as e:
-    print(e)
-try:
-    app.addComponent(loader.loadComponent("spacer"))
-except Errors.ComponentTypeError as e:
-    print(e)
-try:
-    app.addComponent(loader.loadComponent("segmentArea"))
-except Errors.ComponentTypeError as e:
-    print(e)
-try:
-    app.addComponent(loader.loadComponent("spacer"))
-except Errors.ComponentTypeError as e:
-    print(e)
-try:
-    app.addComponent(loader.loadComponent("segmentCompare"))
-except Errors.ComponentTypeError as e:
-    print(e)
-try:
-    app.addComponent(loader.loadComponent("spacer"))
-except Errors.ComponentTypeError as e:
-    print(e)
-try:
-    app.addComponent(loader.loadComponent("detailedTimer"))
-except Errors.ComponentTypeError as e:
-    print(e)
-try:
-    app.addComponent(loader.loadComponent("spacer"))
-except Errors.ComponentTypeError as e:
-    print(e)
-if (state.config["infoShow"]["timeSave"]):
+for component in layout:
     try:
-        app.addComponent(loader.loadComponent("timeSaveInfo"))
-    except Errors.ComponentTypeError as e:
-        print(e)
-if (state.config["infoShow"]["diff"]):
-    try:
-        app.addComponent(loader.loadComponent("diffInfo"))
-    except Errors.ComponentTypeError as e:
-        print(e)
-if (state.config["infoShow"]["bpt"]):
-    try:
-        app.addComponent(loader.loadComponent("bptInfo"))
-    except Errors.ComponentTypeError as e:
-        print(e)
-if (state.config["infoShow"]["sob"]):
-    try:
-        app.addComponent(loader.loadComponent("sobInfo"))
-    except Errors.ComponentTypeError as e:
-        print(e)
-if (state.config["infoShow"]["pb"]):
-    try:
-        app.addComponent(loader.loadComponent("pbInfo"))
-    except Errors.ComponentTypeError as e:
-        print(e)
-if (state.config["infoShow"]["comparison"]):
-    try:
-        app.addComponent(loader.loadComponent("compareInfo"))
-    except Errors.ComponentTypeError as e:
-        print(e)
-if (state.config["infoShow"]["buttons"]):
-    try:
-        app.addComponent(loader.loadComponent("controlButtons"))
+        if "config" in component.keys():
+            app.addComponent(loader.loadComponent(component["type"],component["config"]))
+        else:
+            app.addComponent(loader.loadComponent(component["type"]))
     except Errors.ComponentTypeError as e:
         print(e)
 

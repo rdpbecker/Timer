@@ -22,12 +22,9 @@ def getUserConfig():
     config = mergeConfigs(defaultConfig,userConfig)
     return config
 
-def getCUserConfig(ctype,number):
+def getCUserConfig(ctype,fileName):
     defaultConfig = fileio.readJson("defaults/"+ctype+".json")
-    numString = ""
-    if number:
-        numString = str(number+1)
-    configPath = "config/" + ctype + numString + ".json"
+    configPath = "config/" + fileName + ".json"
     if os.path.exists(configPath):
         userConfig = fileio.readJson(configPath)
     else:

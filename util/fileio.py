@@ -73,3 +73,8 @@ def readJson(filepath):
     with open(filepath,'r') as reader:
         data = json.load(reader)
     return data
+
+def getLayout():
+    if os.path.exists("config/layout.json"):
+        return readJson("config/layout.json")
+    return readJson("defaults/layout.json")

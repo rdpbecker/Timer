@@ -19,13 +19,13 @@ class ComponentLoader:
         for key in self.configKeys:
             self.configDict[key]["numLoaded"] = 0
 
-    def loadComponent(self,ctype):
+    def loadComponent(self,ctype,configFileName=""):
         if not ctype in self.configKeys:
             raise Errors.ComponentTypeError(ctype)
 
         module = importlib.import_module(self.configDict[ctype]["module_name"])
         myClass = getattr(module,self.configDict[ctype]["class_name"])
-        config = rc.getCUserConfig(ctype,self.configDict[ctype]["numLoaded"])
+        config = rc.getCUserConfig(ctype,configFileName)
         self.configDict[ctype]["numLoaded"] = self.configDict[ctype]["numLoaded"] + 1
         if self.configDict[ctype]["class_name"] == "Buttons":
             return myClass(self.rootWindow,self.state,config,self.app)
