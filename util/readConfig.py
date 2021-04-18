@@ -1,5 +1,6 @@
 import os
 from util import fileio
+import errors as Errors
 
 validHotkeys = [
     'a','b','c','d','e','f','g','h','i','j','k','l','m',\
@@ -54,5 +55,9 @@ def mergeConfigs(original,override):
 
 def validateHotkeys(config):
     for key in config["hotkeys"].keys():
-        if not config["hotkeys"][key] in validHotkeys:
+        try:
+            if not config["hotkeys"][key] in validHotkeys:
+                raise Errors.HotKeyTypeError(config["hotkeys"][key],defaultHotkeys[key],key)
+        except Errors.HotKeyTypeError as e:
+            print(e)
             config["hotkeys"][key] = defaultHotkeys[key]
