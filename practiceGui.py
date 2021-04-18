@@ -9,12 +9,15 @@ import timeHelpers as timeh
 class Gui(threading.Thread):
     labels = []
     buttons = []
+    state = None
 
     def __init__(self,state):
         threading.Thread.__init__(self)
+        self.state = state
         self.run()
 
     def run(self):
+        self.root = tk.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.root.quit)
         self.root.configure(background='black')
 
@@ -66,11 +69,11 @@ class Gui(threading.Thread):
         self.labels[1][0].configure(text=timeh.timeToString(0,{"blankToDash":False,"precision":2}))
 
     def onSplitEnd(self,event=None):
-        self.state.onSplitEnd(timer())
+        self.state.onSplit(timer())
         self.labels[0][1].configure(text=timeh.timeToString(self.state.bestTime,{"precision":2}))
 
     def start(self,event=None):
-        self.state.startRun(timer())
+        self.state.onStarted(timer())
 
     def finish(self,event=None):
         self.state.saveTimes()

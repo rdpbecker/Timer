@@ -32,3 +32,6 @@ class Component(tk.Frame):
 
     def onReset(self):
         pass
+
+    def onRestart(self):
+        pass
