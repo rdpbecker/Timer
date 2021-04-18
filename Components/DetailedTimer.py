@@ -2,7 +2,7 @@ import tkinter as tk
 from Components import Component
 from util import timeHelpers as timeh
 
-class DetailedTimer(Component.Component):
+class Timer(Component.Component):
     main = None
     segment = None
 

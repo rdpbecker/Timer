@@ -1,0 +1,58 @@
+{
+    "bptInfo": {
+        "module_name": "Components.BptInfo",
+        "class_name": "BptInfo"
+    },
+    "compareInfo": {
+        "module_name": "Components.CompareInfo",
+        "class_name": "CompareInfo"
+    },
+    "controlButtons": {
+        "module_name": "Components.ControlButtons",
+        "class_name": "Buttons"
+    },
+    "detailedTimer": {
+        "module_name": "Components.DetailedTimer",
+        "class_name": "Timer"
+    },
+    "detailedTitle": {
+        "module_name": "Components.DetailedTitle",
+        "class_name": "Title"
+    },
+    "diffInfo": {
+        "module_name": "Components.DiffInfo",
+        "class_name": "DiffInfo"
+    },
+    "pbInfo": {
+        "module_name": "Components.PbInfo",
+        "class_name": "PbInfo"
+    },
+    "segmentArea": {
+        "module_name": "Components.SegmentArea",
+        "class_name": "SegmentArea"
+    },
+    "segmentCompare": {
+        "module_name": "Components.SegmentCompare",
+        "class_name": "SegmentCompare"
+    },
+    "sobInfo": {
+        "module_name": "Components.SobInfo",
+        "class_name": "SobInfo"
+    },
+    "spacer": {
+        "module_name": "Components.Spacer",
+        "class_name": "Spacer"
+    },
+    "timeSaveInfo": {
+        "module_name": "Components.TimeSaveInfo",
+        "class_name": "TimeSaveInfo"
+    },
+    "timer": {
+        "module_name": "Components.Timer",
+        "class_name": "Timer"
+    },
+    "title": {
+        "module_name": "Components.Title",
+        "class_name": "Title"
+    }
+}

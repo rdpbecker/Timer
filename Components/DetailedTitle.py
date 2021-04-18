@@ -2,7 +2,7 @@ import tkinter as tk
 from Components import Component
 from util import timeHelpers as timeh
 
-class DetailedTitle(Component.Component):
+class Title(Component.Component):
     game = None
     category = None
     compHeader = None

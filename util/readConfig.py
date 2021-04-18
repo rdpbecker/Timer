@@ -22,6 +22,20 @@ def getUserConfig():
     config = mergeConfigs(defaultConfig,userConfig)
     return config
 
+def getCUserConfig(ctype,number):
+    defaultConfig = fileio.readJson("defaults/"+ctype+".json")
+    setDefaultHotkeys(defaultConfig)
+    numString = ""
+    if number:
+        numString = str(number+1)
+    configPath = "config/" + ctype + numString + ".json"
+    if os.path.exists(configPath):
+        userConfig = fileio.readJson(configPath)
+    else:
+        userConfig = {}
+    config = mergeConfigs(defaultConfig,userConfig)
+    return config
+
 def setDefaultHotkeys(defaultConfig):
     global defaultHotkeys
     for key in defaultConfig["hotkeys"].keys():
