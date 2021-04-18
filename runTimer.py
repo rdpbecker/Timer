@@ -35,17 +35,35 @@ app.addComponent(Spacer.Spacer(rootWindow,state))
 app.addComponent(DetailedTimer.Timer(rootWindow,state))
 app.addComponent(Spacer.Spacer(rootWindow,state))
 if (state.config["infoShow"]["timeSave"]):
-    app.addComponent(TimeSaveInfo.TimeSaveInfo(rootWindow,state))
+    try:
+        app.addComponent(loader.loadComponent("timeSaveInfo"))
+    except Errors.ComponentTypeError as e:
+        print(e)
 if (state.config["infoShow"]["diff"]):
-    app.addComponent(DiffInfo.DiffInfo(rootWindow,state))
+    try:
+        app.addComponent(loader.loadComponent("diffInfo"))
+    except Errors.ComponentTypeError as e:
+        print(e)
 if (state.config["infoShow"]["bpt"]):
-    app.addComponent(BptInfo.BptInfo(rootWindow,state))
+    try:
+        app.addComponent(loader.loadComponent("bptInfo"))
+    except Errors.ComponentTypeError as e:
+        print(e)
 if (state.config["infoShow"]["sob"]):
-    app.addComponent(SobInfo.SobInfo(rootWindow,state))
+    try:
+        app.addComponent(loader.loadComponent("sobInfo"))
+    except Errors.ComponentTypeError as e:
+        print(e)
 if (state.config["infoShow"]["pb"]):
-    app.addComponent(PbInfo.PbInfo(rootWindow,state))
+    try:
+        app.addComponent(loader.loadComponent("pbInfo"))
+    except Errors.ComponentTypeError as e:
+        print(e)
 if (state.config["infoShow"]["comparison"]):
-    app.addComponent(CompareInfo.CompareInfo(rootWindow,state))
+    try:
+        app.addComponent(loader.loadComponent("compareInfo"))
+    except Errors.ComponentTypeError as e:
+        print(e)
 if (state.config["infoShow"]["buttons"]):
     try:
         app.addComponent(loader.loadComponent("controlButtons"))

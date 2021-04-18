@@ -3,8 +3,8 @@ from Components import Info
 from util import timeHelpers as timeh
 
 class BptInfo(Info.Info):
-    def __init__(self,parent,state):
-        Info.Info.__init__(self,parent,state)
+    def __init__(self,parent,state,config):
+        Info.Info.__init__(self,parent,state,config)
         self.header.configure(text="Best Possible Time:")
         self.info.configure(text=timeh.timeToString(self.state.bptList.total,{"precision":2}))
 
