@@ -13,10 +13,10 @@ validHotkeys = [
 defaultHotkeys = {}
 
 def getUserConfig():
-    defaultConfig = fileio.readJson("defaultConfig.json")
+    defaultConfig = fileio.readJson("defaults/global.json")
     setDefaultHotkeys(defaultConfig)
-    if os.path.exists("config.json"):
-        userConfig = fileio.readJson("config.json")
+    if os.path.exists("config/global.json"):
+        userConfig = fileio.readJson("config/global.json")
     else:
         userConfig = {}
     config = mergeConfigs(defaultConfig,userConfig)
