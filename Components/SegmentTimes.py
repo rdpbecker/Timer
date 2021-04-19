@@ -28,9 +28,10 @@ class SegmentTimes(Component.Component):
 
         self.leftFrame.pack(side="left", padx=state.config["padx"])
         self.rightFrame.pack(side="left", padx=state.config["padx"])
-        self.segmentHeader.pack(side="top",anchor="nw")
+        if config["includeCurrentComparison"]:
+            self.segmentHeader.pack(side="top",anchor="nw")
+            self.segmentTime.pack(side="top",anchor="ne")
         self.goldHeader.pack(side="bottom",anchor="sw")
-        self.segmentTime.pack(side="top",anchor="ne")
         self.goldTime.pack(side="bottom",anchor="se")
 
     def onSplit(self):
