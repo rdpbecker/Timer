@@ -16,8 +16,6 @@ class ComponentLoader:
         self.rootWindow = rootWindow
         self.configDict = fileio.readJson("Components/componentList.json")
         self.configKeys = self.configDict.keys()
-        for key in self.configKeys:
-            self.configDict[key]["numLoaded"] = 0
 
     def loadComponent(self,ctype,configFileName=""):
         if not ctype in self.configKeys:
@@ -26,7 +24,6 @@ class ComponentLoader:
         module = importlib.import_module(self.configDict[ctype]["module_name"])
         myClass = getattr(module,self.configDict[ctype]["class_name"])
         config = rc.getCUserConfig(ctype,configFileName)
-        self.configDict[ctype]["numLoaded"] = self.configDict[ctype]["numLoaded"] + 1
         if self.configDict[ctype]["class_name"] == "Buttons":
             return myClass(self.rootWindow,self.state,config,self.app)
         else:
