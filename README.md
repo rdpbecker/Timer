@@ -28,7 +28,7 @@ directory called `layouts`.
 
 1. The list of component types are given in
 `Components/componentList.json`, and descriptions of each of the
-type is given in that directory.
+types is given in that directory.
 
 2. If a config location is not given, or if the referenced
 configuration file does not exist, the configuration used for the
