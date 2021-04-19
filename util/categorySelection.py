@@ -1,6 +1,8 @@
 import csv, sys
 from util import fileio
 
+generalHeader = "Please enter a value from the following list:"
+
 def findAllSplits(baseDir):
     csvname = baseDir + "/splitNames.csv"
     with open(csvname,'r') as csvfile:
@@ -34,8 +36,8 @@ def findGameSplits(csvlines,category):
         if splits[1] == category:
             return splits[2:]
 
-def readThingInList(aList):
-    print("Please enter a value from the following list:")
+def readThingInList(aList,header=generalHeader):
+    print(header)
     print(aList)
     thing = sys.stdin.readline()[:-1]
     while not thing in aList:
@@ -47,10 +49,10 @@ def readThingInList(aList):
 def getSplitNames(baseDir):
     splitNames = findAllSplits(baseDir)
     names = findNames(splitNames,0)
-    game = readThingInList(names)
+    game = readThingInList(names, "Pick a game:")
     restrictCategories(splitNames,game)
     categories = findNames(splitNames,1)
-    category = readThingInList(categories)
+    category = readThingInList(categories, "Pick a category:")
     splitnames = findGameSplits(splitNames,category)
     fileio.stripEmptyStrings(splitnames)
     return { \

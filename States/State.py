@@ -49,10 +49,6 @@ class State(BaseState.State):
         
         self.currentRun = CurrentRun.CurrentRun()
 
-        if self.config["numSplits"] > len(self.splitnames):
-            self.config["numSplits"] = len(self.splitnames)
-            self.config["activeSplit"] = len(self.splitnames) - 2
-
     ##########################################################
     ## Sets the segment and total times. Should be used only
     ## for frame updates.

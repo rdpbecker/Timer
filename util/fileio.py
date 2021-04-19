@@ -1,5 +1,5 @@
-import os, csv
-import json
+import os, csv, json
+from util import categorySelection as cate
 
 def resolveFilename(arr):
     return "/".join(arr)
@@ -73,3 +73,14 @@ def readJson(filepath):
     with open(filepath,'r') as reader:
         data = json.load(reader)
     return data
+
+def getLayout():
+    if os.path.exists("layouts"):
+        layoutFiles = [f[:-5] for f in os.listdir("layouts")]
+        layoutFiles.insert(0,"system default")
+        layoutFile = cate.readThingInList(layoutFiles, "Pick a layout to use:")
+    else:
+        layoutFile = "system default"
+    if layoutFile == "system default":
+        return readJson("defaults/layout.json")
+    return readJson("layouts/"+layoutFile+".json")

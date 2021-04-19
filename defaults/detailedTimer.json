@@ -1,0 +1,20 @@
+{
+    "colours": {
+        "bg": "black"
+    },
+    "mainTimer": {
+        "font": ["Arial Black",24],
+        "colours": {
+            "main": "green",
+            "notGoldAheadGaining": "#45ab2a",
+            "aheadLosing": "lime green",
+            "notGoldBehindGaining": "coral",
+            "behindGaining": "light coral",
+            "behindLosing": "red"
+        }
+    },
+    "segmentTimer": {
+        "font": ["Liberation Sans",18],
+        "colour": "gray"
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "baseDir": "../",
+    "padx": 10,
+    "hotkeys": {
+        "decreaseComparison": "<Left>",
+        "split": "<Return>",
+        "increaseComparison": "<Right>",
+        "pause": "p",
+        "reset": "r",
+        "skip": "s",
+        "start": "<space>",
+        "restart": "R",
+        "finish": "f"
+    }
+}

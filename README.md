@@ -6,44 +6,58 @@ file stores the list of games and categories, along with the list
 of segments for each game/category pair.  More explanation and an 
 example are given in the *examples/* directory.
 
-## Layout/Appearance Configuration
+## Configuring the layout
 
-Parts of the layout and appearance can be configured by the user.
-
-For the appearance, most of the colours and fonts can be
-configured, including but not limited to the main text, the timer,
-the buttons, and the highlighting on the current segment.
-
-For the layout, the number of segments displayed and the index of
-the current segment can be chosen, and the information shown at the
-bottom of the window about the comparisons.
-
-Finally, the base directory of the save files can be configured
-using the `baseDir` attribute. The default is to save all files in
-the parent of this directory.
-
-A list of all configurable attributes can be found in
-`defaultConfig.json`.
-
-## Creating the Configuration
-
-There is a default configuration provided at `defaultConfig.json`
-in the root directory. This configuration shouldn't be changed
-manually, as it will be overwritten whenever it gets changed in the
-repository. To override this configuration globally
-(i.e. for all game/category pairs), you can use create a file 
-called `config.json` in the root directory which overwrites the
-desired attributes. To override this configuration for a specific
-game/category pair, create a file at
-`<baseDir>/<game>/<category>.json` which overrides the desired
-attributes. The attributes are overwritten in the following order:
-
+In the `defaults` directory, there is a file called `layout.json`.
+This file gives the default layout for the timer. This file
+provides a list of objects, where each object defines a component
+to be used in the layout. Each object has the form
 ```
-defaultConfig.json -> config.json -> <baseDir>/<game>/<category>.json
+{
+    "type" (required): the type of component to add
+    "config" (optional): the location of the configuration file for
+        this component (if desired). The referenced file has the
+        location 'config/<config>.json', so set this appropriately.
+}
 ```
 
-Attributes in files further right overwrite attributes set in
-previous files.
+Custom layouts should follow this format, and should be placed in a
+directory called `layouts`.
+
+#### Notes about layouts
+
+1. The list of component types are given in
+`Components/componentList.json`, and descriptions of each of the
+types is given in that directory.
+
+2. If a config location is not given, or if the referenced
+configuration file does not exist, the configuration used for the
+component is taken from `defaults/<type>.json`. This file defines
+all the necessary configuration fields for the given component
+type, so look at this when making a component configuration.
+
+3. The defined components are added to the window in order from top to
+bottom, so the order of component definitions does matter.
+
+4. Custom layouts can be added to a folder called `layouts`. Before
+the window is created, you will be prompted to choose a layout to
+use from this directory. `system default` refers to the default layout
+defined in the `defaults` directory.
+
+## General configuration notes
+
+As noted before, each component has the option to have custom
+configuration, and the components used and their relative positions
+are also customizable. However, there is also a global
+configuration at `defaults/global.json`. There are only three
+attributes defined in this file:
+
+1. `baseDir`: The base directory where all the data is stored
+2. `padx`: The (global) horizontal padding on the outside of the
+window
+3. `hotkeys`: Defines the hotkeys associated with different control
+actions. These are validated before being set, and a error will be
+shown if an invalid hotkey is defined
 
 ## Manual Comparisons
 

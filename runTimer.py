@@ -1,7 +1,9 @@
 import app
 from States import State
-from Components import Title, DetailedTitle, Spacer, SegmentArea, SegmentCompare, Timer, DetailedTimer, CompareInfo, PbInfo, SobInfo, BptInfo, DiffInfo, TimeSaveInfo, ControlButtons
 from util import readConfig as rc
+import ComponentLoader
+import errors as Errors
+from util import fileio
 
 def setHotkeys(app,state):
     app.root.bind(state.config["hotkeys"]["decreaseComparison"],app.guiSwitchCompareCCW)
@@ -22,27 +24,16 @@ app.setupGui()
 setHotkeys(app,state)
 rootWindow = app.root
 
-app.addComponent(Title.Title(rootWindow,state))
-app.addComponent(Spacer.Spacer(rootWindow,state))
-app.addComponent(SegmentArea.SegmentArea(rootWindow,state))
-app.addComponent(Spacer.Spacer(rootWindow,state))
-app.addComponent(SegmentCompare.SegmentCompare(rootWindow,state))
-app.addComponent(Spacer.Spacer(rootWindow,state))
-app.addComponent(DetailedTimer.DetailedTimer(rootWindow,state))
-app.addComponent(Spacer.Spacer(rootWindow,state))
-if (state.config["infoShow"]["timeSave"]):
-    app.addComponent(TimeSaveInfo.TimeSaveInfo(rootWindow,state))
-if (state.config["infoShow"]["diff"]):
-    app.addComponent(DiffInfo.DiffInfo(rootWindow,state))
-if (state.config["infoShow"]["bpt"]):
-    app.addComponent(BptInfo.BptInfo(rootWindow,state))
-if (state.config["infoShow"]["sob"]):
-    app.addComponent(SobInfo.SobInfo(rootWindow,state))
-if (state.config["infoShow"]["pb"]):
-    app.addComponent(PbInfo.PbInfo(rootWindow,state))
-if (state.config["infoShow"]["comparison"]):
-    app.addComponent(CompareInfo.CompareInfo(rootWindow,state))
-if (state.config["infoShow"]["buttons"]):
-    app.addComponent(ControlButtons.Buttons(rootWindow,state,app))
+loader = ComponentLoader.ComponentLoader(app,state,rootWindow)
+layout = fileio.getLayout()
+
+for component in layout:
+    try:
+        if "config" in component.keys():
+            app.addComponent(loader.loadComponent(component["type"],component["config"]))
+        else:
+            app.addComponent(loader.loadComponent(component["type"]))
+    except Errors.ComponentTypeError as e:
+        print(e)
 
 app.startGui()

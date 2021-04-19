@@ -1,0 +1,12 @@
+{
+    "font": ["Arial Black",24],
+    "colours": {
+        "bg": "black",
+        "main": "green",
+        "notGoldAheadGaining": "#45ab2a",
+        "aheadLosing": "lime green",
+        "notGoldBehindGaining": "coral",
+        "behindGaining": "light coral",
+        "behindLosing": "red"
+    }
+}

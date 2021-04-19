@@ -2,17 +2,17 @@ import tkinter as tk
 from Components import Component
 from util import timeHelpers as timeh
 
-class DetailedTitle(Component.Component):
+class Title(Component.Component):
     game = None
     category = None
     compHeader = None
     compName = None
 
-    def __init__(self,parent,state):
-        Component.Component.__init__(self,parent,state)
-        bg = state.config["root"]["colours"]["bg"]
-        font = state.config["root"]["font"]
-        textColour = state.config["root"]["colours"]["text"]
+    def __init__(self,parent,state,config):
+        Component.Component.__init__(self,parent,state,config)
+        bg = config["colours"]["bg"]
+        font = config["font"]
+        textColour = config["colours"]["text"]
 
         self.configure(bg=bg)
         self.game = tk.Label(self, bg=bg, font=font, fg=textColour)

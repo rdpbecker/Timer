@@ -1,5 +1,6 @@
 import os
 from util import fileio
+import errors as Errors
 
 validHotkeys = [
     'a','b','c','d','e','f','g','h','i','j','k','l','m',\
@@ -13,10 +14,20 @@ validHotkeys = [
 defaultHotkeys = {}
 
 def getUserConfig():
-    defaultConfig = fileio.readJson("defaultConfig.json")
+    defaultConfig = fileio.readJson("defaults/global.json")
     setDefaultHotkeys(defaultConfig)
-    if os.path.exists("config.json"):
-        userConfig = fileio.readJson("config.json")
+    if os.path.exists("config/global.json"):
+        userConfig = fileio.readJson("config/global.json")
+    else:
+        userConfig = {}
+    config = mergeConfigs(defaultConfig,userConfig)
+    return config
+
+def getCUserConfig(ctype,fileName):
+    defaultConfig = fileio.readJson("defaults/"+ctype+".json")
+    configPath = "config/" + fileName + ".json"
+    if os.path.exists(configPath):
+        userConfig = fileio.readJson(configPath)
     else:
         userConfig = {}
     config = mergeConfigs(defaultConfig,userConfig)
@@ -44,5 +55,9 @@ def mergeConfigs(original,override):
 
 def validateHotkeys(config):
     for key in config["hotkeys"].keys():
-        if not config["hotkeys"][key] in validHotkeys:
+        try:
+            if not config["hotkeys"][key] in validHotkeys:
+                raise Errors.HotKeyTypeError(config["hotkeys"][key],defaultHotkeys[key],key)
+        except Errors.HotKeyTypeError as e:
+            print(e)
             config["hotkeys"][key] = defaultHotkeys[key]
