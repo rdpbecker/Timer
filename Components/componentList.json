@@ -31,9 +31,9 @@
         "module_name": "Components.SegmentArea",
         "class_name": "SegmentArea"
     },
-    "segmentCompare": {
-        "module_name": "Components.SegmentCompare",
-        "class_name": "SegmentCompare"
+    "segmentTimes": {
+        "module_name": "Components.SegmentTimes",
+        "class_name": "SegmentTimes"
     },
     "sobInfo": {
         "module_name": "Components.SobInfo",

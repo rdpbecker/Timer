@@ -1,6 +1,5 @@
 import app
 from States import State
-from Components import Title, DetailedTitle, Spacer, SegmentArea, SegmentCompare, Timer, DetailedTimer, CompareInfo, PbInfo, SobInfo, BptInfo, DiffInfo, TimeSaveInfo, ControlButtons
 from util import readConfig as rc
 import ComponentLoader
 import errors as Errors

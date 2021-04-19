@@ -1,7 +1,7 @@
 import tkinter as tk
 from Components import Component
 
-class SegmentCompare(Component.Component):
+class SegmentTimes(Component.Component):
     segmentHeader = None
     segmentTime = None
     goldHeader = None
