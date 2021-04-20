@@ -18,7 +18,8 @@ def parseOptions(options):
     newOptions = {\
         "showSign": False, \
         "blankToDash": True, \
-        "precision": 0\
+        "precision": 0,\
+        "noPrecisionOnMinute": False\
     }
 
     newOptions.update(options)
@@ -41,6 +42,8 @@ def timeToString(totalSecs,options={}):
         else: 
             string = '-'
     totalSecs = abs(totalSecs)
+    if totalSecs > 60 and options["noPrecisionOnMinute"]:
+        options["precision"] = 0
     fracsecs = totalSecs - int(totalSecs)
     totalSecs = int(totalSecs)
     secs = totalSecs % 60

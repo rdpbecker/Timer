@@ -17,8 +17,12 @@ class GoldDiffInfo(Info.Info):
             self.header.configure(text="Current Segment:")
             self.info.configure(text=timeh.timeToString(\
                 timeh.difference(self.state.segmentTime,self.state.comparisons[0].segments[self.state.splitnum]),\
-                {"showSign": True, "precision":2})\
-            )
+                {\
+                    "showSign": True,\
+                    "precision": self.config["precision"],\
+                    "noPrecisionOnMinute": self.config["noPrecisionOnMinute"]\
+                }\
+            ))
             self.info.configure(fg=self.setCurrentColour())
 
     def onSplit(self):
@@ -31,7 +35,17 @@ class GoldDiffInfo(Info.Info):
         if not self.state.splitnum:
             return
         self.header.configure(text="Last Split (vs Best):")
-        self.info.configure(text=self.state.comparisons[0].getString("segmentDiffs",self.state.splitnum-1,{"showSign":True,"precision":2}))
+        self.info.configure(\
+            text=\
+                self.state.comparisons[0].getString(\
+                    "segmentDiffs",self.state.splitnum-1,\
+                    {\
+                        "showSign": True,\
+                        "precision": self.config["precision"],\
+                        "noPrecisionOnMinute": self.config["noPrecisionOnMinute"]\
+                    }\
+                )\
+        )
         self.info.configure(fg=self.setPreviousColour())
 
     def setCurrentColour(self):

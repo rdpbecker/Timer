@@ -53,10 +53,28 @@ class SegmentTimes(Component.Component):
         self.segmentHeader.configure(text=self.state.currentComparison.segmentHeader+":")
 
     def updateSegmentTime(self):
-        self.segmentTime.configure(text=self.state.currentComparison.getString("segments",self.state.splitnum,{"precision":2}))
+        self.segmentTime.configure(\
+            text=\
+                self.state.currentComparison.getString(\
+                    "segments",\
+                    self.state.splitnum,\
+                    {\
+                        "precision": self.config["precision"]\
+                    }\
+                )\
+        )
 
     def updateGoldHeader(self):
         self.goldHeader.configure(text="Best Split:")
 
     def updateGoldTime(self):
-        self.goldTime.configure(text=self.state.comparisons[0].getString("segments",self.state.splitnum,{"precision":2}))
+        self.goldTime.configure(\
+            text=\
+                self.state.comparisons[0].getString(\
+                    "segments",\
+                    self.state.splitnum,\
+                    {\
+                        "precision": self.config["precision"]\
+                    }\
+                )\
+        )

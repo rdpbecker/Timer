@@ -1,4 +1,6 @@
 {
+    "precision": 2,
+    "noPrecisionOnMinute": true,
     "font": ["DejaVu Sans", 10],
     "colours": {
         "text": "white",

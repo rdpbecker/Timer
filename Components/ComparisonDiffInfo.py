@@ -21,7 +21,11 @@ class ComparisonDiffInfo(Info.Info):
                         self.state.segmentTime,\
                         self.state.currentComparison.segments[self.state.splitnum]\
                     ),\
-                    {"showSign": True, "precision":2}\
+                    {\
+                        "showSign": True, \
+                        "precision": self.config["precision"],\
+                        "noPrecisionOnMinute": self.config["noPrecisionOnMinute"]\
+                    }\
                 )\
                 +" / "\
                 +timeh.timeToString(\
@@ -29,8 +33,11 @@ class ComparisonDiffInfo(Info.Info):
                         self.state.currentComparison.segments[self.state.splitnum],\
                         self.state.comparisons[0].segments[self.state.splitnum]\
                     ),\
-                    {"precision":2}\
-                )
+                    {\
+                        "precision": self.config["precision"],\
+                        "noPrecisionOnMinute": self.config["noPrecisionOnMinute"]\
+                    }\
+                )\
             )
             self.info.configure(fg=self.setCurrentColour())
 
@@ -50,7 +57,11 @@ class ComparisonDiffInfo(Info.Info):
                     self.state.currentRun.segments[self.state.splitnum-1],\
                     self.state.currentComparison.segments[self.state.splitnum-1]\
                 ),\
-                {"showSign": True, "precision":2}\
+                {\
+                    "showSign": True, \
+                    "precision": self.config["precision"],\
+                    "noPrecisionOnMinute": self.config["noPrecisionOnMinute"]\
+                }\
             )\
             +" / "\
             +timeh.timeToString(\
@@ -58,8 +69,11 @@ class ComparisonDiffInfo(Info.Info):
                     self.state.currentComparison.segments[self.state.splitnum-1],\
                     self.state.comparisons[0].segments[self.state.splitnum-1]\
                 ),\
-                {"precision":2}\
-            )
+                {\
+                    "precision": self.config["precision"],\
+                    "noPrecisionOnMinute": self.config["noPrecisionOnMinute"]\
+                }\
+            )\
         )
         self.info.configure(fg=self.setPreviousColour())
 
