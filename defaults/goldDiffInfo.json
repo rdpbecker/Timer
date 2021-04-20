@@ -1,0 +1,11 @@
+{
+    "font": ["DejaVu Sans", 10],
+    "colours": {
+        "text": "white",
+        "skipped": "white",
+        "gold": "gold",
+        "gaining": "green",
+        "losing": "red",
+        "bg": "black"
+    }
+}

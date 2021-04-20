@@ -7,6 +7,10 @@
         "module_name": "Components.CompareInfo",
         "class_name": "CompareInfo"
     },
+    "comparisonDiffInfo": {
+        "module_name": "Components.ComparisonDiffInfo",
+        "class_name": "ComparisonDiffInfo"
+    },
     "controlButtons": {
         "module_name": "Components.ControlButtons",
         "class_name": "Buttons"
@@ -19,9 +23,9 @@
         "module_name": "Components.DetailedTitle",
         "class_name": "Title"
     },
-    "diffInfo": {
-        "module_name": "Components.DiffInfo",
-        "class_name": "DiffInfo"
+    "goldDiffInfo": {
+        "module_name": "Components.GoldDiffInfo",
+        "class_name": "GoldDiffInfo"
     },
     "pbInfo": {
         "module_name": "Components.PbInfo",

@@ -6,6 +6,10 @@
 
  - `compareInfo`: Shows which comparison is currently being used.
 
+ - `comparisonDiffInfo`: Shows a comparison of the previous split
+   vs. the current comparisons's last split, and the possible time
+   save for the last split.
+
  - `controlButtons`: Shows the buttons for control actions so that
    the actions can be triggered by clicking a button instead of
    using the hotkeys.
@@ -18,7 +22,7 @@
  - `detailedTitle`: A title which shows the game, category, and
    current comparison.
 
- - `diffInfo`: Shows a comparison of the previous split vs. the best
+ - `goldDiffInfo`: Shows a comparison of the previous split vs. the best
    previous split, or shows how much time is being lost to the
    current best split if applicable.
  

@@ -27,7 +27,7 @@
         "type": "timeSaveInfo"
     },
     {
-        "type": "diffInfo"
+        "type": "goldDiffInfo"
     },
     {
         "type": "bptInfo"
