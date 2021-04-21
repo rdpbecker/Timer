@@ -27,6 +27,10 @@ class ComparisonDiffInfo(Info.Info):
         if self.state.splitnum:
             self.setTimes(self.state.currentRun.segments[self.state.splitnum-1])
 
+    def onRestart(self):
+        self.header.configure(text="Last Split (Current/Best):")
+        self.info.configure(text="")
+
     def splitEndUpdate(self):
         if not self.state.splitnum:
             return

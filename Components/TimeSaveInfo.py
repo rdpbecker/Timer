@@ -8,6 +8,9 @@ class TimeSaveInfo(Info.Info):
         self.header.configure(text="Possible Time Save:")
         self.setInfo()
 
+    def onRestart(self):
+        self.updateIfNecessary()
+
     def onSplit(self):
         self.updateIfNecessary()
     

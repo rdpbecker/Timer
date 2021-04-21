@@ -8,7 +8,6 @@ class State:
     paused = False
     reset = False
     runEnded = False
-    finished = False
 
     starttime = 0
     segmentTime = 0
@@ -32,6 +31,18 @@ class State:
         splitArrs = fileio.csvReadStart(self.config["baseDir"],self.game,self.category,self.splitnames)
         self.completeCsv = splitArrs[0]
         self.comparesCsv = splitArrs[1]
+
+    def _cleanState(self):
+        self.started = False
+        self.paused = False
+        self.reset = False
+        self.runEnded = False
+
+        self.starttime = 0
+        self.segmentTime = 0
+        self.totalTime = 0
+
+        self.splitnum = 0
 
     ##########################################################
     ## Gets the global configuration, game, category, and splits.

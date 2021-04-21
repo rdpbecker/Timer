@@ -3,6 +3,7 @@
 import tkinter as tk
 import threading
 from timeit import default_timer as timer
+from util import categorySelection as cate
 
 class App(threading.Thread):
     state = None
@@ -47,7 +48,8 @@ class App(threading.Thread):
             "comp": component.onComparisonChanged,
             "pause": component.onPaused,
             "skip": component.onSplitSkipped,
-            "reset": component.onReset
+            "reset": component.onReset,
+            "restart": component.onRestart
         }
         signals.get(signalType)()
 
@@ -66,7 +68,7 @@ class App(threading.Thread):
     ##########################################################
     def setupGui(self):
         self.root = tk.Tk()
-        self.root.protocol("WM_DELETE_WINDOW", self.root.quit)
+        self.root.protocol("WM_DELETE_WINDOW", self.finish)
 
     ##########################################################
     ## Show the window, and call the first update after one
@@ -129,8 +131,8 @@ class App(threading.Thread):
     ## Stop the run here
     ##########################################################
     def reset(self, event=None):
-        self.state.onReset()
-        self.updateComponents("reset")
+        if not self.state.onReset():
+            self.updateComponents("reset")
 
     ##########################################################
     ## Skip a split
@@ -150,13 +152,22 @@ class App(threading.Thread):
     ## Restart the run by resetting the timer state.
     ##########################################################
     def restart(self,event=None):
-        self.state.onRestart()
-        self.labels[1][0].configure(text=timeh.timeToString(0,{"blankToDash":False,"precision":2}))
+        if not self.state.onRestart():
+            self.updateComponents("restart")
+
+    ##########################################################
+    ## Saves the data stored in the state.
+    ##########################################################
+    def save(self,event=None):
+        self.state.saveTimes()
 
     ##########################################################
     ## Finish the run by saving the splits and closing the
     ## window.
     ##########################################################
     def finish(self,event=None):
-        self.state.saveTimes()
+        if self.state.unSaved:
+            shouldSave = cate.readThingInList(["yes","no"],"Save local data?")
+            if shouldSave == "yes":
+                self.state.saveTimes()
         self.root.quit()

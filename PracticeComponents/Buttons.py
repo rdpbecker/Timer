@@ -1,21 +1,23 @@
 import tkinter as tk
 from Components import Component
+from util import fileio
 
 class Buttons(Component.Component):
     buttons = []
     rootWindow = None
 
     def __init__(self,parent,state,rootWindow):
-        Component.Component.__init__(self,parent,state)
+        config = fileio.readJson("defaults/controlButtons.json")
+        Component.Component.__init__(self,parent,state,config)
         self.rootWindow = rootWindow
-        bg = state.config["buttons"]["colours"]["bg"]
-        fg = state.config["buttons"]["colours"]["text"]
-        font = state.config["buttons"]["font"]
+        bg = config["colours"]["bg"]
+        fg = config["colours"]["text"]
+        font = config["font"]
 
-        button1 = tk.Button(self, bg=bg, font=font, text="Split", fg=fg,command=rootWindow.guiSwitchCompareCW)
-        button2 = tk.Button(self, bg=bg, font=font, text="Restart", fg=fg, command=rootWindow.onSplitEnd)
-        button3 = tk.Button(self, bg=bg, font=font, text="Start", fg=fg, command=rootWindow.reset)
-        button4 = tk.Button(self, bg=bg, font=font, text="Finish", fg=fg, command=rootWindow.skip)
+        button1 = tk.Button(self, bg=bg, font=font, text="Split", fg=fg,command=rootWindow.onSplitEnd)
+        button2 = tk.Button(self, bg=bg, font=font, text="Restart", fg=fg, command=rootWindow.restart)
+        button3 = tk.Button(self, bg=bg, font=font, text="Start", fg=fg, command=rootWindow.start)
+        button4 = tk.Button(self, bg=bg, font=font, text="Finish", fg=fg, command=rootWindow.finish)
 
         button1.grid(row=0,column=0,columnspan=6,sticky='WE')
         button2.grid(row=0,column=6,columnspan=6,sticky='WE')

@@ -23,10 +23,18 @@ class State(BaseState.State):
     compareNum = 2
     numComparisons = 0
 
+    unSaved = False
+
     def __init__(self):
         BaseState.State.__init__(self)
-        self.bptList = BptList.BptList(self.getTimes(1,self.comparesCsv))
         self.currentBests = SumList.SumList(self.getTimes(1,self.comparesCsv))
+        self.setComparisons()
+
+    ##########################################################
+    ## Initialize the comparisons, BPT list, and current run.
+    ##########################################################
+    def setComparisons(self):
+        self.bptList = BptList.BptList(self.getTimes(1,self.comparesCsv))
         
         for i in range(int((len(self.comparesCsv[0])-1)/2)):
             self.comparisons.append(Comparison.Comparison( \
@@ -45,7 +53,9 @@ class State(BaseState.State):
             ))
 
         self.numComparisons = len(self.comparisons)
-        self.currentComparison = self.comparisons[2]
+        if self.compareNum >= self.numComparisons:
+            self.compareNum = self.numComparisons - 1
+        self.currentComparison = self.comparisons[self.compareNum]
         
         self.currentRun = CurrentRun.CurrentRun()
 
@@ -80,7 +90,7 @@ class State(BaseState.State):
         self.splitstarttime = time
         if self.splitnum >= len(self.splitnames):
             self.runEnded = True
-            self.saveTimes()
+            self.localSave()
 
     ##########################################################
     ## Does all the state updates necessary to skip a split.
@@ -96,7 +106,7 @@ class State(BaseState.State):
         self.splitstarttime = time
         if self.splitnum >= len(self.splitnames):
             self.runEnded = True
-            self.saveTimes()
+            self.localSave()
 
     ##########################################################
     ## Unpause
@@ -150,8 +160,17 @@ class State(BaseState.State):
             return True
         return False
 
+    ##########################################################
+    ## Cleans the state when the user wants to restart the run.
+    ##########################################################
+    def cleanState(self):
+        self._cleanState()
+        self.pauseTime = 0
+        self.splitstarttime = 0
+        self.comparisons = []
+
     def frameUpdate(self,time):
-        if not self.started or self.finished or self.reset or self.runEnded:
+        if not self.started or self.reset or self.runEnded:
             return 1
         if self.paused:
             time = self.pauseTime
@@ -189,13 +208,19 @@ class State(BaseState.State):
 
     def onReset(self):
         self.reset = True
-        self.saveTimes()
+        self.runEnded= True
+        self.localSave()
+
+    def onRestart(self):
+        if not self.runEnded:
+            return 1
+        self.cleanState()
+        self.setComparisons()
 
     ##########################################################
-    ## Calculate all the comparisons and export them along 
-    ## with the splits from the current run
+    ## Updates the local versions of the data files.
     ##########################################################
-    def saveTimes(self):
+    def localSave(self):
         self.currentRun.fillTimes(len(self.splitnames))
         bests = self.currentBests
         averages = self.getAverages()
@@ -213,6 +238,13 @@ class State(BaseState.State):
         self.replaceCsvLines(averageSplits,3,self.comparesCsv)
         self.replaceCsvLines(pbSplits,5,self.comparesCsv)
         self.insertCsvLines(lastRun,1)
+        self.unSaved = True
+
+    ##########################################################
+    ## Export the locally saved data. Only do this after a local
+    ## save.
+    ##########################################################
+    def saveTimes(self):
         fileio.writeCSV(self.config["baseDir"],self.game,self.category,self.completeCsv,self.comparesCsv)
+        self.unSaved = False
         print("Saved data successfully.")
-        print("Close the window to end the program")
