@@ -24,3 +24,17 @@ class HotKeyTypeError(Error):
 
     def __str__(self):
         return f'The hotkey "{self.message}" is an invalid key.  Using the default hotkey "{self.default}" for the control action "{self.control}"'
+
+class ConfigValueError(Error):
+    key = ""
+    user = ""
+    default = ""
+
+    def __init__(self,key,user,default):
+        self.key = key
+        self.user = user
+        self.default = default
+        super().__init__(self.key)
+
+    def __str__(self):
+        return f'The configuration key "{self.key}" has an invalid value "{self.user}". Setting to the default value "{self.default}".'
