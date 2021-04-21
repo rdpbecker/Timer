@@ -179,7 +179,7 @@ class State(BaseState.State):
             self.compareNum = self.numComparisons - 1
         self.currentComparison = self.comparisons[self.compareNum]
 
-        currentRun = CurrentRun.CurrentRun()
+        self.currentRun = CurrentRun.CurrentRun()
 
     def frameUpdate(self,time):
         if not self.started or self.reset or self.runEnded:

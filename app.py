@@ -151,8 +151,8 @@ class App(threading.Thread):
     ## Restart the run by resetting the timer state.
     ##########################################################
     def restart(self,event=None):
-        self.state.onRestart()
-        self.updateComponents("restart")
+        if not self.state.onRestart():
+            self.updateComponents("restart")
 
     ##########################################################
     ## Finish the run by saving the splits and closing the
