@@ -151,7 +151,6 @@ class State(BaseState.State):
         return False
 
     def cleanState(self):
-        print("CLEANING")
         self._cleanState()
         self.pauseTime = 0
         self.splitstarttime = 0
@@ -181,14 +180,13 @@ class State(BaseState.State):
         currentRun = CurrentRun.CurrentRun()
 
     def frameUpdate(self,time):
-        if not self.started or self.finished or self.reset or self.runEnded:
+        if not self.started or self.reset or self.runEnded:
             return 1
         if self.paused:
             time = self.pauseTime
         self.setTimes(time)
 
     def onStarted(self,time):
-        print(self.started,self.paused,self.reset,self.runEnded,self.finished)
         if self.started:
             return 1
         self.starttime = time
@@ -220,10 +218,12 @@ class State(BaseState.State):
 
     def onReset(self):
         self.reset = True
-        self.finished = True
+        self.runEnded= True
         self.localSave()
 
     def onRestart(self):
+        if not self.runEnded:
+            return 1
         self.cleanState()
 
     def localSave(self):

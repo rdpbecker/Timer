@@ -91,7 +91,6 @@ class App(threading.Thread):
     ##########################################################
     def start(self, event=None):
         if not self.state.onStarted(timer()):
-            print("Started")
             self.updateComponents("start")
 
     ##########################################################
@@ -131,8 +130,8 @@ class App(threading.Thread):
     ## Stop the run here
     ##########################################################
     def reset(self, event=None):
-        self.state.onReset()
-        self.updateComponents("reset")
+        if not self.state.onReset():
+            self.updateComponents("reset")
 
     ##########################################################
     ## Skip a split
@@ -154,7 +153,6 @@ class App(threading.Thread):
     def restart(self,event=None):
         self.state.onRestart()
         self.updateComponents("restart")
-        print("Restarted")
 
     ##########################################################
     ## Finish the run by saving the splits and closing the

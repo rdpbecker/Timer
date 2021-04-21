@@ -8,7 +8,6 @@ class State:
     paused = False
     reset = False
     runEnded = False
-    finished = False
 
     starttime = 0
     segmentTime = 0
@@ -38,7 +37,6 @@ class State:
         self.paused = False
         self.reset = False
         self.runEnded = False
-        self.finished = False
 
         self.starttime = 0
         self.segmentTime = 0

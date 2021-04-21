@@ -23,7 +23,7 @@ class State(BaseState.State):
         self.bestTime = bestTimes[self.splitnum]
 
     def frameUpdate(self,time):
-        if not (self.started and not self.finished):
+        if not (self.started and not self.runEnded):
             return 1
         self.segmentTime = time - self.starttime
 
@@ -35,7 +35,7 @@ class State(BaseState.State):
     def onStarted(self,time):
         self.starttime = time
         self.started = True
-        self.finished = False
+        self.runEnded = False
 
     ##########################################################
     ## Do the state update when the split is ended
@@ -43,7 +43,7 @@ class State(BaseState.State):
     ## Parameters: time - the time the split was ended
     ##########################################################
     def onSplit(self,time):
-        self.finished = True
+        self.runEnded = True
         splitTime = time - self.starttime
         self.currentTime = splitTime
         if timeh.greater(self.bestTime,splitTime):

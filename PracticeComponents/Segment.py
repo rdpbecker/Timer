@@ -1,5 +1,6 @@
 import tkinter as tk
 from Components import Component
+from util import fileio
 from util import timeHelpers as timeh
 
 class SegmentCompare(Component.Component):
@@ -7,9 +8,10 @@ class SegmentCompare(Component.Component):
     goldTime = None
 
     def __init__(self,parent,state):
-        Component.Component.__init__(self,parent,state)
-        fg = state.config["root"]["colours"]["text"]
-        bg = state.config["root"]["colours"]["bg"]
+        config = fileio.readJson("defaults/segmentTimes.json")
+        Component.Component.__init__(self,parent,state,config)
+        fg = config["colours"]["text"]
+        bg = config["colours"]["bg"]
 
         self.configure(bg=bg)
         self.leftFrame = tk.Frame(self,bg=bg)
@@ -33,4 +35,4 @@ class SegmentCompare(Component.Component):
         self.goldHeader.configure(text="Best Split:")
 
     def updateGoldTime(self):
-        self.goldTime.configure(text=timeh.timeToString(self.state.bestTime,{"precision":2}))
+        self.goldTime.configure(text=timeh.timeToString(self.state.bestTime,{"precision":self.config["precision"]}))
