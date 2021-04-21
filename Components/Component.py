@@ -12,7 +12,7 @@ class Component(tk.Frame):
 
     def configureColumns(self):
         for i in range(12):
-            self.columnconfigure(i,minsize=25,weight=1)
+            self.columnconfigure(i,minsize=27,weight=1)
 
     def frameUpdate(self):
         pass

@@ -3,6 +3,8 @@
     "numSplits": 5,
     "activeSplit": 2,
     "main": {
+        "precision": 2,
+        "noPrecisionOnMinute": false,
         "font": ["DejaVu Sans", 10],
         "colours": {
             "text": "white",
@@ -10,6 +12,8 @@
         }
     },
     "diff": {
+        "precision": 1,
+        "noPrecisionOnMinute": true,
         "colours": {
             "gold": "gold",
             "aheadGaining": "green",

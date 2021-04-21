@@ -20,13 +20,21 @@ class Timer(Component.Component):
             self.main.configure(\
                 text=timeh.timeToString(\
                     self.state.totalTime,\
-                    {"blankToDash":False,"precision":2}\
+                    {\
+                        "blankToDash": False,\
+                        "precision": self.config["mainTimer"]["precision"],\
+                        "noPrecisionOnMinute": self.config["mainTimer"]["noPrecisionOnMinute"]\
+                    }\
                 )\
             )
             self.segment.configure(\
                 text=timeh.timeToString(\
                     self.state.segmentTime,\
-                    {"blankToDash":False}\
+                    {\
+                        "blankToDash": False,\
+                        "precision": self.config["segmentTimer"]["precision"],\
+                        "noPrecisionOnMinute": self.config["segmentTimer"]["noPrecisionOnMinute"]\
+                    }\
                 )\
             )
             self.main.configure(fg=self.timerColour())
@@ -34,13 +42,21 @@ class Timer(Component.Component):
             self.main.configure(\
                 text=timeh.timeToString(\
                     self.state.currentRun.totals[-1],\
-                    {"blankToDash":False,"precision":2}\
+                    {\
+                        "blankToDash": False,\
+                        "precision": self.config["mainTimer"]["precision"],\
+                        "noPrecisionOnMinute": self.config["mainTimer"]["noPrecisionOnMinute"]\
+                    }\
                 )\
             )
             self.segment.configure(\
                 text=timeh.timeToString(\
                     self.state.currentRun.segments[-1],\
-                    {"blankToDash":False}\
+                    {\
+                        "blankToDash": False,\
+                        "precision": self.config["segmentTimer"]["precision"],\
+                        "noPrecisionOnMinute": self.config["segmentTimer"]["noPrecisionOnMinute"]\
+                    }\
                 )\
             )
 

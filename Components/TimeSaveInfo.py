@@ -28,5 +28,8 @@ class TimeSaveInfo(Info.Info):
                 self.state.currentComparison.segments[self.state.splitnum],\
                 self.state.comparisons[0].segments[self.state.splitnum]\
             ),\
-            {"precision":2})\
-        )
+            {\
+                "precision": self.config["precision"],\
+                "noPrecisionOnMinute": self.config["noPrecisionOnMinute"]\
+            }\
+        ))

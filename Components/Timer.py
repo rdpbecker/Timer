@@ -17,7 +17,10 @@ class Timer(Component.Component):
             self.main.configure(\
                 text=timeh.timeToString(\
                     self.state.totalTime,\
-                    {"blankToDash":False,"precision":2}\
+                    {\
+                        "blankToDash": False,\
+                        "precision": self.config["precision"],\
+                    }\
                 )\
             )
             self.main.configure(fg=self.timerColour())
@@ -25,7 +28,10 @@ class Timer(Component.Component):
             self.main.configure(\
                 text=timeh.timeToString(\
                     self.state.currentRun.totals[-1],\
-                    {"blankToDash":False,"precision":2}\
+                    {\
+                        "blankToDash": False,\
+                        "precision": self.config["precision"],\
+                    }\
                 )\
             )
 

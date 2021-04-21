@@ -28,9 +28,10 @@ class SegmentTimes(Component.Component):
 
         self.leftFrame.pack(side="left", padx=state.config["padx"])
         self.rightFrame.pack(side="left", padx=state.config["padx"])
-        self.segmentHeader.pack(side="top",anchor="nw")
+        if config["includeCurrentComparison"]:
+            self.segmentHeader.pack(side="top",anchor="nw")
+            self.segmentTime.pack(side="top",anchor="ne")
         self.goldHeader.pack(side="bottom",anchor="sw")
-        self.segmentTime.pack(side="top",anchor="ne")
         self.goldTime.pack(side="bottom",anchor="se")
 
     def onSplit(self):
@@ -52,10 +53,28 @@ class SegmentTimes(Component.Component):
         self.segmentHeader.configure(text=self.state.currentComparison.segmentHeader+":")
 
     def updateSegmentTime(self):
-        self.segmentTime.configure(text=self.state.currentComparison.getString("segments",self.state.splitnum,{"precision":2}))
+        self.segmentTime.configure(\
+            text=\
+                self.state.currentComparison.getString(\
+                    "segments",\
+                    self.state.splitnum,\
+                    {\
+                        "precision": self.config["precision"]\
+                    }\
+                )\
+        )
 
     def updateGoldHeader(self):
         self.goldHeader.configure(text="Best Split:")
 
     def updateGoldTime(self):
-        self.goldTime.configure(text=self.state.comparisons[0].getString("segments",self.state.splitnum,{"precision":2}))
+        self.goldTime.configure(\
+            text=\
+                self.state.comparisons[0].getString(\
+                    "segments",\
+                    self.state.splitnum,\
+                    {\
+                        "precision": self.config["precision"]\
+                    }\
+                )\
+        )

@@ -76,7 +76,15 @@ class SegmentArea(Component.Component):
         for i in range(self.numRows-1):
             if (i+self.topRowSplitnum < self.state.splitnum):
                 self.rows[i].setDiff(\
-                    text=timeh.timeToString(self.state.currentComparison.totalDiffs[i+self.topRowSplitnum],{"showSign":True,"precision":2}),\
+                    text=\
+                        timeh.timeToString(\
+                            self.state.currentComparison.totalDiffs[i+self.topRowSplitnum],\
+                            {
+                                "showSign": True,\
+                                "precision": self.config["diff"]["precision"],\
+                                "noPrecisionOnMinute": self.config["diff"]["noPrecisionOnMinute"]\
+                            }\
+                        ),\
                     fg=self.findDiffColour(i+self.topRowSplitnum)\
                 )
             else:
@@ -85,7 +93,15 @@ class SegmentArea(Component.Component):
     def setLastDiff(self):
         if self.state.runEnded:
             self.rows[-1].setDiff(\
-                text=timeh.timeToString(self.state.currentComparison.totalDiffs[-1],{"showSign":True,"precision":2}),\
+                text=\
+                    timeh.timeToString(\
+                        self.state.currentComparison.totalDiffs[-1],\
+                        {\
+                            "showSign": True,\
+                            "precision": self.config["diff"]["precision"],\
+                            "noPrecisionOnMinute": self.config["diff"]["noPrecisionOnMinute"]\
+                        }\
+                    ),\
                 fg=self.findDiffColour(-1)\
             )
         else:
@@ -99,18 +115,50 @@ class SegmentArea(Component.Component):
         for i in range(self.numRows-1):
             if (i+self.topRowSplitnum < self.state.splitnum):
                 self.rows[i].setComparison(\
-                    text=timeh.timeToString(self.state.currentRun.totals[i+self.topRowSplitnum],{"precision":2})\
+                    text=\
+                        timeh.timeToString(\
+                            self.state.currentRun.totals[i+self.topRowSplitnum],\
+                            {\
+                                "precision": self.config["main"]["precision"],\
+                                "noPrecisionOnMinute": self.config["main"]["noPrecisionOnMinute"]\
+                            }\
+                       )\
                 )
             else:
                 self.rows[i].setComparison(\
-                    text=timeh.timeToString(self.state.currentComparison.totals[i+self.topRowSplitnum],{"precision":2})\
+                    text=\
+                        timeh.timeToString(\
+                            self.state.currentComparison.totals[i+self.topRowSplitnum],\
+                            {\
+                                "precision": self.config["main"]["precision"],\
+                                "noPrecisionOnMinute": self.config["main"]["noPrecisionOnMinute"]\
+                            }\
+                        )\
                 )
 
     def setLastComparison(self):
         if self.state.runEnded:
-            self.rows[-1].setComparison(text=timeh.timeToString(self.state.currentRun.totals[-1],{"precision":2}))
+            self.rows[-1].setComparison(\
+                text=\
+                    timeh.timeToString(\
+                        self.state.currentRun.totals[-1],\
+                        {\
+                            "precision": self.config["main"]["precision"],\
+                            "noPrecisionOnMinute": self.config["main"]["noPrecisionOnMinute"]\
+                        }\
+                    )\
+            )
         else:
-            self.rows[-1].setComparison(text=timeh.timeToString(self.state.currentComparison.totals[-1],{"precision":2}))
+            self.rows[-1].setComparison(\
+                text=\
+                    timeh.timeToString(\
+                        self.state.currentComparison.totals[-1],\
+                        {\
+                            "precision": self.config["main"]["precision"],\
+                            "noPrecisionOnMinute": self.config["main"]["noPrecisionOnMinute"]\
+                        }\
+                    )\
+            )
 
     def setAllComparisons(self):
         self.setMainComparisons()
@@ -120,7 +168,11 @@ class SegmentArea(Component.Component):
         self.rows[self.activeIndex].setDiff(\
             text=timeh.timeToString(\
                 timeh.difference(self.state.totalTime,self.state.currentComparison.totals[self.state.splitnum]),\
-                {"showSign":True,"precision": 2}\
+                {\
+                    "showSign": True,\
+                    "precision": self.config["diff"]["precision"],\
+                    "noPrecisionOnMinute": self.config["diff"]["noPrecisionOnMinute"]\
+                }\
             ),\
             fg=self.getCurrentDiffColour(\
                 timeh.difference(self.state.segmentTime,self.state.currentComparison.segments[self.state.splitnum]), \
