@@ -1,5 +1,6 @@
 import tkinter as tk
 from Components import Info 
+from util import timeHelpers as timeh
 
 class PbInfo(Info.Info):
     def __init__(self,parent,state,config):
@@ -7,9 +8,13 @@ class PbInfo(Info.Info):
         self.header.configure(text="Personal Best:")
         self.setInfo()
 
-    def onSplitEnd(self):
+    def onSplit(self):
         if self.state.runEnded:
-            self.setInfo()
+            self.setInfo(new=self.state.isPB())
 
-    def setInfo(self):
-        self.info.configure(text=self.state.comparisons[2].getString("totals",-1,{"precision":self.config["precision"]}))
+    def setInfo(self,new=False):
+        if new:
+            time = self.state.currentRun.totals[-1]
+        else:
+            time = self.state.comparisons[2].totals[-1]
+        self.info.configure(text=timeh.timeToString(time,{"precision":self.config["precision"]}))
