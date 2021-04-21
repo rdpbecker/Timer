@@ -15,31 +15,7 @@ class ComparisonDiffInfo(Info.Info):
             and not (self.state.splitnum and timeh.isBlank(self.state.currentRun.segments[self.state.splitnum-1])):
 
             self.header.configure(text="Current Split:")
-            self.info.configure(text=\
-                timeh.timeToString(\
-                    timeh.difference(
-                        self.state.segmentTime,\
-                        self.state.currentComparison.segments[self.state.splitnum]\
-                    ),\
-                    {\
-                        "showSign": True, \
-                        "precision": self.config["precision"],\
-                        "noPrecisionOnMinute": self.config["noPrecisionOnMinute"]\
-                    }\
-                )\
-                +" / "\
-                +timeh.timeToString(\
-                    timeh.difference(\
-                        self.state.currentComparison.segments[self.state.splitnum],\
-                        self.state.comparisons[0].segments[self.state.splitnum]\
-                    ),\
-                    {\
-                        "precision": self.config["precision"],\
-                        "noPrecisionOnMinute": self.config["noPrecisionOnMinute"]\
-                    }\
-                )\
-            )
-            self.info.configure(fg=self.setCurrentColour())
+            self.setTimes(self.state.segmentTime,False)
 
     def onSplit(self):
         self.splitEndUpdate()
@@ -47,15 +23,26 @@ class ComparisonDiffInfo(Info.Info):
     def onSplitSkipped(self):
         self.splitEndUpdate()
 
+    def onComparisonChanged(self):
+        if self.state.splitnum:
+            self.setTimes(self.state.currentRun.segments[self.state.splitnum-1])
+
     def splitEndUpdate(self):
         if not self.state.splitnum:
             return
         self.header.configure(text="Last Split (Current/Best):")
+        self.setTimes(self.state.currentRun.segments[self.state.splitnum-1])
+
+    def setTimes(self,time,previous=True):
+        if previous:
+            splitnum = self.state.splitnum - 1
+        else:
+            splitnum = self.state.splitnum
         self.info.configure(text=\
             timeh.timeToString(\
                 timeh.difference(
-                    self.state.currentRun.segments[self.state.splitnum-1],\
-                    self.state.currentComparison.segments[self.state.splitnum-1]\
+                    time,\
+                    self.state.currentComparison.segments[splitnum]\
                 ),\
                 {\
                     "showSign": True, \
@@ -66,8 +53,8 @@ class ComparisonDiffInfo(Info.Info):
             +" / "\
             +timeh.timeToString(\
                 timeh.difference(\
-                    self.state.currentComparison.segments[self.state.splitnum-1],\
-                    self.state.comparisons[0].segments[self.state.splitnum-1]\
+                    self.state.currentComparison.segments[splitnum],\
+                    self.state.comparisons[0].segments[splitnum]\
                 ),\
                 {\
                     "precision": self.config["precision"],\
@@ -75,7 +62,10 @@ class ComparisonDiffInfo(Info.Info):
                 }\
             )\
         )
-        self.info.configure(fg=self.setPreviousColour())
+        if previous:
+            self.info.configure(fg=self.setPreviousColour())
+        else:
+            self.info.configure(fg=self.setCurrentColour())
 
     def setCurrentColour(self):
         split = self.state.splitnum
