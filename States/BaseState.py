@@ -57,7 +57,6 @@ class State:
         self.category = splitnames["category"]
         self.splitnames = splitnames["splits"]
         self.numSplits = len(self.splitnames)
-        config = rc.mergeConfigs(config,rc.getGameConfig(config["baseDir"],self.game,self.category))
         return config
 
     ##########################################################

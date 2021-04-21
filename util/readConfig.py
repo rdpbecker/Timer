@@ -11,6 +11,8 @@ validHotkeys = [
     '<Left>','<Right>','<Up>','<Down>'\
 ]
 
+validPositions = ["left","center-left","center","center-right","right"]
+
 defaultHotkeys = {}
 
 def getUserConfig():
@@ -38,17 +40,16 @@ def setDefaultHotkeys(defaultConfig):
     for key in defaultConfig["hotkeys"].keys():
         defaultHotkeys[key] = defaultConfig["hotkeys"][key]
 
-def getGameConfig(baseDir,game,category):
-    cateFile = baseDir + "/" + game + "/" + category + "_config.json"
-    if os.path.exists(cateFile):
-        return fileio.readJson(cateFile)
-    return {}
-
 def mergeConfigs(original,override):
     new = original
     for key in override.keys():
         if not type(override[key]) is dict:
-            new[key] = override[key]
+            try:
+                if key == "position" and not override[key] in validPositions:
+                    raise Errors.ConfigValueError(key,override[key],original[key])
+                new[key] = override[key]
+            except Errors.ConfigValueError as e:
+                print(e)
         else:
             new[key] = mergeConfigs(original[key], override[key])
     return new
