@@ -8,32 +8,30 @@ class Timer(Component.Component):
     def __init__(self,parent,state,config):
         Component.Component.__init__(self,parent,state,config)
         self.configure(bg=config["colours"]["bg"])
-        self.state = state
         self.main = tk.Label(self, bg=config["colours"]["bg"], fg=config["colours"]["main"], font=config["font"])
+        self.setMainTime(0)
         self.main.grid(row=0,column=0,columnspan=12)
+
+    def onRestart(self):
+        self.setMainTime(0)
 
     def frameUpdate(self):
         if not self.state.runEnded:
-            self.main.configure(\
-                text=timeh.timeToString(\
-                    self.state.totalTime,\
-                    {\
-                        "blankToDash": False,\
-                        "precision": self.config["precision"],\
-                    }\
-                )\
-            )
+            self.setMainTime(self.state.totalTime)
             self.main.configure(fg=self.timerColour())
         else:
-            self.main.configure(\
-                text=timeh.timeToString(\
-                    self.state.currentRun.totals[-1],\
-                    {\
-                        "blankToDash": False,\
-                        "precision": self.config["precision"],\
-                    }\
-                )\
-            )
+            self.setMainTime(self.state.currentRun.totals[-1])
+
+    def setMainTime(self,time):
+        self.main.configure(\
+            text=timeh.timeToString(\
+                time,\
+                {\
+                    "blankToDash": False,\
+                    "precision": self.config["precision"],\
+                }\
+            )\
+        )
 
     def timerColour(self):
         splitnum = self.state.splitnum

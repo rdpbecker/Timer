@@ -9,56 +9,47 @@ class Timer(Component.Component):
     def __init__(self,parent,state,config):
         Component.Component.__init__(self,parent,state,config)
         self.configure(bg=config["colours"]["bg"])
-        self.state = state
-        self.segment = tk.Label(self, bg=config["colours"]["bg"], fg=config["segmentTimer"]["colour"], font=config["segmentTimer"]["font"])
         self.main = tk.Label(self, bg=config["colours"]["bg"], fg=config["mainTimer"]["colours"]["main"], font=config["mainTimer"]["font"])
-        self.segment.grid(row=0,column=0,columnspan=10,sticky="E")
+        self.setMainTime(0)
+
+        self.segment = tk.Label(self, bg=config["colours"]["bg"], fg=config["segmentTimer"]["colour"], font=config["segmentTimer"]["font"])
+        self.setSegmentTime(0)
+
         self.main.grid(row=1,column=0,columnspan=12)
+        self.segment.grid(row=0,column=0,columnspan=10,sticky="E")
+
+    def onRestart(self):
+        self.main.configure(fg=self.config["mainTimer"]["colours"]["main"])
+        self.setMainTime(0)
+        self.setSegmentTime(0)
 
     def frameUpdate(self):
         if not self.state.runEnded:
-            self.main.configure(\
-                text=timeh.timeToString(\
-                    self.state.totalTime,\
-                    {\
-                        "blankToDash": False,\
-                        "precision": self.config["mainTimer"]["precision"],\
-                        "noPrecisionOnMinute": self.config["mainTimer"]["noPrecisionOnMinute"]\
-                    }\
-                )\
-            )
-            self.segment.configure(\
-                text=timeh.timeToString(\
-                    self.state.segmentTime,\
-                    {\
-                        "blankToDash": False,\
-                        "precision": self.config["segmentTimer"]["precision"],\
-                        "noPrecisionOnMinute": self.config["segmentTimer"]["noPrecisionOnMinute"]\
-                    }\
-                )\
-            )
+            self.setMainTime(self.state.totalTime)
             self.main.configure(fg=self.timerColour())
+            self.setSegmentTime(self.state.segmentTime)
         else:
-            self.main.configure(\
-                text=timeh.timeToString(\
-                    self.state.currentRun.totals[-1],\
-                    {\
-                        "blankToDash": False,\
-                        "precision": self.config["mainTimer"]["precision"],\
-                        "noPrecisionOnMinute": self.config["mainTimer"]["noPrecisionOnMinute"]\
-                    }\
-                )\
-            )
-            self.segment.configure(\
-                text=timeh.timeToString(\
-                    self.state.currentRun.segments[-1],\
-                    {\
-                        "blankToDash": False,\
-                        "precision": self.config["segmentTimer"]["precision"],\
-                        "noPrecisionOnMinute": self.config["segmentTimer"]["noPrecisionOnMinute"]\
-                    }\
-                )\
-            )
+            self.setMainTime(self.state.currentRun.totals[-1])
+            self.setSegmentTime(self.state.currentRun.segments[-1])
+
+    def setMainTime(self,time):
+        self.main.configure(text=self.formatTime(time,"main"))
+
+    def setSegmentTime(self,time):
+        self.segment.configure(text=self.formatTime(time,"segment"))
+
+    def formatTime(self,time,ttype):
+        if ttype == "main":
+            precision = self.config["mainTimer"]["precision"]
+        else:
+            precision = self.config["segmentTimer"]["precision"]
+        return timeh.timeToString(\
+                time,\
+                {\
+                    "blankToDash": False,\
+                    "precision": precision
+                }\
+            )\
 
     def timerColour(self):
         splitnum = self.state.splitnum

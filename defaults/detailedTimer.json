@@ -4,7 +4,6 @@
     },
     "mainTimer": {
         "precision": 2,
-        "noPrecisionOnMinute": false,
         "font": ["Arial Black",24],
         "colours": {
             "main": "green",
@@ -17,7 +16,6 @@
     },
     "segmentTimer": {
         "precision": 0,
-        "noPrecisionOnMinute": false,
         "font": ["Liberation Sans",18],
         "colour": "gray"
     }
