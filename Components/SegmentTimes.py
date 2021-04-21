@@ -34,6 +34,10 @@ class SegmentTimes(Component.Component):
         self.goldHeader.pack(side="bottom",anchor="sw")
         self.goldTime.pack(side="bottom",anchor="se")
 
+    def onRestart(self):
+        self.updateSegmentTime()
+        self.updateGoldTime()
+
     def onSplit(self):
         if not self.state.runEnded:
             self.updateSegmentTime()

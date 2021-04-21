@@ -5,4 +5,11 @@ class PbInfo(Info.Info):
     def __init__(self,parent,state,config):
         Info.Info.__init__(self,parent,state,config)
         self.header.configure(text="Personal Best:")
-        self.info.configure(text=self.state.comparisons[2].getString("totals",-1,{"precision":config["precision"]}))
+        self.setInfo()
+
+    def onSplitEnd(self):
+        if self.state.runEnded:
+            self.setInfo()
+
+    def setInfo(self):
+        self.info.configure(text=self.state.comparisons[2].getString("totals",-1,{"precision":self.config["precision"]}))

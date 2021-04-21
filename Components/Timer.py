@@ -14,6 +14,7 @@ class Timer(Component.Component):
 
     def onRestart(self):
         self.setMainTime(0)
+        self.main.configure(fg=self.config["colours"]["main"])
 
     def frameUpdate(self):
         if not self.state.runEnded:

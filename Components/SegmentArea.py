@@ -25,6 +25,14 @@ class SegmentArea(Component.Component):
         self.rows[-1].setHeader(fg=config["endColour"])
         self.rows[-1].setComparison(fg=config["endColour"])
 
+    def onRestart(self):
+        self.topRowSplitnum = 0
+        self.activeIndex = 0
+        self.setAllHeaders()
+        self.setAllDiffs()
+        self.setAllComparisons()
+        self.setHighlight()
+
     def frameUpdate(self):
         if not self.state.runEnded\
             and (not timeh.greater(self.state.currentComparison.totals[self.state.splitnum],self.state.totalTime)\

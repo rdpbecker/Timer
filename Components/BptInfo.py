@@ -28,6 +28,9 @@ class BptInfo(Info.Info):
     def onSplit(self):
         self.updateTime()
 
+    def onRestart(self):
+        self.updateTime()
+
     def updateTime(self):
         self.info.configure(\
             text=\
