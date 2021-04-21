@@ -80,7 +80,7 @@ class State(BaseState.State):
         self.splitstarttime = time
         if self.splitnum >= len(self.splitnames):
             self.runEnded = True
-            self.saveTimes()
+            self.localSave()
 
     ##########################################################
     ## Does all the state updates necessary to skip a split.
@@ -96,7 +96,7 @@ class State(BaseState.State):
         self.splitstarttime = time
         if self.splitnum >= len(self.splitnames):
             self.runEnded = True
-            self.saveTimes()
+            self.localSave()
 
     ##########################################################
     ## Unpause
@@ -252,23 +252,6 @@ class State(BaseState.State):
     ## with the splits from the current run
     ##########################################################
     def saveTimes(self):
-        self.currentRun.fillTimes(len(self.splitnames))
-        bests = self.currentBests
-        averages = self.getAverages()
-        if self.isPB():
-            pbSplits = [timeh.timesToStringList(self.currentRun.segments,{"precision":5}),timeh.timesToStringList(self.currentRun.totals,{"precision":5})]
-        else:
-            pbSplits = [timeh.timesToStringList(self.comparisons[2].segments,{"precision":5}),timeh.timesToStringList(self.comparisons[2].totals,{"precision":5})]
-        bestSplits = [timeh.timesToStringList(bests.bests,{"precision":5}), timeh.timesToStringList(bests.totalBests,{"precision":5})]
-        averageSplits = [timeh.timesToStringList(averages.bests,{"precision":5}), timeh.timesToStringList(averages.totalBests,{"precision":5})]
-        lastRun = [timeh.timesToStringList(self.currentRun.segments,{"precision":5}),timeh.timesToStringList(self.currentRun.totals,{"precision":5})]
-        self.completeCsv[0].insert(1,"Run #"+str(int((len(self.completeCsv[1])+1)/2)))
-        self.completeCsv[0].insert(2,"Totals")
-        self.replaceCsvLines([self.splitnames],0,self.completeCsv)
-        self.replaceCsvLines(bestSplits,1,self.comparesCsv)
-        self.replaceCsvLines(averageSplits,3,self.comparesCsv)
-        self.replaceCsvLines(pbSplits,5,self.comparesCsv)
-        self.insertCsvLines(lastRun,1)
         fileio.writeCSV(self.config["baseDir"],self.game,self.category,self.completeCsv,self.comparesCsv)
         print("Saved data successfully.")
         print("Close the window to end the program")

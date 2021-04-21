@@ -67,7 +67,7 @@ class App(threading.Thread):
     ##########################################################
     def setupGui(self):
         self.root = tk.Tk()
-        self.root.protocol("WM_DELETE_WINDOW", self.root.quit)
+        self.root.protocol("WM_DELETE_WINDOW", self.finish)
 
     ##########################################################
     ## Show the window, and call the first update after one
@@ -153,6 +153,12 @@ class App(threading.Thread):
     def restart(self,event=None):
         if not self.state.onRestart():
             self.updateComponents("restart")
+
+    ##########################################################
+    ## Saves the data stored in the state.
+    ##########################################################
+    def save(self,event=None):
+        self.state.saveTimes()
 
     ##########################################################
     ## Finish the run by saving the splits and closing the
