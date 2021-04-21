@@ -3,6 +3,7 @@
 import tkinter as tk
 import threading
 from timeit import default_timer as timer
+from util import categorySelection as cate
 
 class App(threading.Thread):
     state = None
@@ -165,5 +166,7 @@ class App(threading.Thread):
     ## window.
     ##########################################################
     def finish(self,event=None):
-        self.state.saveTimes()
+        shouldSave = cate.readThingInList(["yes","no"],"Save local data?")
+        if shouldSave == "yes":
+            self.state.saveTimes()
         self.root.quit()
