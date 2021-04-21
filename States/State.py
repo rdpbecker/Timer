@@ -25,8 +25,14 @@ class State(BaseState.State):
 
     def __init__(self):
         BaseState.State.__init__(self)
-        self.bptList = BptList.BptList(self.getTimes(1,self.comparesCsv))
         self.currentBests = SumList.SumList(self.getTimes(1,self.comparesCsv))
+        self.setComparisons()
+
+    ##########################################################
+    ## Initialize the comparisons, BPT list, and current run.
+    ##########################################################
+    def setComparisons(self):
+        self.bptList = BptList.BptList(self.getTimes(1,self.comparesCsv))
         
         for i in range(int((len(self.comparesCsv[0])-1)/2)):
             self.comparisons.append(Comparison.Comparison( \
@@ -45,7 +51,9 @@ class State(BaseState.State):
             ))
 
         self.numComparisons = len(self.comparisons)
-        self.currentComparison = self.comparisons[2]
+        if self.compareNum >= self.numComparisons:
+            self.compareNum = self.numComparisons - 1
+        self.currentComparison = self.comparisons[self.compareNum]
         
         self.currentRun = CurrentRun.CurrentRun()
 
@@ -150,36 +158,14 @@ class State(BaseState.State):
             return True
         return False
 
+    ##########################################################
+    ## Cleans the state when the user wants to restart the run.
+    ##########################################################
     def cleanState(self):
         self._cleanState()
         self.pauseTime = 0
         self.splitstarttime = 0
-
-        self.bptList = BptList.BptList(self.getTimes(1,self.comparesCsv))
-        
         self.comparisons = []
-        for i in range(int((len(self.comparesCsv[0])-1)/2)):
-            self.comparisons.append(Comparison.Comparison( \
-                self.comparesCsv[0][2*i+1], \
-                self.comparesCsv[0][2*i+2], \
-                self.getTimes(2*i+1,self.comparesCsv), \
-                self.getTimes(2*i+2,self.comparesCsv) \
-             ))
-
-        if len(self.completeCsv[0]) > 1:
-            self.comparisons.append(Comparison.Comparison( \
-                "Last Run Splits", \
-                "Last Run", \
-                self.getTimes(1,self.completeCsv), \
-                self.getTimes(2,self.completeCsv) \
-            ))
-
-        self.numComparisons = len(self.comparisons)
-        if self.compareNum >= self.numComparisons:
-            self.compareNum = self.numComparisons - 1
-        self.currentComparison = self.comparisons[self.compareNum]
-
-        self.currentRun = CurrentRun.CurrentRun()
 
     def frameUpdate(self,time):
         if not self.started or self.reset or self.runEnded:
@@ -227,7 +213,11 @@ class State(BaseState.State):
         if not self.runEnded:
             return 1
         self.cleanState()
+        self.setComparisons()
 
+    ##########################################################
+    ## Updates the local versions of the data files.
+    ##########################################################
     def localSave(self):
         self.currentRun.fillTimes(len(self.splitnames))
         bests = self.currentBests
@@ -248,8 +238,8 @@ class State(BaseState.State):
         self.insertCsvLines(lastRun,1)
 
     ##########################################################
-    ## Calculate all the comparisons and export them along 
-    ## with the splits from the current run
+    ## Export the locally saved data. Only do this after a local
+    ## save.
     ##########################################################
     def saveTimes(self):
         fileio.writeCSV(self.config["baseDir"],self.game,self.category,self.completeCsv,self.comparesCsv)
