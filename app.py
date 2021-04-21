@@ -47,7 +47,8 @@ class App(threading.Thread):
             "comp": component.onComparisonChanged,
             "pause": component.onPaused,
             "skip": component.onSplitSkipped,
-            "reset": component.onReset
+            "reset": component.onReset,
+            "restart": component.onRestart
         }
         signals.get(signalType)()
 
@@ -90,6 +91,7 @@ class App(threading.Thread):
     ##########################################################
     def start(self, event=None):
         if not self.state.onStarted(timer()):
+            print("Started")
             self.updateComponents("start")
 
     ##########################################################
@@ -151,7 +153,8 @@ class App(threading.Thread):
     ##########################################################
     def restart(self,event=None):
         self.state.onRestart()
-        self.labels[1][0].configure(text=timeh.timeToString(0,{"blankToDash":False,"precision":2}))
+        self.updateComponents("restart")
+        print("Restarted")
 
     ##########################################################
     ## Finish the run by saving the splits and closing the

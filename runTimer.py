@@ -13,6 +13,7 @@ def setHotkeys(app,state):
     app.root.bind(state.config["hotkeys"]["skip"], app.skip)
     app.root.bind(state.config["hotkeys"]["start"], app.start)
     app.root.bind(state.config["hotkeys"]["pause"], app.togglePause)
+    app.root.bind(state.config["hotkeys"]["restart"], app.restart)
 
 ## Initialize the state. This picks the game and category
 state = State.State()

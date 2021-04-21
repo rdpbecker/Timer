@@ -150,6 +150,36 @@ class State(BaseState.State):
             return True
         return False
 
+    def cleanState(self):
+        print("CLEANING")
+        self._cleanState()
+        self.pauseTime = 0
+        self.splitstarttime = 0
+
+        self.bptList = BptList.BptList(self.getTimes(1,self.comparesCsv))
+        
+        self.comparisons = []
+        for i in range(int((len(self.comparesCsv[0])-1)/2)):
+            self.comparisons.append(Comparison.Comparison( \
+                self.comparesCsv[0][2*i+1], \
+                self.comparesCsv[0][2*i+2], \
+                self.getTimes(2*i+1,self.comparesCsv), \
+                self.getTimes(2*i+2,self.comparesCsv) \
+             ))
+
+        if len(self.completeCsv[0]) > 1:
+            self.comparisons.append(Comparison.Comparison( \
+                "Last Run Splits", \
+                "Last Run", \
+                self.getTimes(1,self.completeCsv), \
+                self.getTimes(2,self.completeCsv) \
+            ))
+
+        self.numComparisons = len(self.comparisons)
+        self.currentComparison = self.comparisons[2]
+
+        currentRun = CurrentRun.CurrentRun()
+
     def frameUpdate(self,time):
         if not self.started or self.finished or self.reset or self.runEnded:
             return 1
@@ -158,6 +188,7 @@ class State(BaseState.State):
         self.setTimes(time)
 
     def onStarted(self,time):
+        print(self.started,self.paused,self.reset,self.runEnded,self.finished)
         if self.started:
             return 1
         self.starttime = time
@@ -189,7 +220,30 @@ class State(BaseState.State):
 
     def onReset(self):
         self.reset = True
-        self.saveTimes()
+        self.finished = True
+        self.localSave()
+
+    def onRestart(self):
+        self.cleanState()
+
+    def localSave(self):
+        self.currentRun.fillTimes(len(self.splitnames))
+        bests = self.currentBests
+        averages = self.getAverages()
+        if self.isPB():
+            pbSplits = [timeh.timesToStringList(self.currentRun.segments,{"precision":5}),timeh.timesToStringList(self.currentRun.totals,{"precision":5})]
+        else:
+            pbSplits = [timeh.timesToStringList(self.comparisons[2].segments,{"precision":5}),timeh.timesToStringList(self.comparisons[2].totals,{"precision":5})]
+        bestSplits = [timeh.timesToStringList(bests.bests,{"precision":5}), timeh.timesToStringList(bests.totalBests,{"precision":5})]
+        averageSplits = [timeh.timesToStringList(averages.bests,{"precision":5}), timeh.timesToStringList(averages.totalBests,{"precision":5})]
+        lastRun = [timeh.timesToStringList(self.currentRun.segments,{"precision":5}),timeh.timesToStringList(self.currentRun.totals,{"precision":5})]
+        self.completeCsv[0].insert(1,"Run #"+str(int((len(self.completeCsv[1])+1)/2)))
+        self.completeCsv[0].insert(2,"Totals")
+        self.replaceCsvLines([self.splitnames],0,self.completeCsv)
+        self.replaceCsvLines(bestSplits,1,self.comparesCsv)
+        self.replaceCsvLines(averageSplits,3,self.comparesCsv)
+        self.replaceCsvLines(pbSplits,5,self.comparesCsv)
+        self.insertCsvLines(lastRun,1)
 
     ##########################################################
     ## Calculate all the comparisons and export them along 

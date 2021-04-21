@@ -18,6 +18,9 @@ class Timer(Component.Component):
     def onSplit(self):
         self.updateTimer(self.state.currentTime)
 
+    def onRestart(self):
+        self.main.configure(text=timeh.timeToString(0,{"blankToDash":False,"precision":2}))
+
     def updateTimer(self,time):
         self.main.configure(\
             text=timeh.timeToString(time, {"blankToDash":False,"precision":2}))

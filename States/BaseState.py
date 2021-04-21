@@ -33,6 +33,19 @@ class State:
         self.completeCsv = splitArrs[0]
         self.comparesCsv = splitArrs[1]
 
+    def _cleanState(self):
+        self.started = False
+        self.paused = False
+        self.reset = False
+        self.runEnded = False
+        self.finished = False
+
+        self.starttime = 0
+        self.segmentTime = 0
+        self.totalTime = 0
+
+        self.splitnum = 0
+
     ##########################################################
     ## Gets the global configuration, game, category, and splits.
     ## Sets the game, category, and splitnames.
