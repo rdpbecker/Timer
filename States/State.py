@@ -175,7 +175,9 @@ class State(BaseState.State):
             ))
 
         self.numComparisons = len(self.comparisons)
-        self.currentComparison = self.comparisons[2]
+        if self.compareNum >= self.numComparisons:
+            self.compareNum = self.numComparisons - 1
+        self.currentComparison = self.comparisons[self.compareNum]
 
         currentRun = CurrentRun.CurrentRun()
 
