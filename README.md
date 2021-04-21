@@ -96,10 +96,13 @@ also have key bindings.
 |:------:|:---------:|:----:|
 |`Start Run`|Starts the timer|`<Space>`|
 |`Split`|Ends the current segment and starts the next one|`<Return>`|
-|`Reset`|Ends the timer and writes the completed segments, regardless of whether all segments have been completed|`r`|
+|`Reset`|Ends the timer, regardless of whether all segments have been completed|`r`|
 |`Skip Split`|Skips the current segment|`s`|
 |`Change Compare`|Changes to the next comparison|`<Left>` for counter-clockwise, and `<Right>` for clockwise|
 |`Pause`|Toggles whether the timer is paused|`p`|
+|`Restart`|After the run has ended, resets the timer|`R`|
+|`Finish`|Closes the window, prompting to save if there is unsaved data|`f`|
+|`Save`|Saves any unsaved local data|`S`|
 
 A couple notes about the key bindings:
 
