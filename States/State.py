@@ -23,6 +23,8 @@ class State(BaseState.State):
     compareNum = 2
     numComparisons = 0
 
+    unSaved = False
+
     def __init__(self):
         BaseState.State.__init__(self)
         self.currentBests = SumList.SumList(self.getTimes(1,self.comparesCsv))
@@ -236,6 +238,7 @@ class State(BaseState.State):
         self.replaceCsvLines(averageSplits,3,self.comparesCsv)
         self.replaceCsvLines(pbSplits,5,self.comparesCsv)
         self.insertCsvLines(lastRun,1)
+        self.unSaved = True
 
     ##########################################################
     ## Export the locally saved data. Only do this after a local
@@ -243,5 +246,5 @@ class State(BaseState.State):
     ##########################################################
     def saveTimes(self):
         fileio.writeCSV(self.config["baseDir"],self.game,self.category,self.completeCsv,self.comparesCsv)
+        self.unSaved = False
         print("Saved data successfully.")
-        print("Close the window to end the program")

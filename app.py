@@ -166,7 +166,8 @@ class App(threading.Thread):
     ## window.
     ##########################################################
     def finish(self,event=None):
-        shouldSave = cate.readThingInList(["yes","no"],"Save local data?")
-        if shouldSave == "yes":
-            self.state.saveTimes()
+        if self.state.unSaved:
+            shouldSave = cate.readThingInList(["yes","no"],"Save local data?")
+            if shouldSave == "yes":
+                self.state.saveTimes()
         self.root.quit()
