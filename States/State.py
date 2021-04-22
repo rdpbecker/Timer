@@ -7,6 +7,7 @@ from DataClasses import BptList
 from DataClasses import Comparison
 from DataClasses import CurrentRun
 from DataClasses import SumList
+from DataClasses import DifferenceList
 from States import BaseState
 
 class State(BaseState.State):
@@ -15,6 +16,7 @@ class State(BaseState.State):
 
     bptList = None
     currentBests = None
+    bestExits = None
 
     currentRun = None
 
@@ -28,6 +30,7 @@ class State(BaseState.State):
     def __init__(self):
         BaseState.State.__init__(self)
         self.currentBests = SumList.SumList(self.getTimes(1,self.comparesCsv))
+        self.bestExits = DifferenceList.DifferenceList(self.getTimes(8,self.comparesCsv))
         self.setComparisons()
 
     ##########################################################
@@ -86,6 +89,8 @@ class State(BaseState.State):
             self.comparisons[i].updateDiffs(splitTime,totalTime)
         if timeh.greater(self.currentBests.bests[self.splitnum],splitTime):
             self.currentBests.update(splitTime,self.splitnum)
+        if timeh.greater(self.bestExits.totals[self.splitnum],totalTime):
+            self.bestExits.update(totalTime,self.splitnum)
         self.splitnum = self.splitnum + 1
         self.splitstarttime = time
         if self.splitnum >= len(self.splitnames):
@@ -230,6 +235,7 @@ class State(BaseState.State):
             pbSplits = [timeh.timesToStringList(self.comparisons[2].segments,{"precision":5}),timeh.timesToStringList(self.comparisons[2].totals,{"precision":5})]
         bestSplits = [timeh.timesToStringList(bests.bests,{"precision":5}), timeh.timesToStringList(bests.totalBests,{"precision":5})]
         averageSplits = [timeh.timesToStringList(averages.bests,{"precision":5}), timeh.timesToStringList(averages.totalBests,{"precision":5})]
+        bestExits = [timeh.timesToStringList(self.bestExits.segments,{"precision":5}), timeh.timesToStringList(self.bestExits.totals,{"precision":5})]
         lastRun = [timeh.timesToStringList(self.currentRun.segments,{"precision":5}),timeh.timesToStringList(self.currentRun.totals,{"precision":5})]
         self.completeCsv[0].insert(1,"Run #"+str(int((len(self.completeCsv[1])+1)/2)))
         self.completeCsv[0].insert(2,"Totals")
@@ -237,6 +243,7 @@ class State(BaseState.State):
         self.replaceCsvLines(bestSplits,1,self.comparesCsv)
         self.replaceCsvLines(averageSplits,3,self.comparesCsv)
         self.replaceCsvLines(pbSplits,5,self.comparesCsv)
+        self.replaceCsvLines(bestExits,7,self.comparesCsv)
         self.insertCsvLines(lastRun,1)
         self.unSaved = True
 
