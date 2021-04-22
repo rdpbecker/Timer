@@ -1,4 +1,8 @@
 {
+    "bestExitInfo": {
+        "module_name": "Components.BestExitInfo",
+        "class_name": "BestExitInfo"
+    },
     "bptInfo": {
         "module_name": "Components.BptInfo",
         "class_name": "BptInfo"

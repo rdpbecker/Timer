@@ -1,0 +1,9 @@
+{
+    "font": ["DejaVu Sans", 10],
+    "colours": {
+        "yes": "green",
+        "no": "red",
+        "text": "white",
+        "bg": "black"
+    }
+}
