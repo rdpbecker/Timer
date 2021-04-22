@@ -1,11 +1,25 @@
 from util import fileio
 from util import readConfig as rc
 from util import categorySelection as cate
+from util import timeHelpers as timeh
+from DataClasses import DifferenceList
 
 def insertCsvLines(lines,startIndex,csv_ref):
     for i in range(len(csv_ref)):
         for j in range(len(lines[i])):
             csv_ref[i].insert(startIndex+j,lines[i][j])
+
+def findBestExit(splitnum,complete):
+    minVal = 100000000
+    for i in range(int((len(complete[0])-1)/2)):
+        val = timeh.stringToTime(complete[splitnum+1][2*i+2])
+        if(timeh.isBlank(val)):
+            continue
+        if val < minVal:
+            minVal = val
+    if minVal == 100000000:
+        return 'BLANK'
+    return minVal
 
 def copy(arr):
     new = []
@@ -28,11 +42,16 @@ def main():
                 continue
             comparesCsv = splitArrs[1]
 
-            newCompares = [['To Best Exit','Best Exit','Blank Split','Blank']]
-            for i in range(1,len(comparesCsv)):
-                newCompares.append(['-','-','-','-'])
+            newCompares = [['To Best Exit','Best Exit']]
+            bestExits = DifferenceList.DifferenceList([findBestExit(i,splitArrs[0]) for i in range(len(comparesCsv)-1)])
+            for i in range(len(comparesCsv)-1):
+                newCompares.append([timeh.timeToString(bestExits.segments[i],{"precision":5}),timeh.timeToString(bestExits.totals[i],{"precision":5})])
             insertCsvLines(newCompares,7,comparesCsv)
 
-            fileio.writeCSVs(config["baseDir"],game+"tmp",category,splitArrs[0],comparesCsv)
+            newCompares = [['Blank Split','Blank']]
+            newCompares.extend(['-','-'] for i in range(len(comparesCsv)-1))
+            insertCsvLines(newCompares,9,comparesCsv)
+
+            fileio.writeCSVs(config["baseDir"],game+"tmp",category,None,comparesCsv)
 
 main()
