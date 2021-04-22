@@ -35,10 +35,14 @@ def csvReadStart(baseDir,name,category,splitList):
             'Average Split', \
             'Average', \
             'PB Split', \
-            'Personal Best' \
+            'Personal Best',\
+            'To Best Exit',\
+            'Best Exit',\
+            'Blank Split',\
+            'Blank'\
         ]]
         for thing in splitList:
-            splitWrite[1].append([thing,'-','-','-','-','-','-'])
+            splitWrite[1].append([thing,'-','-','-','-','-','-','-','-','-','-'])
         with open(compareCsvName,'w') as writer:
             csvWriter = csv.writer(writer, delimiter = ',')
             for thing in splitWrite[1]:
@@ -52,17 +56,16 @@ def csvReadStart(baseDir,name,category,splitList):
 
     return splitWrite
 
-def writeCSV(baseDir,name,category,splitWrite,comparesWrite):
-    csvName = resolveFilename([baseDir,name,category + ".csv"])
-    compareCsvName = resolveFilename([baseDir,name,category + "_comparisons.csv"])
-    with open(csvName,'w') as writer:
-        csvWriter = csv.writer(writer, delimiter = ',')
-        for thing in splitWrite:
-            csvWriter.writerow(thing)
+def writeCSVs(baseDir,name,category,splitWrite,comparesWrite):
+    if splitWrite:
+        writeCSV(resolveFilename([baseDir,name,category + ".csv"]),splitWrite)
+    if comparesWrite:
+        writeCSV(resolveFilename([baseDir,name,category + "_comparisons.csv"]),comparesWrite)
 
-    with open(compareCsvName,'w') as writer:
+def writeCSV(filename,rows):
+    with open(filename,'w') as writer:
         csvWriter = csv.writer(writer, delimiter = ',')
-        for thing in comparesWrite:
+        for thing in rows:
             csvWriter.writerow(thing)
 
 def stripEmptyStrings(stringList):

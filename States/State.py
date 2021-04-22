@@ -245,6 +245,6 @@ class State(BaseState.State):
     ## save.
     ##########################################################
     def saveTimes(self):
-        fileio.writeCSV(self.config["baseDir"],self.game,self.category,self.completeCsv,self.comparesCsv)
+        fileio.writeCSVs(self.config["baseDir"],self.game,self.category,self.completeCsv,self.comparesCsv)
         self.unSaved = False
         print("Saved data successfully.")
