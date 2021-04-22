@@ -6,7 +6,7 @@
         "text": "white",
         "skipped": "white",
         "gold": "gold",
-        "gaining": "green",
+        "gaining": "light coral",
         "losing": "red",
         "bg": "black"
     }
