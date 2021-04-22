@@ -1,0 +1,15 @@
+{
+    "precision": 2,
+    "noPrecisionOnMinute": true,
+    "font": ["DejaVu Sans", 10],
+    "colours": {
+        "text": "white",
+        "skipped": "white",
+        "gold": "gold",
+        "aheadGaining": "green",
+        "aheadLosing": "lime green",
+        "behindGaining": "light coral",
+        "behindLosing": "red",
+        "bg": "black"
+    }
+}

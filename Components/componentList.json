@@ -1,4 +1,8 @@
 {
+    "bestExitComparisonInfo": {
+        "module_name": "Components.BestExitComparisonInfo",
+        "class_name": "BestExitComparisonInfo"
+    },
     "bestExitInfo": {
         "module_name": "Components.BestExitInfo",
         "class_name": "BestExitInfo"
