@@ -7,12 +7,22 @@ class GoldDiffInfo(Info.Info):
         Info.Info.__init__(self,parent,state,config)
         self.header.configure(text="Last Split (vs Best):")
 
+    def hide(self):
+        self.info.configure(text="-",fg=self.config["colours"]["text"])
+
     def frameUpdate(self):
         if self.state.runEnded:
+            return
+        if self.state.splitnum and self.shouldHide():
+            self.hide()
             return
         if not timeh.greater(self.state.comparisons[0].segments[self.state.splitnum],self.state.segmentTime)\
             and not timeh.isBlank(self.state.comparisons[0].segments[self.state.splitnum])\
             and not (self.state.splitnum and timeh.isBlank(self.state.currentRun.segments[self.state.splitnum-1])):
+
+            if self.state.splitnum and self.shouldHide():
+                self.hide()
+                return
 
             self.header.configure(text="Current Segment:")
             self.setTimes(self.state.segmentTime,previous=False)
@@ -25,6 +35,9 @@ class GoldDiffInfo(Info.Info):
 
     def onComparisonChanged(self):
         if self.state.splitnum:
+            if self.shouldHide():
+                self.hide()
+                return
             self.setTimes(self.state.currentRun.segments[self.state.splitnum-1])
 
     def onRestart(self):
@@ -35,6 +48,9 @@ class GoldDiffInfo(Info.Info):
         if not self.state.splitnum:
             return
         self.header.configure(text="Last Split (vs Best):")
+        if self.shouldHide():
+            self.hide()
+            return
         self.setTimes(self.state.currentRun.segments[self.state.splitnum-1])
 
     def setTimes(self,time,previous=True):

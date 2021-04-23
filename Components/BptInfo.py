@@ -8,8 +8,14 @@ class BptInfo(Info.Info):
         self.header.configure(text="Best Possible Time:")
         self.updateTime()
 
+    def hide(self):
+        self.info.configure(text="-")
+
     def frameUpdate(self):
         if self.state.runEnded:
+            return
+        if self.shouldHide():
+            self.hide()
             return
         if not timeh.greater(self.state.comparisons[0].segments[self.state.splitnum],self.state.segmentTime):
             self.info.configure(
@@ -32,6 +38,9 @@ class BptInfo(Info.Info):
         self.updateTime()
 
     def updateTime(self):
+        if self.shouldHide():
+            self.hide()
+            return
         self.info.configure(\
             text=\
                 timeh.timeToString(\

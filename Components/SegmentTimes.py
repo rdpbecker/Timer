@@ -34,21 +34,38 @@ class SegmentTimes(Component.Component):
         self.goldHeader.pack(side="bottom",anchor="sw")
         self.goldTime.pack(side="bottom",anchor="se")
 
+    def hide(self):
+        self.segmentHeader.configure(text="")
+        self.segmentTime.configure(text="")
+
     def onRestart(self):
+        if self.shouldHide():
+            self.hide()
+            return
+        self.updateSegmentHeader()
         self.updateSegmentTime()
         self.updateGoldTime()
 
     def onSplit(self):
+        if self.shouldHide():
+            self.hide()
+            return
         if not self.state.runEnded:
             self.updateSegmentTime()
             self.updateGoldTime()
 
     def onSplitSkipped(self):
+        if self.shouldHide():
+            self.hide()
+            return
         if not self.state.runEnded:
             self.updateSegmentTime()
             self.updateGoldTime()
 
     def onComparisonChanged(self):
+        if self.shouldHide():
+            self.hide()
+            return
         if not self.state.runEnded:
             self.updateSegmentHeader()
             self.updateSegmentTime()

@@ -1,4 +1,12 @@
 {
+    "bestExitComparisonInfo": {
+        "module_name": "Components.BestExitComparisonInfo",
+        "class_name": "BestExitComparisonInfo"
+    },
+    "bestExitInfo": {
+        "module_name": "Components.BestExitInfo",
+        "class_name": "BestExitInfo"
+    },
     "bptInfo": {
         "module_name": "Components.BptInfo",
         "class_name": "BptInfo"

@@ -63,4 +63,4 @@ class State(BaseState.State):
         bests.update(self.bestTime,self.splitnum)
         bestSplits = [timeh.timesToStringList(bests.bests,{"precision":5}), timeh.timesToStringList(bests.totalBests,{"precision":5})]
         self.replaceCsvLines(bestSplits,1,self.comparesCsv)
-        fileio.writeCSV(self.config["baseDir"],self.game,self.category,self.completeCsv,self.comparesCsv)
+        fileio.writeCSVs(self.config["baseDir"],self.game,self.category,self.completeCsv,self.comparesCsv)

@@ -7,8 +7,10 @@
         "text": "white",
         "skipped": "white",
         "gold": "gold",
-        "gaining": "green",
-        "losing": "red",
+        "aheadGaining": "green",
+        "aheadLosing": "lime green",
+        "behindGaining": "light coral",
+        "behindLosing": "red",
         "bg": "black"
     }
 }
