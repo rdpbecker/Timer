@@ -46,6 +46,7 @@ class State(BaseState.State):
         self.runEnded = True
         splitTime = time - self.starttime
         self.currentTime = splitTime
+        self.unSaved = True
         if timeh.greater(self.bestTime,splitTime):
             self.bestTime = splitTime
 
@@ -64,3 +65,4 @@ class State(BaseState.State):
         bestSplits = [timeh.timesToStringList(bests.bests,{"precision":5}), timeh.timesToStringList(bests.totalBests,{"precision":5})]
         self.replaceCsvLines(bestSplits,1,self.comparesCsv)
         fileio.writeCSVs(self.config["baseDir"],self.game,self.category,self.completeCsv,self.comparesCsv)
+        print("Save successful.")

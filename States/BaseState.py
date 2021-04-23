@@ -6,7 +6,6 @@ from util import readConfig as rc
 class State:
     started = False
     paused = False
-    reset = False
     runEnded = False
 
     starttime = 0
@@ -25,6 +24,8 @@ class State:
 
     config = None
 
+    unSaved = False
+
     def __init__(self):
         self.config = self.getConfigAndSplits()
 
@@ -35,7 +36,6 @@ class State:
     def _cleanState(self):
         self.started = False
         self.paused = False
-        self.reset = False
         self.runEnded = False
 
         self.starttime = 0
@@ -122,3 +122,6 @@ class State:
 
     def saveTimes(self):
         pass
+
+    def shouldFinish(self):
+        return True

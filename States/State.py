@@ -25,8 +25,6 @@ class State(BaseState.State):
     compareNum = 2
     numComparisons = 0
 
-    unSaved = False
-
     def __init__(self):
         BaseState.State.__init__(self)
         self.currentBests = SumList.SumList(self.getTimes(1,self.comparesCsv))
@@ -175,7 +173,7 @@ class State(BaseState.State):
         self.comparisons = []
 
     def frameUpdate(self,time):
-        if not self.started or self.reset or self.runEnded:
+        if not self.started or self.runEnded:
             return 1
         if self.paused:
             time = self.pauseTime
@@ -189,7 +187,7 @@ class State(BaseState.State):
         self.started = True
 
     def onSplit(self,time):
-        if not self.started or self.paused:
+        if not self.started or self.paused or self.runEnded:
             return 1
 
         if self.splitnames[self.splitnum][-3:] == "[P]" and not self.splitnum == len(self.splitnames) and not self.paused:
@@ -203,17 +201,22 @@ class State(BaseState.State):
         self.currentComparison = self.comparisons[self.compareNum]
 
     def onPaused(self,time):
+        if not self.started or self.runEnded:
+            return 1
         if self.paused:
             self.endPause(time)
         else:
             self.startPause(time)
 
     def onSplitSkipped(self,time):
+        if not self.started or self.runEnded or self.paused:
+            return 1
         self.skipSegment(time)
 
     def onReset(self):
-        self.reset = True
-        self.runEnded= True
+        if not self.started:
+            return 1
+        self.runEnded = True
         self.localSave()
 
     def onRestart(self):
@@ -221,6 +224,9 @@ class State(BaseState.State):
             return 1
         self.cleanState()
         self.setComparisons()
+
+    def shouldFinish(self):
+        return not self.started or self.runEnded
 
     ##########################################################
     ## Updates the local versions of the data files.
