@@ -28,8 +28,6 @@ class TimeSaveInfo(Info.Info):
             return
         if self.shouldHide():
             self.hide()
-        if self.shouldHide():
-            self.hide()
             return
         self.setInfo()
 
