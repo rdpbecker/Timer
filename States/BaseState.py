@@ -6,7 +6,6 @@ from util import readConfig as rc
 class State:
     started = False
     paused = False
-    reset = False
     runEnded = False
 
     starttime = 0
@@ -35,7 +34,6 @@ class State:
     def _cleanState(self):
         self.started = False
         self.paused = False
-        self.reset = False
         self.runEnded = False
 
         self.starttime = 0

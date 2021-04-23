@@ -175,7 +175,7 @@ class State(BaseState.State):
         self.comparisons = []
 
     def frameUpdate(self,time):
-        if not self.started or self.reset or self.runEnded:
+        if not self.started or self.runEnded:
             return 1
         if self.paused:
             time = self.pauseTime
@@ -212,8 +212,7 @@ class State(BaseState.State):
         self.skipSegment(time)
 
     def onReset(self):
-        self.reset = True
-        self.runEnded= True
+        self.runEnded = True
         self.localSave()
 
     def onRestart(self):
