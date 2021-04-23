@@ -1,0 +1,13 @@
+{
+    "mainTimer": {
+        "position": "center",
+        "colours": {
+            "behindGaining": "#188ddb",
+            "notGoldBehindGaining": "#1856db",
+            "behindLosing": "blue"
+        }
+    },
+    "segmentTimer": {
+        "position": "center-right"
+    }
+}

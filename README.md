@@ -1,5 +1,9 @@
 # Setup
 
+__Note__: Examples for much of the setup/configuration files can be
+found in the `examples` directory, along with a description of each
+of the files.
+
 ## Category/Segment Names
 In the parent directory, create a file called *splitNames.csv*. This 
 file stores the list of games and categories, along with the list

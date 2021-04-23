@@ -31,3 +31,24 @@ the timer should pause after Chapter 4 in a Celeste speedrun, the
 segment for Chapter 4 should be called `Chapter 4 [P]`.
 
 An example is in *splitNames.csv*.
+
+# Layout example
+
+`layout.json` is an example of a layout (it's the one I am using
+currently). Note that not all the components have a configuration
+associated with them - the components with no set configuration use
+the default configuration in its entirety. It should be stored in
+the `layouts` directory so it has the path 
+`layouts/<layout name>.json`. For example, my layout is stored at 
+`layouts/default.json`.
+
+`detailedTimer.json` is an example of a component configuration
+file. It should be stored in the `config` directory so it has the
+path `config/detailedTimer.json` (the component loader only looks
+in the `config` directory for user configuration files).
+
+Notice (by comparison with `defaults/detailedTimer.json`)
+that not all the values required are defined explicitly in the
+component example. Any values that are not specified in the user
+configuration will be filled in with the values in
+`defaults/detailedTimer.json`.

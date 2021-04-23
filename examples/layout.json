@@ -1,0 +1,45 @@
+[
+    {
+        "type": "title"
+    },
+    {
+        "type": "spacer"
+    },
+    {
+        "type": "segmentArea",
+        "config": "segmentArea"
+    },
+    {
+        "type": "spacer"
+    },
+    {
+        "type": "segmentTimes"
+    },
+    {
+        "type": "spacer"
+    },
+    {
+        "type": "detailedTimer",
+        "config": "detailedTimer"
+    },
+    {
+        "type": "spacer"
+    },
+    {
+        "type": "timeSaveInfo"
+    },
+    {
+        "type": "comparisonDiffInfo",
+        "config": "diffInfo"
+    },
+    {
+        "type": "bptInfo"
+    },
+    {
+        "type": "sobInfo"
+    },
+    {
+        "type": "compareInfo"
+    }
+]
+
