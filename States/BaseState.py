@@ -120,3 +120,6 @@ class State:
 
     def saveTimes(self):
         pass
+
+    def shouldFinish(self):
+        return True

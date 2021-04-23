@@ -124,8 +124,8 @@ class App(threading.Thread):
     ## clicked
     ##########################################################
     def rotateCompare(self,rotation):
-        self.state.onComparisonChanged(rotation)
-        self.updateComponents("comp")
+        if not self.state.onComparisonChanged(rotation):
+            self.updateComponents("comp")
 
     ##########################################################
     ## Stop the run here
@@ -138,15 +138,15 @@ class App(threading.Thread):
     ## Skip a split
     ##########################################################
     def skip(self,event=None):
-        self.state.onSplitSkipped(timer())
-        self.updateComponents("skip")
+        if not self.state.onSplitSkipped(timer()):
+            self.updateComponents("skip")
 
     ##########################################################
     ## If paused, unpause. If not paused, pause.
     ##########################################################
     def togglePause(self,event=None):
-        self.state.onPaused(timer())
-        self.updateComponents("pause")
+        if not self.state.onPaused(timer()):
+            self.updateComponents("pause")
 
     ##########################################################
     ## Restart the run by resetting the timer state.
@@ -166,6 +166,8 @@ class App(threading.Thread):
     ## window.
     ##########################################################
     def finish(self,event=None):
+        if not self.state.shouldFinish():
+            return
         if self.state.unSaved:
             shouldSave = cate.readThingInList(["yes","no"],"Save local data?")
             if shouldSave == "yes":

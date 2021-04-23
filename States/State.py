@@ -189,7 +189,7 @@ class State(BaseState.State):
         self.started = True
 
     def onSplit(self,time):
-        if not self.started or self.paused:
+        if not self.started or self.paused or self.runEnded:
             return 1
 
         if self.splitnames[self.splitnum][-3:] == "[P]" and not self.splitnum == len(self.splitnames) and not self.paused:
@@ -203,15 +203,21 @@ class State(BaseState.State):
         self.currentComparison = self.comparisons[self.compareNum]
 
     def onPaused(self,time):
+        if not self.started or self.runEnded:
+            return 1
         if self.paused:
             self.endPause(time)
         else:
             self.startPause(time)
 
     def onSplitSkipped(self,time):
+        if not self.started or self.runEnded or self.paused:
+            return 1
         self.skipSegment(time)
 
     def onReset(self):
+        if not self.started:
+            return 1
         self.runEnded = True
         self.localSave()
 
@@ -220,6 +226,9 @@ class State(BaseState.State):
             return 1
         self.cleanState()
         self.setComparisons()
+
+    def shouldFinish(self):
+        return not self.started or self.runEnded
 
     ##########################################################
     ## Updates the local versions of the data files.
