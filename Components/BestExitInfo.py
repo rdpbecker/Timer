@@ -7,8 +7,22 @@ class BestExitInfo(Info.Info):
         Info.Info.__init__(self,parent,state,config)
         self.header.configure(text="Best Exit?")
 
+    def hide(self):
+        self.info.configure(text="",fg=self.config["colours"]["text"])
+
     def onSplit(self):
+        if self.shouldHide():
+            self.hide()
+            return
         self.updateBestExit(self.state.splitnum-1)
+
+    def onComparisonChanged(self):
+        if not self.state.splitnum:
+            return
+        if self.shouldHide():
+            self.hide()
+        else:
+            self.updateBestExit(self.state.splitnum-1)
 
     def onRestart(self):
         self.info.configure(text="")

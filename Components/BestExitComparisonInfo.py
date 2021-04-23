@@ -7,14 +7,24 @@ class BestExitComparisonInfo(Info.Info):
         Info.Info.__init__(self,parent,state,config)
         self.header.configure(text="Vs Best Exit:")
 
+    def hide(self):
+        self.info.configure(text="-",fg=self.config["colours"]["text"])
+
     def frameUpdate(self):
         if self.state.runEnded:
+            return
+        if self.state.splitnum and self.shouldHide():
+            self.hide()
             return
         if (not timeh.greater(self.state.comparisons[0].segments[self.state.splitnum],self.state.segmentTime)\
             and not timeh.isBlank(self.state.comparisons[0].segments[self.state.splitnum]))\
             or (not timeh.greater(self.state.comparisons[3].totals[self.state.splitnum],self.state.totalTime)\
             and not timeh.isBlank(self.state.comparisons[3].totals[self.state.splitnum]))\
             and not (self.state.splitnum and timeh.isBlank(self.state.currentRun.totals[self.state.splitnum-1])):
+
+            if self.shouldHide():
+                self.hide()
+                return
 
             self.setTimes(self.state.totalTime,previous=False)
 
@@ -26,7 +36,10 @@ class BestExitComparisonInfo(Info.Info):
 
     def onComparisonChanged(self):
         if self.state.splitnum:
-            self.setTimes(self.state.currentRun.segments[self.state.splitnum-1])
+            if self.shouldHide():
+                self.hide()
+                return
+            self.setTimes(self.state.currentRun.totals[self.state.splitnum-1])
 
     def onRestart(self):
         self.header.configure(text="Vs Best Exit:")
@@ -34,6 +47,9 @@ class BestExitComparisonInfo(Info.Info):
 
     def splitEndUpdate(self):
         if not self.state.splitnum:
+            return
+        if self.shouldHide():
+            self.hide()
             return
         self.header.configure(text="Vs Best Exit:")
         self.setTimes(self.state.currentRun.totals[self.state.splitnum-1])

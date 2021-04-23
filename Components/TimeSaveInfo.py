@@ -8,6 +8,9 @@ class TimeSaveInfo(Info.Info):
         self.header.configure(text="Possible Time Save:")
         self.setInfo()
 
+    def hide(self):
+        self.info.configure(text="-")
+
     def onRestart(self):
         self.updateIfNecessary()
 
@@ -22,6 +25,11 @@ class TimeSaveInfo(Info.Info):
 
     def updateIfNecessary(self):
         if self.state.runEnded:
+            return
+        if self.shouldHide():
+            self.hide()
+        if self.shouldHide():
+            self.hide()
             return
         self.setInfo()
 

@@ -14,6 +14,14 @@ class Component(tk.Frame):
         for i in range(12):
             self.columnconfigure(i,minsize=27,weight=1)
 
+    def shouldHide(self):
+        if not "hideOnBlank" in self.config.keys():
+            return False
+        return self.state.currentComparison.totalHeader == "Blank" and self.config["hideOnBlank"]
+
+    def hide(self):
+        pass
+
     def frameUpdate(self):
         pass
 

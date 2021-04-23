@@ -1,4 +1,5 @@
 {
+    "hideOnBlank": true,
     "precision": 2,
     "noPrecisionOnMinute": true,
     "font": ["DejaVu Sans", 10],

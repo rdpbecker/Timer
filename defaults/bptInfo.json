@@ -1,4 +1,5 @@
 {
+    "hideOnBlank": true,
     "precision": 2,
     "font": ["DejaVu Sans", 10],
     "colours": {
