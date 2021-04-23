@@ -24,6 +24,8 @@ class State:
 
     config = None
 
+    unSaved = False
+
     def __init__(self):
         self.config = self.getConfigAndSplits()
 

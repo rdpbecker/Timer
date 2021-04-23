@@ -25,8 +25,6 @@ class State(BaseState.State):
     compareNum = 2
     numComparisons = 0
 
-    unSaved = False
-
     def __init__(self):
         BaseState.State.__init__(self)
         self.currentBests = SumList.SumList(self.getTimes(1,self.comparesCsv))
