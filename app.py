@@ -4,6 +4,7 @@ import tkinter as tk
 import threading
 from timeit import default_timer as timer
 from util import categorySelection as cate
+from Dialogs import ConfirmDialog
 
 class App(threading.Thread):
     state = None
@@ -68,7 +69,7 @@ class App(threading.Thread):
     ##########################################################
     def setupGui(self):
         self.root = tk.Tk()
-        self.root.protocol("WM_DELETE_WINDOW", self.finish)
+        self.root.protocol("WM_DELETE_WINDOW", self.root.destroy)
 
     ##########################################################
     ## Show the window, and call the first update after one
@@ -169,7 +170,6 @@ class App(threading.Thread):
         if not self.state.shouldFinish():
             return
         if self.state.unSaved:
-            shouldSave = cate.readThingInList(["yes","no"],"Save local data?")
-            if shouldSave == "yes":
+            if ConfirmDialog.ConfirmDialog("Save local changes (Closing will save automatically)?").show():
                 self.state.saveTimes()
         self.root.quit()
