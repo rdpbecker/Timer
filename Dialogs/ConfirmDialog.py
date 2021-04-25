@@ -6,7 +6,8 @@ class ConfirmDialog(BaseDialog.Dialog):
 
     def __init__(self,message):
         BaseDialog.Dialog.__init__(self)
-        self.root.columnconfigure(12,weight=1)
+        for i in range(12):
+            self.root.columnconfigure(i,weight=1)
         self.message = message
         label = tk.Label(self.root,text=message,fg="white",bg="black",pady=10,padx=20)
         button1 = tk.Button(self.root,text="Yes",fg="black",bg="steel blue",command=self.accept)
