@@ -72,10 +72,32 @@ def stripEmptyStrings(stringList):
     while not stringList[-1]:
         stringList.pop(-1)
 
+def stripEmptyStringsReturn(stringList):
+    new = [stringList[i] for i in range(len(stringList))]
+    while not new[-1]:
+        new.pop(-1)
+    return new
+
 def readJson(filepath):
     with open(filepath,'r') as reader:
         data = json.load(reader)
     return data
+
+def readCsv(filepath):
+    with open(filepath,'r') as csvfile:
+        reader = csv.reader(csvfile, delimiter=",",quotechar="|")
+        csvlines = []
+        for row in reader:
+            csvlines.append(stripEmptyStringsReturn(row))
+    return csvlines
+
+def getLayouts():
+    if os.path.exists("layouts"):
+        layoutFiles = [f[:-5] for f in os.listdir("layouts")]
+        layoutFiles.insert(0,"System Default")
+    else:
+        layoutFiles = ["System Default"]
+    return layoutFiles
 
 def getLayout():
     if os.path.exists("layouts"):

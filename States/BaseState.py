@@ -26,8 +26,12 @@ class State:
 
     unSaved = False
 
-    def __init__(self):
-        self.config = self.getConfigAndSplits()
+    def __init__(self,session):
+        self.config = rc.getUserConfig()
+        self.game = session["game"]
+        self.category = session["category"]
+        self.splitnames = session["splitNames"]
+        self.numSplits = len(self.splitnames)
 
         splitArrs = fileio.csvReadStart(self.config["baseDir"],self.game,self.category,self.splitnames)
         self.completeCsv = splitArrs[0]
@@ -43,21 +47,6 @@ class State:
         self.totalTime = 0
 
         self.splitnum = 0
-
-    ##########################################################
-    ## Gets the global configuration, game, category, and splits.
-    ## Sets the game, category, and splitnames.
-    ##
-    ## Returns: The final version of the configuration
-    ##########################################################
-    def getConfigAndSplits(self):
-        config = rc.getUserConfig()
-        splitnames = cate.getSplitNames(config["baseDir"])
-        self.game = splitnames["game"]
-        self.category = splitnames["category"]
-        self.splitnames = splitnames["splits"]
-        self.numSplits = len(self.splitnames)
-        return config
 
     ##########################################################
     ## Reads a column of times in from a specified array
