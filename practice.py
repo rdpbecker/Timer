@@ -2,6 +2,8 @@ import app
 from States import PracticeState
 from PracticeComponents import Buttons, Timer, Segment
 from util import readConfig as rc
+from DataClasses import AllSplitNames
+from Dialogs import PracticeRunSelector
 
 def setHotkeys(app,state):
     app.root.bind(state.config["hotkeys"]["split"], app.onSplitEnd)
@@ -10,7 +12,10 @@ def setHotkeys(app,state):
     app.root.bind(state.config["hotkeys"]["finish"], app.finish)
     app.root.bind(state.config["hotkeys"]["save"], app.save)
 
-state = PracticeState.State()
+splits = AllSplitNames.Splits()
+session = PracticeRunSelector.RunSelector(splits).show()
+
+state = PracticeState.State(session)
 rc.validateHotkeys(state.config)
 
 app = app.App(state)
