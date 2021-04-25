@@ -31,7 +31,7 @@ class Timer(Component.Component):
         goldSegment = self.state.bestTime
 
         # ahead of gold
-        if goldSegment >= time:
+        if timeh.isBlank(goldSegment) or goldSegment >= time:
             return self.config["colours"]["main"]
         # behind gold
         else:
