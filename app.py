@@ -172,4 +172,4 @@ class App(threading.Thread):
         if self.state.unSaved:
             if ConfirmDialog.ConfirmDialog("Save local changes (Closing will save automatically)?").show():
                 self.state.saveTimes()
-        self.root.quit()
+        self.root.destroy()

@@ -1,11 +1,12 @@
-import app
-from States import State
-from util import readConfig as rc
+import app as App
 import ComponentLoader
 import errors as Errors
-from util import fileio
 from DataClasses import AllSplitNames
 from Dialogs import RunSelector
+from States import State
+from util import fileio
+from util import layoutHelper as lh
+from util import readConfig as rc
 
 def setHotkeys(app,state):
     app.root.bind(state.config["hotkeys"]["decreaseComparison"],app.guiSwitchCompareCCW)
@@ -22,18 +23,17 @@ def setHotkeys(app,state):
 splits = AllSplitNames.Splits()
 session = RunSelector.RunSelector(splits).show()
 
-## Initialize the state. This picks the game and category
 state = State.State(session)
 rc.validateHotkeys(state.config)
 
-app = app.App(state)
+app = App.App(state)
 app.setupGui()
 
 setHotkeys(app,state)
 rootWindow = app.root
 
 loader = ComponentLoader.ComponentLoader(app,state,rootWindow)
-layout = session["layout"]
+layout = lh.resolveLayout(session["layout"])
 
 for component in layout:
     try:

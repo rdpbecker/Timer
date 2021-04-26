@@ -21,7 +21,7 @@ class RunSelector(BaseDialog.Dialog):
             "game": "",\
             "category": "",\
             "splitNames": [],\
-            "layout": lh.resolveLayout("System Default")\
+            "layout": "System Default"\
         }
 
         menubar = tk.Menu(self.root, tearoff=False)
@@ -90,7 +90,7 @@ class RunSelector(BaseDialog.Dialog):
 
     def setLayout(self,*args):
         self.layout = self.layoutVar.get()
-        self.retVal["layout"] = lh.resolveLayout(self.layout)
+        self.retVal["layout"] = self.layout
 
     def accept(self):
         if not self.game or not self.category or not self.layout:
