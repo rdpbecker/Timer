@@ -18,30 +18,47 @@ def setHotkeys(app,state):
     app.root.bind(state.config["hotkeys"]["pause"], app.togglePause)
     app.root.bind(state.config["hotkeys"]["restart"], app.restart)
     app.root.bind(state.config["hotkeys"]["finish"], app.finish)
-    app.root.bind(state.config["hotkeys"]["save"], app.save)
+    app.root.bind(state.config["hotkeys"]["save"], app.save),
+    app.root.bind(state.config["hotkeys"]["chooseLayout"], app.chooseLayout)
 
 splits = AllSplitNames.Splits()
 session = RunSelector.RunSelector(splits).show()
 
-state = State.State(session)
-rc.validateHotkeys(state.config)
+app = None
+exitCode = None
 
-app = App.App(state)
-app.setupGui()
+while not app or exitCode:
+    rootWindow = None
+    if exitCode:
+        layoutDict = {\
+            "layoutName": exitCode,\
+            "layout": lh.resolveLayout(exitCode)\
+        }
+    else:
+        layoutDict = {\
+            "layoutName": session["layout"],\
+            "layout": lh.resolveLayout(session["layout"]),\
+        }
 
-setHotkeys(app,state)
-rootWindow = app.root
+    state = State.State(session)
+    rc.validateHotkeys(state.config)
 
-loader = ComponentLoader.ComponentLoader(app,state,rootWindow)
-layout = lh.resolveLayout(session["layout"])
+    app = App.App(state)
+    app.layoutName = layoutDict["layoutName"]
+    app.setupGui()
 
-for component in layout:
-    try:
-        if "config" in component.keys():
-            app.addComponent(loader.loadComponent(component["type"],component["config"]))
-        else:
-            app.addComponent(loader.loadComponent(component["type"]))
-    except Errors.ComponentTypeError as e:
-        print(e)
+    setHotkeys(app,state)
+    rootWindow = app.root
 
-app.startGui()
+    loader = ComponentLoader.ComponentLoader(app,state,rootWindow)
+
+    for component in layoutDict["layout"]:
+        try:
+            if "config" in component.keys():
+                app.addComponent(loader.loadComponent(component["type"],component["config"]))
+            else:
+                app.addComponent(loader.loadComponent(component["type"]))
+        except Errors.ComponentTypeError as e:
+            print(e)
+
+    exitCode = app.startGui()

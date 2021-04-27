@@ -5,11 +5,15 @@ import threading
 from timeit import default_timer as timer
 from util import categorySelection as cate
 from Dialogs import ConfirmDialog
+from Dialogs import LayoutPopup
 
 class App(threading.Thread):
     state = None
     components = []
     numComponents = 0
+    layoutName = ""
+    retVal = None
+    updated = None
 
     ##########################################################
     ## Initialize the app in a different thread than the state
@@ -19,6 +23,8 @@ class App(threading.Thread):
     def __init__(self,state):
         threading.Thread.__init__(self)
         self.state = state
+        self.components = []
+        self.numComponents = 0
 
     ##########################################################
     ## Add a component to the bottom of the app, and track the
@@ -78,6 +84,7 @@ class App(threading.Thread):
     def startGui(self):
         self.root.after(17,self.update)
         self.root.mainloop()
+        return self.retVal
 
     ##########################################################
     ## Set the timer to update every time this is called
@@ -85,7 +92,7 @@ class App(threading.Thread):
     def update(self):
         if not self.state.frameUpdate(timer()):
             self.updateComponents("frame")
-        self.root.after(17,self.update)
+        self.updater = self.root.after(17,self.update)
 
     ##########################################################
     ## Initialize the start and first split times when the run
@@ -163,6 +170,19 @@ class App(threading.Thread):
         self.state.saveTimes()
 
     ##########################################################
+    ## Opens a window to change the current layout
+    ##########################################################
+    def chooseLayout(self,event=None):
+        if self.state.started:
+            return
+        layoutName = LayoutPopup.LayoutPopup(self.root,self.setLayout).show()
+
+    def setLayout(self,layoutName):
+        if not layoutName == self.layoutName:
+            self.retVal = layoutName
+            self.finish()
+
+    ##########################################################
     ## Finish the run by saving the splits and closing the
     ## window.
     ##########################################################
@@ -172,4 +192,6 @@ class App(threading.Thread):
         if self.state.unSaved:
             if ConfirmDialog.ConfirmDialog("Save local changes (Closing will save automatically)?").show():
                 self.state.saveTimes()
+        if self.updater:
+            self.root.after_cancel(self.updater)
         self.root.destroy()
