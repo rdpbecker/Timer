@@ -5,7 +5,7 @@ from util import timeHelpers as timeh
 class ComparisonDiffInfo(Info.Info):
     def __init__(self,parent,state,config):
         Info.Info.__init__(self,parent,state,config)
-        self.header.configure(text="Last Split (Current/Best):")
+        self.resetUI()
 
     def hide(self):
         self.info.configure(text="- / -",fg=self.config["colours"]["text"])
@@ -41,6 +41,9 @@ class ComparisonDiffInfo(Info.Info):
             self.setTimes(self.state.currentRun.segments[self.state.splitnum-1])
 
     def onRestart(self):
+        self.resetUI()
+
+    def resetUI(self):
         self.header.configure(text="Last Split (Current/Best):")
         self.info.configure(text="")
 

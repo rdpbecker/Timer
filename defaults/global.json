@@ -12,6 +12,7 @@
         "restart": "R",
         "finish": "f",
         "save": "S",
-        "chooseLayout": "l"
+        "chooseLayout": "l",
+        "chooseRun": "q"
     }
 }

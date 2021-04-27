@@ -45,3 +45,11 @@ class Component(tk.Frame):
 
     def onRestart(self):
         pass
+
+    def runChanged(self,**kwargs):
+        self.state = kwargs["state"]
+        self.resetUI()
+
+    # Reset the UI on state change that requires it.
+    def resetUI(self):
+        pass

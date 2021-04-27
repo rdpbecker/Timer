@@ -9,7 +9,6 @@ class Timer(Component.Component):
         Component.Component.__init__(self,parent,state,config)
         self.configure(bg=config["colours"]["bg"],padx=state.config["padx"])
         self.main = tk.Label(self, bg=config["colours"]["bg"], fg=config["colours"]["main"], font=config["font"])
-        self.setMainTime(0)
         m = config["position"]
         if m == "left":
             self.main.grid(row=0,column=0,columnspan=12,sticky="W")
@@ -22,7 +21,12 @@ class Timer(Component.Component):
         elif m == "right":
             self.main.grid(row=0,column=0,columnspan=12,sticky="E")
 
+        self.resetUI()
+
     def onRestart(self):
+        self.resetUI()
+
+    def resetUI(self):
         self.setMainTime(0)
         self.main.configure(fg=self.config["colours"]["main"])
 

@@ -1,11 +1,14 @@
 # Run tkinter code in another thread
 
 import tkinter as tk
+from tkinter import messagebox as mb
 import threading
 from timeit import default_timer as timer
 from util import categorySelection as cate
-from Dialogs import ConfirmDialog
+from Dialogs import ConfirmPopup
+from Dialogs import RunPopup
 from Dialogs import LayoutPopup
+from States import State
 
 class App(threading.Thread):
     state = None
@@ -47,7 +50,7 @@ class App(threading.Thread):
     ## Parameters: component - the component to update
     ##             signalType - the signal to dispatch
     ##########################################################
-    def switchSignal(self,component,signalType):
+    def switchSignal(self,component,signalType,**kwargs):
         signals = {
             "frame": component.frameUpdate,
             "start": component.onStarted,
@@ -56,18 +59,19 @@ class App(threading.Thread):
             "pause": component.onPaused,
             "skip": component.onSplitSkipped,
             "reset": component.onReset,
-            "restart": component.onRestart
+            "restart": component.onRestart,
+            "runChanged": component.runChanged
         }
-        signals.get(signalType)()
+        signals.get(signalType)(**kwargs)
 
     ##########################################################
     ## Updates all the components with a given signal type.
     ##
     ## Parameters: signalType - the type of signal to dispatch
     ##########################################################
-    def updateComponents(self,signalType):
+    def updateComponents(self,signalType,**kwargs):
         for component in self.components:
-            self.switchSignal(component,signalType)
+            self.switchSignal(component,signalType,**kwargs)
 
     ##########################################################
     ## Creates the window with the destruction callback, and
@@ -75,7 +79,7 @@ class App(threading.Thread):
     ##########################################################
     def setupGui(self):
         self.root = tk.Tk()
-        self.root.protocol("WM_DELETE_WINDOW", self.root.destroy)
+        self.root.protocol("WM_DELETE_WINDOW", self.finish)
 
     ##########################################################
     ## Show the window, and call the first update after one
@@ -183,15 +187,48 @@ class App(threading.Thread):
             self.finish()
 
     ##########################################################
+    ## Opens a window to change the current run
+    ##########################################################
+    def chooseRun(self,event=None):
+        if self.state.started:
+            return
+        newRun = RunPopup.RunPopup(self.root,self.setRun).show()
+
+    def setRun(self,session):
+        if session["game"] == self.state.game\
+            and session["category"] == self.state.category:
+            return
+        self.preFinish()
+        compareNum = self.state.compareNum
+        self.state = State.State(session)
+        self.state.setComparison(compareNum)
+        self.updateComponents("runChanged",state=self.state)
+
+    def saveIfDesired(self,desired):
+        if desired:
+            self.save()
+
+    ##########################################################
+    ## Save the splits before closing the window or changing the
+    ## run.
+    ##########################################################
+    def preFinish(self):
+        if self.state.unSaved:
+            ConfirmPopup.ConfirmPopup(\
+                self.root,\
+                self.saveIfDesired,\
+                "Save",\
+                "Save local changes?  (Closing will save automatically)?"\
+            )
+
+    ##########################################################
     ## Finish the run by saving the splits and closing the
     ## window.
     ##########################################################
     def finish(self,event=None):
         if not self.state.shouldFinish():
             return
-        if self.state.unSaved:
-            if ConfirmDialog.ConfirmDialog("Save local changes (Closing will save automatically)?").show():
-                self.state.saveTimes()
+        self.preFinish()
         if self.updater:
             self.root.after_cancel(self.updater)
         self.root.destroy()

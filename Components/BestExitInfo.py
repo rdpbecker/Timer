@@ -5,7 +5,7 @@ from util import timeHelpers as timeh
 class BestExitInfo(Info.Info):
     def __init__(self,parent,state,config):
         Info.Info.__init__(self,parent,state,config)
-        self.header.configure(text="Best Exit?")
+        self.resetUI()
 
     def hide(self):
         self.info.configure(text="",fg=self.config["colours"]["text"])
@@ -25,6 +25,10 @@ class BestExitInfo(Info.Info):
             self.updateBestExit(self.state.splitnum-1)
 
     def onRestart(self):
+        self.resetUI()
+
+    def resetUI(self):
+        self.header.configure(text="Best Exit?")
         self.info.configure(text="")
 
     def updateBestExit(self,splitnum):

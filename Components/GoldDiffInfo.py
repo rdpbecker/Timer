@@ -41,6 +41,9 @@ class GoldDiffInfo(Info.Info):
             self.setTimes(self.state.currentRun.segments[self.state.splitnum-1])
 
     def onRestart(self):
+        self.resetUI()
+
+    def resetUI(self):
         self.header.configure(text="Last Split (vs Best):")
         self.info.configure(text="")
 

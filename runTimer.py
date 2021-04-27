@@ -20,6 +20,7 @@ def setHotkeys(app,state):
     app.root.bind(state.config["hotkeys"]["finish"], app.finish)
     app.root.bind(state.config["hotkeys"]["save"], app.save),
     app.root.bind(state.config["hotkeys"]["chooseLayout"], app.chooseLayout)
+    app.root.bind(state.config["hotkeys"]["chooseRun"], app.chooseRun)
 
 splits = AllSplitNames.Splits()
 session = RunSelector.RunSelector(splits).show()
