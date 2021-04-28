@@ -7,7 +7,7 @@ from util import layoutHelper as lh
 class RunSelector(BaseDialog.Dialog):
     game = ""
     category = ""
-    layout = "System Default"
+    layoutName = "System Default"
     splits = None
     gameVar = None
     cateVar = None
@@ -20,8 +20,7 @@ class RunSelector(BaseDialog.Dialog):
         self.retVal = {\
             "game": "",\
             "category": "",\
-            "splitNames": [],\
-            "layout": "System Default"\
+            "layoutName": "System Default"\
         }
 
         menubar = tk.Menu(self.root, tearoff=False)
@@ -89,11 +88,11 @@ class RunSelector(BaseDialog.Dialog):
         self.cateCombo["values"] = self.splits.getCategories(self.game)
 
     def setLayout(self,*args):
-        self.layout = self.layoutVar.get()
-        self.retVal["layout"] = self.layout
+        self.layoutName = self.layoutVar.get()
+        self.retVal["layoutName"] = self.layoutName
 
     def accept(self):
-        if not self.game or not self.category or not self.layout:
+        if not self.game or not self.category or not self.layoutName:
             error = tk.Label(self.root,bg="black",fg="white",text="A game and category must both be selected.")
             error.grid(row=4,column=0,columnspan=12,sticky="WE")
             return

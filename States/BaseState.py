@@ -28,9 +28,9 @@ class State:
 
     def __init__(self,session):
         self.config = rc.getUserConfig()
-        self.game = session["game"]
-        self.category = session["category"]
-        self.splitnames = session["splitNames"]
+        self.game = session.game
+        self.category = session.category
+        self.splitnames = session.splitNames
         self.numSplits = len(self.splitnames)
 
         splitArrs = fileio.csvReadStart(self.config["baseDir"],self.game,self.category,self.splitnames)

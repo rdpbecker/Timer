@@ -19,8 +19,7 @@ class RunPopup(Popup.Popup):
     def show(self):
         self.retVal = {\
             "game": "",\
-            "category": "",\
-            "splitNames": []\
+            "category": ""\
         }
         self.window.configure(bg="black")
 
@@ -67,12 +66,10 @@ class RunPopup(Popup.Popup):
         self.category = ""
         self.retVal["game"] = self.game
         self.retVal["category"] = self.category
-        self.retVal["splitNames"] = self.splits.getSplitNames(self.game,self.category)
 
     def setCate(self,*args):
         self.category = self.cateVar.get()
         self.retVal["category"] = self.category
-        self.retVal["splitNames"] = self.splits.getSplitNames(self.game,self.category)
 
     def updateCateCombo(self):
         self.cateCombo["values"] = self.splits.getCategories(self.game)

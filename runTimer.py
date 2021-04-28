@@ -2,6 +2,7 @@ import app as App
 import ComponentLoader
 import errors as Errors
 from DataClasses import AllSplitNames
+from DataClasses import Session
 from Dialogs import RunSelector
 from States import State
 from util import fileio
@@ -23,29 +24,18 @@ def setHotkeys(app,state):
     app.root.bind(state.config["hotkeys"]["chooseRun"], app.chooseRun)
 
 splits = AllSplitNames.Splits()
-session = RunSelector.RunSelector(splits).show()
+session = Session.Session(splits)
 
 app = None
 exitCode = None
 
 while not app or exitCode:
     rootWindow = None
-    if exitCode:
-        layoutDict = {\
-            "layoutName": exitCode,\
-            "layout": lh.resolveLayout(exitCode)\
-        }
-    else:
-        layoutDict = {\
-            "layoutName": session["layout"],\
-            "layout": lh.resolveLayout(session["layout"]),\
-        }
 
     state = State.State(session)
     rc.validateHotkeys(state.config)
 
-    app = App.App(state)
-    app.layoutName = layoutDict["layoutName"]
+    app = App.App(state,session)
     app.setupGui()
 
     setHotkeys(app,state)
@@ -53,7 +43,7 @@ while not app or exitCode:
 
     loader = ComponentLoader.ComponentLoader(app,state,rootWindow)
 
-    for component in layoutDict["layout"]:
+    for component in session.layout:
         try:
             if "config" in component.keys():
                 app.addComponent(loader.loadComponent(component["type"],component["config"]))
@@ -63,3 +53,5 @@ while not app or exitCode:
             print(e)
 
     exitCode = app.startGui()
+
+session.save()

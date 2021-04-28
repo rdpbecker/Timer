@@ -14,7 +14,6 @@ class App(threading.Thread):
     state = None
     components = []
     numComponents = 0
-    layoutName = ""
     retVal = None
     updated = None
 
@@ -23,9 +22,10 @@ class App(threading.Thread):
     ##
     ## Parameters: state - the state of the program
     ##########################################################
-    def __init__(self,state):
+    def __init__(self,state,session):
         threading.Thread.__init__(self)
         self.state = state
+        self.session = session
         self.components = []
         self.numComponents = 0
 
@@ -179,11 +179,12 @@ class App(threading.Thread):
     def chooseLayout(self,event=None):
         if self.state.started:
             return
-        layoutName = LayoutPopup.LayoutPopup(self.root,self.setLayout).show()
+        LayoutPopup.LayoutPopup(self.root,self.setLayout).show()
 
     def setLayout(self,layoutName):
-        if not layoutName == self.layoutName:
-            self.retVal = layoutName
+        if not layoutName == self.session.layoutName:
+            self.session.setLayout(layoutName)
+            self.retVal = 1
             self.finish()
 
     ##########################################################
@@ -194,13 +195,14 @@ class App(threading.Thread):
             return
         newRun = RunPopup.RunPopup(self.root,self.setRun).show()
 
-    def setRun(self,session):
-        if session["game"] == self.state.game\
-            and session["category"] == self.state.category:
+    def setRun(self,newSession):
+        if newSession["game"] == self.state.game\
+            and newSession["category"] == self.state.category:
             return
         self.preFinish()
         compareNum = self.state.compareNum
-        self.state = State.State(session)
+        self.session.setRun(newSession["game"],newSession["category"])
+        self.state = State.State(self.session)
         self.state.setComparison(compareNum)
         self.updateComponents("runChanged",state=self.state)
 

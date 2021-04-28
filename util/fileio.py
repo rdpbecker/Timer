@@ -83,6 +83,11 @@ def readJson(filepath):
         data = json.load(reader)
     return data
 
+def writeJson(filepath,data):
+    jsonData = json.dumps(data)
+    with open(filepath,'w') as writer:
+        writer.write(jsonData)
+
 def readCsv(filepath):
     with open(filepath,'r') as csvfile:
         reader = csv.reader(csvfile, delimiter=",",quotechar="|")
