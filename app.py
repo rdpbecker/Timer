@@ -216,12 +216,15 @@ class App(threading.Thread):
     ## run.
     ##########################################################
     def confirmSave(self,callback):
-        ConfirmPopup.ConfirmPopup(\
-            self.root,\
-            callback,\
-            "Save",\
-            "Save local changes (closing will save automatically)?"\
-        )
+        if self.state.unSaved:
+            ConfirmPopup.ConfirmPopup(\
+                self.root,\
+                callback,\
+                "Save",\
+                "Save local changes (closing will save automatically)?"\
+            )
+        else:
+            self.close(False)
 
     ##########################################################
     ## Finish the run by saving the splits and closing the

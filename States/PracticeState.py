@@ -7,9 +7,12 @@ from States import BaseState
 class State(BaseState.State):
     bestTime = 0
     currentTime = 0
+    splitName = ""
+    splitnum = 0
 
     def __init__(self,session):
         BaseState.State.__init__(self,session)
+        self.splitName = session.split
         self.splitnum = self.splitnames.index(session.split)
         bestTimes = self.getTimes(1,self.comparesCsv)
         self.bestTime = bestTimes[self.splitnum]

@@ -32,7 +32,8 @@ class SegmentCompare(Component.Component):
             self.updateGoldTime()
 
     def updateGoldHeader(self):
-        self.goldHeader.configure(text="Best Split:")
+        self.goldHeader.configure(text=self.state.game + " - " +
+        self.state.category + " - " + self.state.splitName + ":")
 
     def updateGoldTime(self):
         self.goldTime.configure(text=timeh.timeToString(self.state.bestTime,{"precision":self.config["precision"]}))
