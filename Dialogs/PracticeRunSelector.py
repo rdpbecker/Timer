@@ -15,6 +15,7 @@ class RunSelector(BaseDialog.Dialog):
 
     def __init__(self,splits):
         BaseDialog.Dialog.__init__(self)
+        self.root.title("Choose Run and Split")
         self.splits = splits
         self.retVal = {\
             "game": "",\
