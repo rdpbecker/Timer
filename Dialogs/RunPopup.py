@@ -7,13 +7,14 @@ from util import layoutHelper as lh
 class RunPopup(Popup.Popup):
     game = ""
     category = ""
-    split = None
+    splits = None
     gameVar = None
     cateVar = None
     cateCombo = None
 
-    def __init__(self,master,callback):
+    def __init__(self,master,callback,session):
         Popup.Popup.__init__(self,master,callback)
+        self.session = session
         self.splits = AllSplitNames.Splits()
 
     def show(self):
@@ -22,6 +23,7 @@ class RunPopup(Popup.Popup):
             "category": ""\
         }
         self.window.configure(bg="black")
+        self.window.title("Choose Run")
 
         menubar = tk.Menu(self.window, tearoff=False)
         fileMenu = tk.Menu(self.window, tearoff=False)
@@ -40,6 +42,7 @@ class RunPopup(Popup.Popup):
         self.window.configure(bg="black",menu=menubar)
 
         self.gameVar = tk.StringVar()
+        self.gameVar.set(self.session.game)
         self.gameVar.trace('w',self.setGame)
         gameCombo = tk.ttk.Combobox(self.window,values=self.splits.getGames(),textvariable=self.gameVar)
         gameLabel = tk.Label(self.window,bg="black",fg="white",text="Game:")
@@ -47,6 +50,7 @@ class RunPopup(Popup.Popup):
         gameLabel.grid(row=0,column=0,columnspan=4,sticky="W")
 
         self.cateVar = tk.StringVar()
+        self.cateVar.set(self.session.category)
         self.cateVar.trace('w',self.setCate)
         self.cateCombo = tk.ttk.Combobox(self.window,values=self.splits.getCategories(self.game),textvariable=self.cateVar)
         cateLabel = tk.Label(self.window,bg="black",fg="white",text="Category:")

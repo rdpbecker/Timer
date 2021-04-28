@@ -5,16 +5,19 @@ from util import layoutHelper as lh
 
 class LayoutPopup(Popup.Popup):
     layoutVar = None
+    session = None
 
-    def __init__(self,master,callback):
+    def __init__(self,master,callback,session):
+        self.session = session
         Popup.Popup.__init__(self,master,callback)
 
     def show(self):
-        self.retVal = "System Default"
+        self.retVal = self.session.layoutName
         self.window.configure(bg="black")
+        self.window.title("Choose Layout")
 
         self.layoutVar = tk.StringVar()
-        self.layoutVar.set("System Default")
+        self.layoutVar.set(self.session.layoutName)
         self.layoutVar.trace('w',self.setLayout)
         layoutCombo = tk.ttk.Combobox(self.window,values=lh.getLayouts(),textvariable=self.layoutVar)
         layoutLabel = tk.Label(self.window,bg="black",fg="white",text="Layout:")

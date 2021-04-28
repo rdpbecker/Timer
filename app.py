@@ -80,6 +80,7 @@ class App(threading.Thread):
     def setupGui(self):
         self.root = tk.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.finish)
+        self.root.title("Base Timer")
 
     ##########################################################
     ## Show the window, and call the first update after one
@@ -179,7 +180,7 @@ class App(threading.Thread):
     def chooseLayout(self,event=None):
         if self.state.started:
             return
-        LayoutPopup.LayoutPopup(self.root,self.setLayout).show()
+        LayoutPopup.LayoutPopup(self.root,self.setLayout,self.session).show()
 
     def setLayout(self,layoutName):
         if not layoutName == self.session.layoutName:
@@ -193,13 +194,13 @@ class App(threading.Thread):
     def chooseRun(self,event=None):
         if self.state.started:
             return
-        newRun = RunPopup.RunPopup(self.root,self.setRun).show()
+        newRun = RunPopup.RunPopup(self.root,self.setRun,self.session).show()
 
     def setRun(self,newSession):
         if newSession["game"] == self.state.game\
             and newSession["category"] == self.state.category:
             return
-        self.preFinish()
+        self.confirmSave(self.saveIfDesired)
         compareNum = self.state.compareNum
         self.session.setRun(newSession["game"],newSession["category"])
         self.state = State.State(self.session)
@@ -214,14 +215,13 @@ class App(threading.Thread):
     ## Save the splits before closing the window or changing the
     ## run.
     ##########################################################
-    def preFinish(self):
-        if self.state.unSaved:
-            ConfirmPopup.ConfirmPopup(\
-                self.root,\
-                self.saveIfDesired,\
-                "Save",\
-                "Save local changes?  (Closing will save automatically)?"\
-            )
+    def confirmSave(self,callback):
+        ConfirmPopup.ConfirmPopup(\
+            self.root,\
+            callback,\
+            "Save",\
+            "Save local changes (closing will save automatically)?"\
+        )
 
     ##########################################################
     ## Finish the run by saving the splits and closing the
@@ -230,7 +230,11 @@ class App(threading.Thread):
     def finish(self,event=None):
         if not self.state.shouldFinish():
             return
-        self.preFinish()
+        self.confirmSave(self.close)
+
+    def close(self,shouldSave):
+        if shouldSave:
+            self.save()
         if self.updater:
             self.root.after_cancel(self.updater)
         self.root.destroy()
