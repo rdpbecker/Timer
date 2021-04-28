@@ -16,8 +16,11 @@ class Title(Component.Component):
         self.game = tk.Label(self, bg=bg, font=font, fg=textColour)
         self.category = tk.Label(self, bg=bg, font=font, fg=textColour)
 
-        self.game.configure(text=self.state.game)
-        self.category.configure(text=self.state.category)
-
         self.game.grid(row=0,column=2,columnspan=4,sticky='W')
         self.category.grid(row=0,column=6,columnspan=4,sticky='E')
+
+        self.resetUI()
+
+    def resetUI(self):
+        self.game.configure(text=self.state.game)
+        self.category.configure(text=self.state.category)

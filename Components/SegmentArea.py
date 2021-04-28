@@ -5,25 +5,42 @@ from util import timeHelpers as timeh
 
 class SegmentArea(Component.Component):
     rows = []
+    numRows = 0
+    trueNumSplits = 0
+    trueActiveSplit = 0
     topRowSplitnum = 0
     activeIndex = 0
 
     def __init__(self,parent,state,config):
         Component.Component.__init__(self,parent,state,config)
-        if config["numSplits"] > len(self.state.splitnames):
-            config["numSplits"] = len(self.state.splitnames)
-            config["activeSplit"] = len(self.state.splitnames) - 2
+        self.rows = []
+        self.resetUI()
 
-        self.numRows = config["numSplits"]
-        for i in range(self.numRows):
-            row = SegmentRow.SegmentRow(self, config["main"]["colours"]["bg"], config["main"]["font"], config["main"]["colours"]["text"])
-            row.grid(row=i,column=0,columnspan=12,sticky='NSWE')
-            self.rows.append(row)
+    def resetUI(self):
+        oldNumSplits = len(self.rows)
+        if self.config["numSplits"] > len(self.state.splitnames):
+            self.trueNumSplits = len(self.state.splitnames)
+            self.trueActiveSplit = len(self.state.splitnames) - 2
+        else:
+            self.trueNumSplits = self.config["numSplits"]
+            self.trueActiveSplit = self.config["activeSplit"]
+
+        self.numRows = self.trueNumSplits
+        if oldNumSplits < self.numRows:
+            for i in range(oldNumSplits,self.numRows):
+                row = SegmentRow.SegmentRow(self, self.config["main"]["colours"]["bg"], self.config["main"]["font"], self.config["main"]["colours"]["text"])
+                row.grid(row=i,column=0,columnspan=12,sticky='NSWE')
+                self.rows.append(row)
+        elif oldNumSplits > self.numRows:
+            for i in range(oldNumSplits-1,self.numRows-1,-1):
+                self.rows[i].grid_forget()
+                self.rows[i].destroy()
+                self.rows.pop(-1)
         self.setAllHeaders()
         self.setAllComparisons()
         self.setHighlight()
-        self.rows[-1].setHeader(fg=config["endColour"])
-        self.rows[-1].setComparison(fg=config["endColour"])
+        self.rows[-1].setHeader(fg=self.config["endColour"])
+        self.rows[-1].setComparison(fg=self.config["endColour"])
 
     def onRestart(self):
         self.topRowSplitnum = 0
@@ -52,11 +69,11 @@ class SegmentArea(Component.Component):
         self.setAllComparisons()
 
     def getTopSplitIndex(self):
-        if self.state.splitnum <= self.config["activeSplit"] - 1:
+        if self.state.splitnum <= self.trueActiveSplit - 1:
             return 0
-        if self.state.splitnum >= self.state.numSplits - (self.config["numSplits"]-self.config["activeSplit"]):
-            return self.state.numSplits - self.config["numSplits"]
-        return self.state.splitnum - (self.config["activeSplit"] - 1)
+        if self.state.splitnum >= self.state.numSplits - (self.trueNumSplits-self.trueActiveSplit):
+            return self.state.numSplits - self.trueNumSplits
+        return self.state.splitnum - (self.trueActiveSplit - 1)
 
     def toNextSplit(self):
         self.topRowSplitnum = self.getTopSplitIndex()

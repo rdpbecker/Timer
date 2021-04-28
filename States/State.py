@@ -25,10 +25,11 @@ class State(BaseState.State):
     compareNum = 2
     numComparisons = 0
 
-    def __init__(self):
-        BaseState.State.__init__(self)
+    def __init__(self,session):
+        BaseState.State.__init__(self,session)
         self.currentBests = SumList.SumList(self.getTimes(1,self.comparesCsv))
         self.bestExits = DifferenceList.DifferenceList(self.getTimes(8,self.comparesCsv))
+        self.comparisons = []
         self.setComparisons()
 
     ##########################################################
@@ -198,6 +199,12 @@ class State(BaseState.State):
 
     def onComparisonChanged(self,rotation):
         self.compareNum = (self.compareNum+rotation)%self.numComparisons
+        self.currentComparison = self.comparisons[self.compareNum]
+
+    def setComparison(self,num):
+        if num >= self.numComparisons:
+            num = 2
+        self.compareNum = num
         self.currentComparison = self.comparisons[self.compareNum]
 
     def onPaused(self,time):

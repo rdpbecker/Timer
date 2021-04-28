@@ -1,9 +1,13 @@
-import app
-from States import State
-from util import readConfig as rc
+import app as App
 import ComponentLoader
 import errors as Errors
+from DataClasses import AllSplitNames
+from DataClasses import Session
+from Dialogs import RunSelector
+from States import State
 from util import fileio
+from util import layoutHelper as lh
+from util import readConfig as rc
 
 def setHotkeys(app,state):
     app.root.bind(state.config["hotkeys"]["decreaseComparison"],app.guiSwitchCompareCCW)
@@ -15,28 +19,39 @@ def setHotkeys(app,state):
     app.root.bind(state.config["hotkeys"]["pause"], app.togglePause)
     app.root.bind(state.config["hotkeys"]["restart"], app.restart)
     app.root.bind(state.config["hotkeys"]["finish"], app.finish)
-    app.root.bind(state.config["hotkeys"]["save"], app.save)
+    app.root.bind(state.config["hotkeys"]["save"], app.save),
+    app.root.bind(state.config["hotkeys"]["chooseLayout"], app.chooseLayout)
+    app.root.bind(state.config["hotkeys"]["chooseRun"], app.chooseRun)
 
-## Initialize the state. This picks the game and category
-state = State.State()
-rc.validateHotkeys(state.config)
+splits = AllSplitNames.Splits()
+session = Session.Session(splits)
 
-app = app.App(state)
-app.setupGui()
+app = None
+exitCode = None
 
-setHotkeys(app,state)
-rootWindow = app.root
+while not app or exitCode:
+    rootWindow = None
 
-loader = ComponentLoader.ComponentLoader(app,state,rootWindow)
-layout = fileio.getLayout()
+    state = State.State(session)
+    rc.validateHotkeys(state.config)
 
-for component in layout:
-    try:
-        if "config" in component.keys():
-            app.addComponent(loader.loadComponent(component["type"],component["config"]))
-        else:
-            app.addComponent(loader.loadComponent(component["type"]))
-    except Errors.ComponentTypeError as e:
-        print(e)
+    app = App.App(state,session)
+    app.setupGui()
 
-app.startGui()
+    setHotkeys(app,state)
+    rootWindow = app.root
+
+    loader = ComponentLoader.ComponentLoader(app,state,rootWindow)
+
+    for component in session.layout:
+        try:
+            if "config" in component.keys():
+                app.addComponent(loader.loadComponent(component["type"],component["config"]))
+            else:
+                app.addComponent(loader.loadComponent(component["type"]))
+        except Errors.ComponentTypeError as e:
+            print(e)
+
+    exitCode = app.startGui()
+
+session.save()

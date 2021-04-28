@@ -21,11 +21,6 @@ class SegmentTimes(Component.Component):
         self.goldHeader = tk.Label(self.leftFrame, fg=fg, bg=bg)
         self.goldTime = tk.Label(self.rightFrame, fg=fg, bg=bg)
 
-        self.updateSegmentHeader()
-        self.updateSegmentTime()
-        self.updateGoldHeader()
-        self.updateGoldTime()
-
         self.leftFrame.pack(side="left", padx=state.config["padx"])
         self.rightFrame.pack(side="left", padx=state.config["padx"])
         if config["includeCurrentComparison"]:
@@ -34,16 +29,22 @@ class SegmentTimes(Component.Component):
         self.goldHeader.pack(side="bottom",anchor="sw")
         self.goldTime.pack(side="bottom",anchor="se")
 
+        self.resetUI()
+
     def hide(self):
         self.segmentHeader.configure(text="")
         self.segmentTime.configure(text="")
 
     def onRestart(self):
+        self.resetUI()
+
+    def resetUI(self):
         if self.shouldHide():
             self.hide()
             return
         self.updateSegmentHeader()
         self.updateSegmentTime()
+        self.updateGoldHeader()
         self.updateGoldTime()
 
     def onSplit(self):

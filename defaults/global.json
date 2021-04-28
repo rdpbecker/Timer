@@ -11,6 +11,8 @@
         "start": "<space>",
         "restart": "R",
         "finish": "f",
-        "save": "S"
+        "save": "S",
+        "chooseLayout": "l",
+        "chooseRun": "q"
     }
 }

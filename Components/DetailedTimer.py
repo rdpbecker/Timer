@@ -10,10 +10,8 @@ class Timer(Component.Component):
         Component.Component.__init__(self,parent,state,config)
         self.configure(bg=config["colours"]["bg"], padx=state.config["padx"])
         self.main = tk.Label(self, bg=config["colours"]["bg"], fg=config["mainTimer"]["colours"]["main"], font=config["mainTimer"]["font"])
-        self.setMainTime(0)
 
         self.segment = tk.Label(self, bg=config["colours"]["bg"], fg=config["segmentTimer"]["colour"], font=config["segmentTimer"]["font"])
-        self.setSegmentTime(0)
 
         m = config["mainTimer"]["position"]
         if m == "left":
@@ -38,8 +36,12 @@ class Timer(Component.Component):
             self.segment.grid(row=0,column=0,columnspan=10,sticky="E")
         elif s == "right":
             self.segment.grid(row=0,column=0,columnspan=12,sticky="E")
+        self.resetUI()
 
     def onRestart(self):
+        self.resetUI()
+
+    def resetUI(self):
         self.main.configure(fg=self.config["mainTimer"]["colours"]["main"])
         self.setMainTime(0)
         self.setSegmentTime(0)

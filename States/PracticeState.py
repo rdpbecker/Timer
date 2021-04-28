@@ -7,18 +7,13 @@ from States import BaseState
 class State(BaseState.State):
     bestTime = 0
     currentTime = 0
+    splitName = ""
+    splitnum = 0
 
-    def __init__(self):
-        BaseState.State.__init__(self)
-        self.getPracticeSplits()
-
-    ##########################################################
-    ## Get the split number and the best time for that split,
-    ## and set the appropriate values in the state.
-    ##########################################################
-    def getPracticeSplits(self):
-        startSplitName = cate.readThingInList(self.splitnames)
-        self.splitnum = self.splitnames.index(startSplitName)
+    def __init__(self,session):
+        BaseState.State.__init__(self,session)
+        self.splitName = session.split
+        self.splitnum = self.splitnames.index(session.split)
         bestTimes = self.getTimes(1,self.comparesCsv)
         self.bestTime = bestTimes[self.splitnum]
 

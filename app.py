@@ -1,23 +1,33 @@
 # Run tkinter code in another thread
 
 import tkinter as tk
+from tkinter import messagebox as mb
 import threading
 from timeit import default_timer as timer
 from util import categorySelection as cate
+from Dialogs import ConfirmPopup
+from Dialogs import RunPopup
+from Dialogs import LayoutPopup
+from States import State
 
 class App(threading.Thread):
     state = None
     components = []
     numComponents = 0
+    retVal = None
+    updated = None
 
     ##########################################################
     ## Initialize the app in a different thread than the state
     ##
     ## Parameters: state - the state of the program
     ##########################################################
-    def __init__(self,state):
+    def __init__(self,state,session):
         threading.Thread.__init__(self)
         self.state = state
+        self.session = session
+        self.components = []
+        self.numComponents = 0
 
     ##########################################################
     ## Add a component to the bottom of the app, and track the
@@ -40,7 +50,7 @@ class App(threading.Thread):
     ## Parameters: component - the component to update
     ##             signalType - the signal to dispatch
     ##########################################################
-    def switchSignal(self,component,signalType):
+    def switchSignal(self,component,signalType,**kwargs):
         signals = {
             "frame": component.frameUpdate,
             "start": component.onStarted,
@@ -49,18 +59,19 @@ class App(threading.Thread):
             "pause": component.onPaused,
             "skip": component.onSplitSkipped,
             "reset": component.onReset,
-            "restart": component.onRestart
+            "restart": component.onRestart,
+            "runChanged": component.runChanged
         }
-        signals.get(signalType)()
+        signals.get(signalType)(**kwargs)
 
     ##########################################################
     ## Updates all the components with a given signal type.
     ##
     ## Parameters: signalType - the type of signal to dispatch
     ##########################################################
-    def updateComponents(self,signalType):
+    def updateComponents(self,signalType,**kwargs):
         for component in self.components:
-            self.switchSignal(component,signalType)
+            self.switchSignal(component,signalType,**kwargs)
 
     ##########################################################
     ## Creates the window with the destruction callback, and
@@ -69,6 +80,7 @@ class App(threading.Thread):
     def setupGui(self):
         self.root = tk.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.finish)
+        self.root.title("Base Timer")
 
     ##########################################################
     ## Show the window, and call the first update after one
@@ -77,6 +89,7 @@ class App(threading.Thread):
     def startGui(self):
         self.root.after(17,self.update)
         self.root.mainloop()
+        return self.retVal
 
     ##########################################################
     ## Set the timer to update every time this is called
@@ -84,7 +97,7 @@ class App(threading.Thread):
     def update(self):
         if not self.state.frameUpdate(timer()):
             self.updateComponents("frame")
-        self.root.after(17,self.update)
+        self.updater = self.root.after(17,self.update)
 
     ##########################################################
     ## Initialize the start and first split times when the run
@@ -162,14 +175,69 @@ class App(threading.Thread):
         self.state.saveTimes()
 
     ##########################################################
+    ## Opens a window to change the current layout
+    ##########################################################
+    def chooseLayout(self,event=None):
+        if self.state.started:
+            return
+        LayoutPopup.LayoutPopup(self.root,self.setLayout,self.session).show()
+
+    def setLayout(self,layoutName):
+        if not layoutName == self.session.layoutName:
+            self.session.setLayout(layoutName)
+            self.retVal = 1
+            self.finish()
+
+    ##########################################################
+    ## Opens a window to change the current run
+    ##########################################################
+    def chooseRun(self,event=None):
+        if self.state.started:
+            return
+        newRun = RunPopup.RunPopup(self.root,self.setRun,self.session).show()
+
+    def setRun(self,newSession):
+        if newSession["game"] == self.state.game\
+            and newSession["category"] == self.state.category:
+            return
+        self.confirmSave(self.saveIfDesired)
+        compareNum = self.state.compareNum
+        self.session.setRun(newSession["game"],newSession["category"])
+        self.state = State.State(self.session)
+        self.state.setComparison(compareNum)
+        self.updateComponents("runChanged",state=self.state)
+
+    def saveIfDesired(self,desired):
+        if desired:
+            self.save()
+
+    ##########################################################
+    ## Save the splits before closing the window or changing the
+    ## run.
+    ##########################################################
+    def confirmSave(self,callback):
+        if self.state.unSaved:
+            ConfirmPopup.ConfirmPopup(\
+                self.root,\
+                callback,\
+                "Save",\
+                "Save local changes (closing will save automatically)?"\
+            )
+        else:
+            self.close(False)
+
+    ##########################################################
     ## Finish the run by saving the splits and closing the
     ## window.
     ##########################################################
     def finish(self,event=None):
         if not self.state.shouldFinish():
             return
-        if self.state.unSaved:
-            shouldSave = cate.readThingInList(["yes","no"],"Save local data?")
-            if shouldSave == "yes":
-                self.state.saveTimes()
-        self.root.quit()
+        self.confirmSave(self.close)
+
+    def close(self,shouldSave):
+        if shouldSave:
+            self.save()
+        if self.updater:
+            self.root.after_cancel(self.updater)
+        self.root.destroy()

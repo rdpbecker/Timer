@@ -5,8 +5,7 @@ from util import timeHelpers as timeh
 class BptInfo(Info.Info):
     def __init__(self,parent,state,config):
         Info.Info.__init__(self,parent,state,config)
-        self.header.configure(text="Best Possible Time:")
-        self.updateTime()
+        self.resetUI()
 
     def hide(self):
         self.info.configure(text="-")
@@ -35,6 +34,10 @@ class BptInfo(Info.Info):
         self.updateTime()
 
     def onRestart(self):
+        self.resetUI()
+
+    def resetUI(self):
+        self.header.configure(text="Best Possible Time:")
         self.updateTime()
 
     def updateTime(self):
