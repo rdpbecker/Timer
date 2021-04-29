@@ -200,7 +200,8 @@ class App(threading.Thread):
         if newSession["game"] == self.state.game\
             and newSession["category"] == self.state.category:
             return
-        self.confirmSave(self.saveIfDesired)
+        if self.state.unSaved:
+            self.confirmSave(self.saveIfDesired)
         compareNum = self.state.compareNum
         self.session.setRun(newSession["game"],newSession["category"])
         self.state = State.State(self.session)
@@ -216,15 +217,12 @@ class App(threading.Thread):
     ## run.
     ##########################################################
     def confirmSave(self,callback):
-        if self.state.unSaved:
-            ConfirmPopup.ConfirmPopup(\
-                self.root,\
-                callback,\
-                "Save",\
-                "Save local changes (closing will save automatically)?"\
-            )
-        else:
-            self.close(False)
+        ConfirmPopup.ConfirmPopup(\
+            self.root,\
+            callback,\
+            "Save",\
+            "Save local changes (closing will save automatically)?"\
+        )
 
     ##########################################################
     ## Finish the run by saving the splits and closing the
@@ -233,7 +231,10 @@ class App(threading.Thread):
     def finish(self,event=None):
         if not self.state.shouldFinish():
             return
-        self.confirmSave(self.close)
+        if self.state.unSaved:
+            self.confirmSave(self.close)
+        else:
+            self.close(False)
 
     def close(self,shouldSave):
         if shouldSave:
