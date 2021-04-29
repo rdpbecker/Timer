@@ -39,7 +39,7 @@ class App(threading.Thread):
     ##                         has the appropriate signals.
     ##########################################################
     def addComponent(self,component):
-        component.grid(row=self.numComponents,column=0,columnspan=12,sticky='WE')
+        component.grid(row=self.numComponents,column=0,columnspan=12,sticky='NSWE')
         self.numComponents = self.numComponents + 1
         self.components.append(component)
 
@@ -81,6 +81,8 @@ class App(threading.Thread):
         self.root = tk.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.finish)
         self.root.title("Base Timer")
+        for i in range(12):
+            self.root.columnconfigure(i,weight=1)
 
     ##########################################################
     ## Show the window, and call the first update after one
