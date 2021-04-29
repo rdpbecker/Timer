@@ -5,9 +5,11 @@ class SegmentRow(tk.Frame):
     header = None
     diff = None
     comparison = None
+    padding = 0
 
-    def __init__(self,parent,bg,font,fg):
+    def __init__(self,parent,bg,font,fg,padding):
         tk.Frame.__init__(self,parent)
+        self.padding = padding
         self.configureColumns()
         self.configure(bg=bg)
         self.font = tkfont.Font(font=font)
@@ -41,11 +43,12 @@ class SegmentRow(tk.Frame):
     def setHeaderText(self,text):
         self.update()
         frameLength = self.winfo_width()
+        maxLength = 7*(frameLength - 2*self.padding)/12
         textLength = self.font.measure(text)
-        if textLength <= 7*frameLength/12:
+        if textLength <= maxLength:
             self.header["text"] = text
         else:
-            self.header["text"] = self.adjustTextLength(7*frameLength/12,text)
+            self.header["text"] = self.adjustTextLength(maxLength,text)
 
     def setHeader(self,**kwargs):
         self.header.configure(kwargs)

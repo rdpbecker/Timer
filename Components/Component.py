@@ -25,6 +25,9 @@ class Component(tk.Frame):
     def frameUpdate(self):
         pass
 
+    def preStart(self):
+        pass
+
     def onStarted(self):
         pass
 

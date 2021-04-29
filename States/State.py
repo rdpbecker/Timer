@@ -174,8 +174,10 @@ class State(BaseState.State):
         self.comparisons = []
 
     def frameUpdate(self,time):
-        if not self.started or self.runEnded:
+        if not self.started:
             return 1
+        if self.runEnded:
+            return 2
         if self.paused:
             time = self.pauseTime
         self.setTimes(time)

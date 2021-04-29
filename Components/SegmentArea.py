@@ -10,6 +10,7 @@ class SegmentArea(Component.Component):
     trueActiveSplit = 0
     topRowSplitnum = 0
     activeIndex = 0
+    updateFrame = 0
 
     def __init__(self,parent,state,config):
         Component.Component.__init__(self,parent,state,config)
@@ -28,7 +29,7 @@ class SegmentArea(Component.Component):
         self.numRows = self.trueNumSplits
         if oldNumSplits < self.numRows:
             for i in range(oldNumSplits,self.numRows):
-                row = SegmentRow.SegmentRow(self, self.config["main"]["colours"]["bg"], self.config["main"]["font"], self.config["main"]["colours"]["text"])
+                row = SegmentRow.SegmentRow(self, self.config["main"]["colours"]["bg"], self.config["main"]["font"], self.config["main"]["colours"]["text"], self.state.config["padx"])
                 row.grid(row=i,column=0,columnspan=12,sticky='NSWE')
                 self.rows.append(row)
         elif oldNumSplits > self.numRows:
@@ -45,10 +46,20 @@ class SegmentArea(Component.Component):
     def onRestart(self):
         self.topRowSplitnum = 0
         self.activeIndex = 0
+        self.updateFrame = 0
         self.setAllHeaders()
         self.setAllDiffs()
         self.setAllComparisons()
         self.setHighlight()
+
+    def preStart(self):
+        # Before the run is started, set the header texts every few
+        # frames so that the length is adjusted appropriately. The
+        # assumption here is that the user isn't resizing during
+        # the run.
+        if not self.updateFrame%6:
+            self.setAllHeaders()
+        self.updateFrame = self.updateFrame + 1
 
     def frameUpdate(self):
         if not self.state.runEnded\

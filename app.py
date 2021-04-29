@@ -60,7 +60,8 @@ class App(threading.Thread):
             "skip": component.onSplitSkipped,
             "reset": component.onReset,
             "restart": component.onRestart,
-            "runChanged": component.runChanged
+            "runChanged": component.runChanged,
+            "preStart": component.preStart
         }
         signals.get(signalType)(**kwargs)
 
@@ -97,8 +98,11 @@ class App(threading.Thread):
     ## Set the timer to update every time this is called
     ##########################################################
     def update(self):
-        if not self.state.frameUpdate(timer()):
+        exitCode = self.state.frameUpdate(timer())
+        if not exitCode:
             self.updateComponents("frame")
+        elif exitCode == 1:
+            self.updateComponents("preStart")
         self.updater = self.root.after(17,self.update)
 
     ##########################################################
