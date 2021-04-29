@@ -88,10 +88,10 @@ class SegmentArea(Component.Component):
 
     def setMainHeaders(self):
         for i in range(self.numRows-1):
-            self.rows[i].setHeader(text=self.state.splitnames[i+self.topRowSplitnum])
+            self.rows[i].setHeaderText(self.state.splitnames[i+self.topRowSplitnum])
 
     def setLastHeader(self):
-        self.rows[-1].setHeader(text=self.state.splitnames[-1])
+        self.rows[-1].setHeaderText(self.state.splitnames[-1])
 
     def setAllHeaders(self):
         self.setMainHeaders()

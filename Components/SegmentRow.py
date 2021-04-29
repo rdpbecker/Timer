@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.font as tkfont
 
 class SegmentRow(tk.Frame):
     header = None
@@ -9,6 +10,7 @@ class SegmentRow(tk.Frame):
         tk.Frame.__init__(self,parent)
         self.configureColumns()
         self.configure(bg=bg)
+        self.font = tkfont.Font(font=font)
         self.header = tk.Label(self, bg=bg, font=font, fg=fg)
         self.diff = tk.Label(self, bg=bg, font=font, fg=fg)
         self.comparison = tk.Label(self, bg=bg, font=font, fg=fg)
@@ -20,6 +22,30 @@ class SegmentRow(tk.Frame):
     def configureColumns(self):
         for i in range(12):
             self.columnconfigure(i,minsize=27,weight=1)
+
+    def adjustTextLength(self,maxLength,text):
+        ellipsis = "..."
+        low = 0
+        high = len(text)
+        current = int(len(text)/2)
+        last = 0
+        while low < high - 1:
+            if self.font.measure(text[:current]+ellipsis) <= maxLength:
+                low = current
+                current = low + int((high-low)/2)
+            else:
+                high = current
+                current = low + int((high-low)/2)
+        return text[:low] + ellipsis
+
+    def setHeaderText(self,text):
+        self.update()
+        frameLength = self.winfo_width()
+        textLength = self.font.measure(text)
+        if textLength <= 7*frameLength/12:
+            self.header["text"] = text
+        else:
+            self.header["text"] = self.adjustTextLength(7*frameLength/12,text)
 
     def setHeader(self,**kwargs):
         self.header.configure(kwargs)
