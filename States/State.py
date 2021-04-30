@@ -147,7 +147,10 @@ class State(BaseState.State):
             if not timeh.isBlank(self.currentRun.segments[i]):
                 average.append(self.currentRun.segments[i])
             averageTime = timeh.sumTimeList(average)
-            averages.append(averageTime/len(average))
+            if timeh.isBlank(averageTime):
+                averages.append("BLANK")
+            else:
+                averages.append(averageTime/len(average))
         return SumList.SumList(averages)
 
     ##########################################################

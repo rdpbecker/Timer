@@ -15,6 +15,10 @@ class SumList:
         self.setTotals()
 
     def setTotals(self):
+        if not len(self.bests):
+            self.total = "BLANK"
+            self.totalBests = []
+            return
         total = self.bests[0]
         self.totalBests[0] = total
         for i in range(1,len(self.bests)):

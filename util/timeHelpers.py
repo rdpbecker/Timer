@@ -97,6 +97,8 @@ def isBlank(time):
     return time == "BLANK"
 
 def sumTimeList(arr):
+    if not len(arr):
+        return "BLANK"
     total = arr[0]
     for i in range(1,len(arr)):
         total = add(total,arr[i])
