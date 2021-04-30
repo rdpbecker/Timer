@@ -59,6 +59,8 @@ attributes defined in this file:
 1. `baseDir`: The base directory where all the data is stored
 2. `padx`: The (global) horizontal padding on the outside of the
 window
+3. `showMenu`: A flag which controls whether the control menu is
+shown.
 3. `hotkeys`: Defines the hotkeys associated with different control
 actions. These are validated before being set, and a error will be
 shown if an invalid hotkey is defined
