@@ -42,10 +42,7 @@ class SegmentRow(tk.Frame):
 
     def setHeaderText(self,text):
         self.update()
-        try:
-            frameLength = self.winfo_width()
-        except _tkinter.TclError:
-            return
+        frameLength = self.winfo_width()
         maxLength = 7*(frameLength - 2*self.padding)/12
         textLength = self.font.measure(text)
         if textLength <= maxLength:

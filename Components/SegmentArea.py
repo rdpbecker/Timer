@@ -98,11 +98,17 @@ class SegmentArea(Component.Component):
             self.setLastComparison()
 
     def setMainHeaders(self):
-        for i in range(self.numRows-1):
-            self.rows[i].setHeaderText(self.state.splitnames[i+self.topRowSplitnum])
+        try:
+            for i in range(self.numRows-1):
+                self.rows[i].setHeaderText(self.state.splitnames[i+self.topRowSplitnum])
+        except:
+            pass
 
     def setLastHeader(self):
-        self.rows[-1].setHeaderText(self.state.splitnames[-1])
+        try:
+            self.rows[-1].setHeaderText(self.state.splitnames[-1])
+        except:
+            pass
 
     def setAllHeaders(self):
         self.setMainHeaders()
