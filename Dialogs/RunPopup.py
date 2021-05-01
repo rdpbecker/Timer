@@ -16,12 +16,14 @@ class RunPopup(Popup.Popup):
         Popup.Popup.__init__(self,master,callback)
         self.session = session
         self.splits = AllSplitNames.Splits()
+        self.game = session.game
+        self.category = session.category
+        self.retVal = {\
+            "game": session.game,\
+            "category": session.category\
+        }
 
     def show(self):
-        self.retVal = {\
-            "game": "",\
-            "category": ""\
-        }
         self.window.configure(bg="black")
         self.window.title("Choose Run")
 

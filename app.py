@@ -5,6 +5,7 @@ from tkinter import messagebox as mb
 import threading
 from timeit import default_timer as timer
 from util import categorySelection as cate
+from Components import Menu
 from Dialogs import ConfirmPopup
 from Dialogs import RunPopup
 from Dialogs import LayoutPopup
@@ -84,6 +85,8 @@ class App(threading.Thread):
         self.root.title("Base Timer")
         for i in range(12):
             self.root.columnconfigure(i,weight=1)
+        if (self.state.config["showMenu"]):
+            self.root.configure(menu=Menu.ControlMenu(self))
 
     ##########################################################
     ## Show the window, and call the first update after one
