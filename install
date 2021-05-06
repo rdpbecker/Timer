@@ -5,9 +5,9 @@ if [[ $NEWBASE ]]; then
     BASE=$NEWBASE
 fi
 
-echo "python3 $PWD/runTimer.py" | sudo sed -n "1w $BASE/runTimer" 
-echo "python3 $PWD/practice.py" | sudo sed -n "1w $BASE/practiceTimer" 
-echo "python3 $PWD/variance.py" | sudo sed -n "1w $BASE/timeVariance" 
+echo -e "cd $PWD\npython3 $PWD/runTimer.py" | sudo sed -n "1,2w $BASE/runTimer"
+echo -e "cd $PWD\npython3 $PWD/practice.py" | sudo sed -n "1,2w $BASE/practiceTimer"
+echo -e "cd $PWD\npython3 $PWD/variance.py" | sudo sed -n "1,2w $BASE/timeVariance"
 
 sudo chmod +x $BASE/runTimer
 sudo chmod +x $BASE/practiceTimer

@@ -80,16 +80,24 @@ the time for the given segment, and the right column should be the
 total time up the end of the given segment. The title (first entry)
 of the second column is used as the name of the comparison.
 
-# runTimer.py
+# Included Programs
 
-Usage: python3 runTimer.py
+__Note__: If the three programs are not installed (see
+[Installation](#installation-linux-only) for install instructions) and are just
+being run as a Python script, they must be run from this directory
+in order to work, as default configuration files are referenced
+locally from this directory.
+
+## runTimer.py
+
+Usage: `python3 runTimer.py` (`runTimer` with installation)
 
 This is a segmented timer which keeps track of segments and stores
 them in a CSV file when the program is completed (either when the
 final segment is completed or when the user terminates the
 program).
 
-## How it works
+### How it works
 
 The program starts by prompting the user to choose a game from
 those in the first column of *splitNames.csv*. Once the user has
@@ -118,9 +126,9 @@ is disabled before.
 2. These key bindings are configurable using the `hotkeys`
 section of the configuration.
 
-# practice.py
+## practice.py
 
-Usage: `python3 practice.py`
+Usage: `python3 practice.py` (`practiceTimer` with installation)
 
 `practice.py` allows you to practice (and improve bests for)
 individual segments. This is run in the same way as `runTimer.py`,
@@ -133,9 +141,9 @@ that run. Only the best time for the practiced segment will be
 written - the sum of best times will be updated with the next run
 of `runTimer.py`.
 
-# variance.py
+## variance.py
 
-Usage: `python3 variance.py`
+Usage: `python3 variance.py` (`timeVariance` with installation)
 
 This simply computes the variance of all the segments to determine
 which ones are most and least consistent. The variance is presented
