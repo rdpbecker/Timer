@@ -226,7 +226,7 @@ class State(BaseState.State):
         self.skipSegment(time)
 
     def onReset(self):
-        if not self.started:
+        if not self.started or self.runEnded:
             return 1
         self.runEnded = True
         self.localSave()
