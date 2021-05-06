@@ -11,15 +11,15 @@ class SegmentRow(tk.Frame):
         tk.Frame.__init__(self,parent)
         self.padding = padding
         self.configureColumns()
-        self.configure(bg=bg)
+        self.configure(bg=bg,padx=padding)
         self.font = tkfont.Font(font=font)
         self.header = tk.Label(self, bg=bg, font=font, fg=fg)
         self.diff = tk.Label(self, bg=bg, font=font, fg=fg)
         self.comparison = tk.Label(self, bg=bg, font=font, fg=fg)
 
-        self.header.grid(row=0,column=0,columnspan=7,sticky='W',padx=10)
+        self.header.grid(row=0,column=0,columnspan=7,sticky='W')
         self.diff.grid(row=0,column=7,columnspan=2,sticky='E')
-        self.comparison.grid(row=0,column=9,columnspan=3,sticky='E',padx=10)
+        self.comparison.grid(row=0,column=9,columnspan=3,sticky='E')
 
     def configureColumns(self):
         for i in range(12):
