@@ -4,7 +4,8 @@ class ScrollableFrame(tk.Frame):
     def __init__(self, container, *args, **kwargs):
         super().__init__(container, *args, **kwargs)
         canvas = tk.Canvas(self,bg="black",width=200)
-        scrollbar = tk.Scrollbar(self, orient="vertical", command=canvas.yview)
+        scrollbary = tk.Scrollbar(self, orient="vertical", command=canvas.yview)
+        scrollbarx = tk.Scrollbar(self, orient="horizontal", command=canvas.xview)
         self.scrollable_frame = tk.Frame(canvas,bg="black")
 
         self.scrollable_frame.bind(\
@@ -16,10 +17,12 @@ class ScrollableFrame(tk.Frame):
 
         canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
 
-        canvas.configure(yscrollcommand=scrollbar.set)
+        canvas.configure(yscrollcommand=scrollbary.set)
+        canvas.configure(xscrollcommand=scrollbarx.set)
 
+        scrollbary.pack(side="right", fill="y")
+        scrollbarx.pack(side="bottom", fill="x")
         canvas.pack(side="left", fill="both", expand=True)
-        scrollbar.pack(side="right", fill="y")
 
 class VarianceRow(tk.Frame):
     number = None
@@ -65,5 +68,5 @@ class VarianceColumn(tk.Frame):
 
     def createRow(self,row):
         new_row = VarianceRow(self.scrollable.scrollable_frame,[len(self.rows)+1,row[0],row[1]])
-        new_row.pack(side="top")
+        new_row.pack(side="top",anchor="nw")
         self.rows.append(new_row)
