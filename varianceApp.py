@@ -2,7 +2,7 @@
 
 import tkinter as tk
 import threading
-from PracticeComponents import VarianceColumn
+from Variance import VarianceColumn
 from DataClasses import AllSplitNames
 import varianceCalculator as varcalc
 
