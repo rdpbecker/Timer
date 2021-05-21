@@ -4,7 +4,7 @@ import tkinter as tk
 import threading
 from Variance import VarianceColumn
 from DataClasses import AllSplitNames
-import varianceCalculator as varcalc
+from Variance import varianceCalculator as varcalc
 
 class App(threading.Thread):
     def __init__(self):
