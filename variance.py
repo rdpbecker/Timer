@@ -1,3 +1,4 @@
+import varianceApp
 global varianceList
 
 def printLines(lines):
@@ -32,6 +33,12 @@ def getRows(completeCsv):
 def sort(i):
     return varianceList[i]
 
+def createTable(names,variances,sort):
+    table = []
+    for i in sort:
+        table.append([names[i],variances[i]])
+    return table
+
 def main():
     global varianceList
     config = rc.getUserConfig()
@@ -53,6 +60,15 @@ def main():
     print("\n\n\nSorted:\n\n")
     sortedRange = sorted(list(range(len(varianceList))),key=sort,reverse=True)
     printLines(splits["splits"][i]+": "+'%.3f'%(varianceList[i])+"%" for i in sortedRange)
+
+    app = varianceApp.App()
+    app.setupGui()
+    app.showVariances(\
+        createTable(splits["splits"],varianceList,range(len(varianceList))),\
+        createTable(splits["splits"],varianceList,sortedRange)\
+    )
+    app.startGui()
+
 
 if __name__ == "__main__":
     from util import categorySelection as cate
