@@ -24,6 +24,14 @@ def csvReadStart(baseDir,name,category,splitList):
             csvReader = csv.reader(reader, delimiter = ',')
             for row in csvReader:
                 splitWrite[0].append(row)
+        if len(splitWrite[0]) > len(splitList) + 1:
+            while len(splitWrite[0]) > len(splitList) + 1:
+                splitWrite[0].pop(-1)
+        elif len(splitWrite[0]) < len(splitList) + 1:
+            while len(splitWrite[0]) < len(splitList) + 1:
+                row = [splitList[len(splitWrite[0])-1]]
+                row.extend(['-' for i in range(len(splitWrite[0][0])-1)])
+                splitWrite[0].append(row)
 
     if not os.path.exists(compareCsvName):
         if not os.path.isdir(resolveFilename([baseDir,name])):
@@ -52,6 +60,14 @@ def csvReadStart(baseDir,name,category,splitList):
         with open(compareCsvName, 'r') as reader:
             csvReader = csv.reader(reader, delimiter = ',')
             for row in csvReader:
+                splitWrite[1].append(row)
+        if len(splitWrite[1]) > len(splitList) + 1:
+            while len(splitWrite[1]) > len(splitList) + 1:
+                splitWrite[1].pop(-1)
+        elif len(splitWrite[1]) < len(splitList) + 1:
+            while len(splitWrite[1]) < len(splitList) + 1:
+                row = [splitList[len(splitWrite[1])-1]]
+                row.extend(['-' for i in range(len(splitWrite[1][1])-1)])
                 splitWrite[1].append(row)
 
     return splitWrite

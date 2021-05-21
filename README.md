@@ -80,23 +80,32 @@ the time for the given segment, and the right column should be the
 total time up the end of the given segment. The title (first entry)
 of the second column is used as the name of the comparison.
 
-# runTimer.py
+# Included Programs
 
-Usage: python3 runTimer.py
+__Note__: If the three programs are not installed (see
+[Installation](#installation-linux-only) for install instructions) and are just
+being run as a Python script, they must be run from this directory
+in order to work, as default configuration files are referenced
+locally from this directory.
+
+## runTimer.py
+
+Usage: `python3 runTimer.py` (`runTimer` with installation)
 
 This is a segmented timer which keeps track of segments and stores
 them in a CSV file when the program is completed (either when the
 final segment is completed or when the user terminates the
 program).
 
-## How it works
+### How it works
 
 The program starts by prompting the user to choose a game from
 those in the first column of *splitNames.csv*. Once the user has
 chosen a game, they are prompted to select a category for the game.
 When the user selects a category, a GUI pops up which is used for
-the rest of the program. There are six buttons, and most of them
-also have key bindings.
+the rest of the program. By default, there is a menu with a number
+of control options, and all the options have an associated hotkey.
+Below is a description of each of the options and their default hotkey.
 
 |Function|Description|Hotkey|
 |:------:|:---------:|:----:|
@@ -109,18 +118,38 @@ also have key bindings.
 |`Restart`|After the run has ended, resets the timer|`R`|
 |`Finish`|Closes the window, prompting to save if there is unsaved data|`f`|
 |`Save`|Saves any unsaved local data|`S`|
+|`Choose Run`|Opens a dialog to choose the game and category|`q`|
+|`Choose Layout`|Opens a dialog to choose the layout|`l`|
 
 A couple notes about the key bindings:
 
-1. `Start Run` is disabled after the run has started, and `Split`
-is disabled before.
+1. A number of the control options are disabled at certain points
+during the run. This is a list of when the control options are
+enabled:
+
+|Option|Before Start|During Run|After End|
+|:----:|:----------:|:--------:|:-------:|
+|`Start Run`|enabled|disabled|disabled|
+|`Split`|disabled|enabled|disabled|
+|`Reset`|disabled|enabled|disabled|
+|`Skip Split`|disabled|enabled|disabled|
+|`Change Compare`|enabled|enabled|enabled|
+|`Pause`|disabled|enabled|disabled|
+|`Restart`|disabled|disabled|enabled|
+|`Finish`|enabled|disabled|enabled|
+|`Save`|enabled|enabled|enabled|
+|`Choose Run`|enabled|disabled|disabled|
+|`Choose Layout`|enabled|disabled|disabled|
+
+`Split` and `Skip Split` are also disabled when the timer is
+paused.
 
 2. These key bindings are configurable using the `hotkeys`
 section of the configuration.
 
-# practice.py
+## practice.py
 
-Usage: `python3 practice.py`
+Usage: `python3 practice.py` (`practiceTimer` with installation)
 
 `practice.py` allows you to practice (and improve bests for)
 individual segments. This is run in the same way as `runTimer.py`,
@@ -133,9 +162,9 @@ that run. Only the best time for the practiced segment will be
 written - the sum of best times will be updated with the next run
 of `runTimer.py`.
 
-# variance.py
+## variance.py
 
-Usage: `python3 variance.py`
+Usage: `python3 variance.py` (`timeVariance` with installation)
 
 This simply computes the variance of all the segments to determine
 which ones are most and least consistent. The variance is presented
