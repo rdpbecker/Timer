@@ -27,7 +27,8 @@ def computeVariances(game,category,splits):
     global varianceList
     config = rc.getUserConfig()
     splitNames = splits.getSplitNames(game,category)
-    completeCsv = [[completeCsv[i][j] for j in range(2,len(completeCsv[i]),2)] for i in range(len(completeCsv))][1:]
+    completeCsv = fileio.csvReadStart(config["baseDir"],game,category,splitNames)[0]
+    completeCsv = [[completeCsv[i][j] for j in range(1,len(completeCsv[i]),2)] for i in range(len(completeCsv))][1:]
     timeRows = getRows(completeCsv)
     varianceList = []
     for row in timeRows:
@@ -36,7 +37,7 @@ def computeVariances(game,category,splits):
         avg = sum(row)/len(row)
         varList = [(x-avg)**2 for x in row]
         variance = sum(varList)/len(varList)
-        varianceList.append(100*variance/avg)
+        varianceList.append(variance/avg)
     sortedRange = sorted(list(range(len(varianceList))),key=sort,reverse=True)
 
     return {\
