@@ -3,20 +3,6 @@ from util import timeHelpers as timeh
 from util import readConfig as rc
 global varianceList
 
-def cutStart(csv):
-    for i in range(len(csv)):
-        csv[i] = csv[i][1:]
-
-def filterEven(csv):
-    new = []
-    for i in range(len(csv)):
-        line = []
-        for j in range(len(csv[i])):
-            if not j%2:
-                line.append(csv[i][j])
-        new.append(line)
-    return new
-
 def getRows(completeCsv):
     rows = []
     for i in range(len(completeCsv)):
@@ -41,13 +27,12 @@ def computeVariances(game,category,splits):
     global varianceList
     config = rc.getUserConfig()
     splitNames = splits.getSplitNames(game,category)
-    completeCsv = fileio.csvReadStart(config["baseDir"],game,category,splitNames)[0]
-    completeCsv = completeCsv[1:]
-    cutStart(completeCsv)
-    completeCsv = filterEven(completeCsv)
+    completeCsv = [[completeCsv[i][j] for j in range(2,len(completeCsv[i]),2)] for i in range(len(completeCsv))][1:]
     timeRows = getRows(completeCsv)
     varianceList = []
     for row in timeRows:
+        if not len(row):
+            continue
         avg = sum(row)/len(row)
         varList = [(x-avg)**2 for x in row]
         variance = sum(varList)/len(varList)
