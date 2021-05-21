@@ -20,8 +20,8 @@ class App(threading.Thread):
             self.root.columnconfigure(i,weight=1)
         self.base = VarianceColumn.VarianceColumn(self.root,"In Order")
         self.sort = VarianceColumn.VarianceColumn(self.root,"Sorted")
-        self.base.grid(row=0, column=0, columnspan=6, sticky='NSWE')
-        self.sort.grid(row=0, column=6, columnspan=6, sticky='NSWE')
+        self.base.pack(side="left")
+        self.sort.pack(side="right")
 
     ##########################################################
     ## Show the window, and call the first update after one
