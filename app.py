@@ -4,7 +4,6 @@ import tkinter as tk
 from tkinter import messagebox as mb
 import threading
 from timeit import default_timer as timer
-from util import categorySelection as cate
 from Components import Menu
 from Dialogs import ConfirmPopup
 from Dialogs import RunPopup

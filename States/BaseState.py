@@ -1,5 +1,4 @@
 from util import fileio
-from util import categorySelection as cate
 from util import timeHelpers as timeh
 from util import readConfig as rc
 

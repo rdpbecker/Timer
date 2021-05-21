@@ -1,5 +1,4 @@
 import os, csv, json
-from util import categorySelection as cate
 
 def resolveFilename(arr):
     return "/".join(arr)
