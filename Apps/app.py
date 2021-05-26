@@ -8,6 +8,7 @@ from Components import Menu
 from Dialogs import ConfirmPopup
 from Dialogs import RunPopup
 from Dialogs import LayoutPopup
+from Dialogs import SplitEditor
 from States import State
 
 class App(threading.Thread):
@@ -260,3 +261,6 @@ class App(threading.Thread):
         if self.updater:
             self.root.after_cancel(self.updater)
         self.root.destroy()
+
+    def editSplits(self):
+        SplitEditor.SplitEditor(self.root,None,self.state)
