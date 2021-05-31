@@ -3,7 +3,7 @@ import tkinter as tk
 class ScrollableFrame(tk.Frame):
     def __init__(self, container, *args, **kwargs):
         super().__init__(container, *args, **kwargs)
-        canvas = tk.Canvas(self,bg="black",width=200)
+        canvas = tk.Canvas(self,**kwargs)
         scrollbary = tk.Scrollbar(self, orient="vertical", command=canvas.yview)
         scrollbarx = tk.Scrollbar(self, orient="horizontal", command=canvas.xview)
         self.scrollable_frame = tk.Frame(canvas,bg="black")

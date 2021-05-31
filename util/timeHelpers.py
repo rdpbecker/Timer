@@ -14,6 +14,12 @@ def adjustEnd(fracsecs):
         string = string + "0"
     return string
 
+def trimTime(time):
+    index = time.find(".")
+    if index < 0:
+        return time
+    return time[:min([index+3,len(time)])]
+
 def parseOptions(options):
     newOptions = {\
         "showSign": False, \
