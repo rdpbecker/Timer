@@ -1,12 +1,12 @@
 import tkinter as tk
-from Components import Component
+from Widgets import WidgetBase
 
-class Buttons(Component.Component):
+class Buttons(WidgetBase.WidgetBase):
     buttons = []
     rootWindow = None
 
     def __init__(self,parent,state,config,rootWindow):
-        Component.Component.__init__(self,parent,state,config)
+        WidgetBase.WidgetBase.__init__(self,parent,state,config)
         self.rootWindow = rootWindow
         bg = config["colours"]["bg"]
         fg = config["colours"]["text"]

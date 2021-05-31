@@ -3,7 +3,7 @@ from util import fileio
 from util import readConfig as rc
 import errors as Errors
 
-class ComponentLoader:
+class WidgetLoader:
     app = None
     state = None
     rootWindow = None
@@ -14,12 +14,12 @@ class ComponentLoader:
         self.app = app
         self.state = state
         self.rootWindow = rootWindow
-        self.configDict = fileio.readJson("Components/componentList.json")
+        self.configDict = fileio.readJson("Widgets/widgetList.json")
         self.configKeys = self.configDict.keys()
 
-    def loadComponent(self,ctype,configFileName=""):
+    def loadWidget(self,ctype,configFileName=""):
         if not ctype in self.configKeys:
-            raise Errors.ComponentTypeError(ctype)
+            raise Errors.WidgetTypeError(ctype)
 
         module = importlib.import_module(self.configDict[ctype]["module_name"])
         myClass = getattr(module,self.configDict[ctype]["class_name"])

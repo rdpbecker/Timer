@@ -1,9 +1,9 @@
 import tkinter as tk
-from Components import Component
-from Components import SegmentRow
+from Widgets import WidgetBase
+from Widgets import SegmentRow
 from util import timeHelpers as timeh
 
-class SegmentArea(Component.Component):
+class SegmentArea(WidgetBase.WidgetBase):
     rows = []
     numRows = 0
     trueNumSplits = 0
@@ -13,7 +13,7 @@ class SegmentArea(Component.Component):
     updateFrame = 0
 
     def __init__(self,parent,state,config):
-        Component.Component.__init__(self,parent,state,config)
+        WidgetBase.WidgetBase.__init__(self,parent,state,config)
         self.rows = []
         self.resetUI()
 

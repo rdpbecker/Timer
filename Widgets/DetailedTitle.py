@@ -1,15 +1,15 @@
 import tkinter as tk
-from Components import Component
+from Widgets import WidgetBase
 from util import timeHelpers as timeh
 
-class Title(Component.Component):
+class Title(WidgetBase.WidgetBase):
     game = None
     category = None
     compHeader = None
     compName = None
 
     def __init__(self,parent,state,config):
-        Component.Component.__init__(self,parent,state,config)
+        WidgetBase.WidgetBase.__init__(self,parent,state,config)
         bg = config["colours"]["bg"]
         font = config["font"]
         textColour = config["colours"]["text"]

@@ -1,14 +1,14 @@
 import tkinter as tk
-from Components import Component
+from Widgets import WidgetBase
 
-class SegmentTimes(Component.Component):
+class SegmentTimes(WidgetBase.WidgetBase):
     segmentHeader = None
     segmentTime = None
     goldHeader = None
     goldTime = None
 
     def __init__(self,parent,state,config):
-        Component.Component.__init__(self,parent,state,config)
+        WidgetBase.WidgetBase.__init__(self,parent,state,config)
         fg = config["colours"]["text"]
         bg = config["colours"]["bg"]
         font = config["font"]

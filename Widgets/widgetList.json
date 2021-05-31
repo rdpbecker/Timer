@@ -1,70 +1,70 @@
 {
     "bestExitComparisonInfo": {
-        "module_name": "Components.BestExitComparisonInfo",
+        "module_name": "Widgets.BestExitComparisonInfo",
         "class_name": "BestExitComparisonInfo"
     },
     "bestExitInfo": {
-        "module_name": "Components.BestExitInfo",
+        "module_name": "Widgets.BestExitInfo",
         "class_name": "BestExitInfo"
     },
     "bptInfo": {
-        "module_name": "Components.BptInfo",
+        "module_name": "Widgets.BptInfo",
         "class_name": "BptInfo"
     },
     "compareInfo": {
-        "module_name": "Components.CompareInfo",
+        "module_name": "Widgets.CompareInfo",
         "class_name": "CompareInfo"
     },
     "comparisonDiffInfo": {
-        "module_name": "Components.ComparisonDiffInfo",
+        "module_name": "Widgets.ComparisonDiffInfo",
         "class_name": "ComparisonDiffInfo"
     },
     "controlButtons": {
-        "module_name": "Components.ControlButtons",
+        "module_name": "Widgets.ControlButtons",
         "class_name": "Buttons"
     },
     "detailedTimer": {
-        "module_name": "Components.DetailedTimer",
+        "module_name": "Widgets.DetailedTimer",
         "class_name": "Timer"
     },
     "detailedTitle": {
-        "module_name": "Components.DetailedTitle",
+        "module_name": "Widgets.DetailedTitle",
         "class_name": "Title"
     },
     "goldDiffInfo": {
-        "module_name": "Components.GoldDiffInfo",
+        "module_name": "Widgets.GoldDiffInfo",
         "class_name": "GoldDiffInfo"
     },
     "pbInfo": {
-        "module_name": "Components.PbInfo",
+        "module_name": "Widgets.PbInfo",
         "class_name": "PbInfo"
     },
     "segmentArea": {
-        "module_name": "Components.SegmentArea",
+        "module_name": "Widgets.SegmentArea",
         "class_name": "SegmentArea"
     },
     "segmentTimes": {
-        "module_name": "Components.SegmentTimes",
+        "module_name": "Widgets.SegmentTimes",
         "class_name": "SegmentTimes"
     },
     "sobInfo": {
-        "module_name": "Components.SobInfo",
+        "module_name": "Widgets.SobInfo",
         "class_name": "SobInfo"
     },
     "spacer": {
-        "module_name": "Components.Spacer",
+        "module_name": "Widgets.Spacer",
         "class_name": "Spacer"
     },
     "timeSaveInfo": {
-        "module_name": "Components.TimeSaveInfo",
+        "module_name": "Widgets.TimeSaveInfo",
         "class_name": "TimeSaveInfo"
     },
     "timer": {
-        "module_name": "Components.Timer",
+        "module_name": "Widgets.Timer",
         "class_name": "Timer"
     },
     "title": {
-        "module_name": "Components.Title",
+        "module_name": "Widgets.Title",
         "class_name": "Title"
     }
 }

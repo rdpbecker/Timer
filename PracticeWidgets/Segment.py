@@ -1,15 +1,15 @@
 import tkinter as tk
-from Components import Component
+from Widgets import WidgetBase
 from util import fileio
 from util import timeHelpers as timeh
 
-class SegmentCompare(Component.Component):
+class SegmentCompare(WidgetBase.WidgetBase):
     goldHeader = None
     goldTime = None
 
     def __init__(self,parent,state):
         config = fileio.readJson("defaults/segmentTimes.json")
-        Component.Component.__init__(self,parent,state,config)
+        WidgetBase.WidgetBase.__init__(self,parent,state,config)
         fg = config["colours"]["text"]
         bg = config["colours"]["bg"]
 

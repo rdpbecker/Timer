@@ -1,5 +1,5 @@
 import app as App
-import ComponentLoader
+import WidgetLoader
 import errors as Errors
 from DataClasses import AllSplitNames
 from DataClasses import Session
@@ -41,15 +41,15 @@ while not app or exitCode:
     setHotkeys(app,state)
     rootWindow = app.root
 
-    loader = ComponentLoader.ComponentLoader(app,state,rootWindow)
+    loader = WidgetLoader.WidgetLoader(app,state,rootWindow)
 
     for component in session.layout:
         try:
             if "config" in component.keys():
-                app.addComponent(loader.loadComponent(component["type"],component["config"]))
+                app.addWidget(loader.loadWidget(component["type"],component["config"]))
             else:
-                app.addComponent(loader.loadComponent(component["type"]))
-        except Errors.ComponentTypeError as e:
+                app.addWidget(loader.loadWidget(component["type"]))
+        except Errors.WidgetTypeError as e:
             print(e)
 
     exitCode = app.startGui()

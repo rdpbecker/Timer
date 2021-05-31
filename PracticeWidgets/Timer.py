@@ -1,14 +1,14 @@
 import tkinter as tk
-from Components import Component
+from Widgets import WidgetBase
 from util import timeHelpers as timeh
 from util import fileio
 
-class Timer(Component.Component):
+class Timer(WidgetBase.WidgetBase):
     main = None
 
     def __init__(self,parent,state):
         config = fileio.readJson("defaults/timer.json")
-        Component.Component.__init__(self,parent,state,config)
+        WidgetBase.WidgetBase.__init__(self,parent,state,config)
         self.configure(bg=config["colours"]["bg"])
         self.main = tk.Label(self, bg=config["colours"]["bg"], fg=config["colours"]["main"], font=config["font"])
         self.main.grid(row=0,column=0,columnspan=12)

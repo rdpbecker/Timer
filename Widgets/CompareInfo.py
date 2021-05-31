@@ -1,5 +1,5 @@
 import tkinter as tk
-from Components import Info
+from Widgets import Info
 
 class CompareInfo(Info.Info):
     def __init__(self,parent,state,config):

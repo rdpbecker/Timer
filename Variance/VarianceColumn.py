@@ -1,5 +1,5 @@
 import tkinter as tk
-from Components import ScrollableFrame
+from Widgets import ScrollableFrame
 from Variance import VarianceRow
 
 class VarianceColumn(tk.Frame):

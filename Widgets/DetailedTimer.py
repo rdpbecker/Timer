@@ -1,13 +1,13 @@
 import tkinter as tk
-from Components import Component
+from Widgets import WidgetBase
 from util import timeHelpers as timeh
 
-class Timer(Component.Component):
+class Timer(WidgetBase.WidgetBase):
     main = None
     segment = None
 
     def __init__(self,parent,state,config):
-        Component.Component.__init__(self,parent,state,config)
+        WidgetBase.WidgetBase.__init__(self,parent,state,config)
         self.configure(bg=config["colours"]["bg"], padx=state.config["padx"])
         self.main = tk.Label(self, bg=config["colours"]["bg"], fg=config["mainTimer"]["colours"]["main"], font=config["mainTimer"]["font"])
 

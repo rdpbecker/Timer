@@ -1,6 +1,6 @@
 import tkinter as tk
 
-class Component(tk.Frame):
+class WidgetBase(tk.Frame):
     state = None
     config = None
 

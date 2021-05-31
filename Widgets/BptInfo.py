@@ -1,5 +1,5 @@
 import tkinter as tk
-from Components import Info
+from Widgets import Info
 from util import timeHelpers as timeh
 
 class BptInfo(Info.Info):

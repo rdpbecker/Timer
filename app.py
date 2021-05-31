@@ -4,7 +4,7 @@ import tkinter as tk
 from tkinter import messagebox as mb
 import threading
 from timeit import default_timer as timer
-from Components import Menu
+from Widgets import Menu
 from Dialogs import ConfirmPopup
 from Dialogs import RunPopup
 from Dialogs import LayoutPopup
@@ -13,7 +13,7 @@ from States import State
 class App(threading.Thread):
     state = None
     components = []
-    numComponents = 0
+    numWidgets = 0
     retVal = None
     updated = None
 
@@ -27,7 +27,7 @@ class App(threading.Thread):
         self.state = state
         self.session = session
         self.components = []
-        self.numComponents = 0
+        self.numWidgets = 0
 
     ##########################################################
     ## Add a component to the bottom of the app, and track the
@@ -35,12 +35,12 @@ class App(threading.Thread):
     ##
     ## Parameters: component - the component to add to the app.
     ##                         Must extend the
-    ##                         Component.Component class so it
+    ##                         WidgetBase.WidgetBase class so it
     ##                         has the appropriate signals.
     ##########################################################
-    def addComponent(self,component):
-        component.grid(row=self.numComponents,column=0,columnspan=12,sticky='NSWE')
-        self.numComponents = self.numComponents + 1
+    def addWidget(self,component):
+        component.grid(row=self.numWidgets,column=0,columnspan=12,sticky='NSWE')
+        self.numWidgets = self.numWidgets + 1
         self.components.append(component)
 
     ##########################################################
@@ -70,7 +70,7 @@ class App(threading.Thread):
     ##
     ## Parameters: signalType - the type of signal to dispatch
     ##########################################################
-    def updateComponents(self,signalType,**kwargs):
+    def updateWidgets(self,signalType,**kwargs):
         for component in self.components:
             self.switchSignal(component,signalType,**kwargs)
 
@@ -102,9 +102,9 @@ class App(threading.Thread):
     def update(self):
         exitCode = self.state.frameUpdate(timer())
         if not exitCode:
-            self.updateComponents("frame")
+            self.updateWidgets("frame")
         elif exitCode == 1:
-            self.updateComponents("preStart")
+            self.updateWidgets("preStart")
         self.updater = self.root.after(17,self.update)
 
     ##########################################################
@@ -113,7 +113,7 @@ class App(threading.Thread):
     ##########################################################
     def start(self, event=None):
         if not self.state.onStarted(timer()):
-            self.updateComponents("start")
+            self.updateWidgets("start")
 
     ##########################################################
     ## At the end of each split, record and store the times, 
@@ -126,7 +126,7 @@ class App(threading.Thread):
             return
         elif exitCode == 2:
             self.togglePause()
-        self.updateComponents("split")
+        self.updateWidgets("split")
 
     ##########################################################
     ## Move the comparison counter-clockwise (backwards)
@@ -146,35 +146,35 @@ class App(threading.Thread):
     ##########################################################
     def rotateCompare(self,rotation):
         if not self.state.onComparisonChanged(rotation):
-            self.updateComponents("comp")
+            self.updateWidgets("comp")
 
     ##########################################################
     ## Stop the run here
     ##########################################################
     def reset(self, event=None):
         if not self.state.onReset():
-            self.updateComponents("reset")
+            self.updateWidgets("reset")
 
     ##########################################################
     ## Skip a split
     ##########################################################
     def skip(self,event=None):
         if not self.state.onSplitSkipped(timer()):
-            self.updateComponents("skip")
+            self.updateWidgets("skip")
 
     ##########################################################
     ## If paused, unpause. If not paused, pause.
     ##########################################################
     def togglePause(self,event=None):
         if not self.state.onPaused(timer()):
-            self.updateComponents("pause")
+            self.updateWidgets("pause")
 
     ##########################################################
     ## Restart the run by resetting the timer state.
     ##########################################################
     def restart(self,event=None):
         if not self.state.onRestart():
-            self.updateComponents("restart")
+            self.updateWidgets("restart")
 
     ##########################################################
     ## Saves the data stored in the state.
@@ -214,7 +214,7 @@ class App(threading.Thread):
         self.session.setRun(newSession["game"],newSession["category"])
         self.state = State.State(self.session)
         self.state.setComparison(compareNum)
-        self.updateComponents("runChanged",state=self.state)
+        self.updateWidgets("runChanged",state=self.state)
 
     def saveIfDesired(self,desired):
         if desired:
