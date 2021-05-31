@@ -1,9 +1,9 @@
 import tkinter as tk
-from Widgets import Info
+from Widgets import InfoBase
 
-class CompareInfo(Info.Info):
+class CompareInfo(InfoBase.InfoBase):
     def __init__(self,parent,state,config):
-        Info.Info.__init__(self,parent,state,config)
+        InfoBase.InfoBase.__init__(self,parent,state,config)
         self.resetUI()
 
     def resetUI(self):

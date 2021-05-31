@@ -1,7 +1,7 @@
 import tkinter as tk
 from Widgets import WidgetBase
 
-class Info(WidgetBase.WidgetBase):
+class InfoBase(WidgetBase.WidgetBase):
     header = None
     info = None
 
