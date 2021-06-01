@@ -1,4 +1,4 @@
-from Variance import varianceApp
+from Apps import varianceApp
 
 app = varianceApp.App()
 app.setupGui()

@@ -1,4 +1,4 @@
-import app
+from Apps import app
 from States import PracticeState
 from PracticeWidgets import Buttons, Timer, Segment
 from util import readConfig as rc

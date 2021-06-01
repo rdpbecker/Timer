@@ -1,4 +1,4 @@
-import app as App
+from Apps import app as App
 import WidgetLoader
 import errors as Errors
 from DataClasses import AllSplitNames
