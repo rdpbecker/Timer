@@ -1,6 +1,6 @@
 import tkinter as tk
 from Widgets import WidgetBase
-from Widgets import SegmentRow
+from Components import SegmentRow
 from util import timeHelpers as timeh
 
 class SegmentArea(WidgetBase.WidgetBase):
