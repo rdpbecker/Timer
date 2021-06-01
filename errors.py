@@ -1,7 +1,7 @@
 class Error(Exception):
     pass
 
-class ComponentTypeError(Error):
+class WidgetTypeError(Error):
     message = ""
 
     def __init__(self,message):

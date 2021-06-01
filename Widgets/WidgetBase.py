@@ -1,11 +1,11 @@
 import tkinter as tk
 
-class Component(tk.Frame):
+class WidgetBase(tk.Frame):
     state = None
     config = None
 
     def __init__(self,parent,state,config):
-        tk.Frame.__init__(self,parent)
+        super().__init__(parent)
         self.state = state
         self.config = config
         self.configureColumns()

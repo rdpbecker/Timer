@@ -25,7 +25,7 @@ class State(BaseState.State):
     numComparisons = 0
 
     def __init__(self,session):
-        BaseState.State.__init__(self,session)
+        super().__init__(session)
         self.currentBests = SumList.SumList(self.getTimes(1,self.comparesCsv))
         self.bestExits = DifferenceList.DifferenceList(self.getTimes(8,self.comparesCsv))
         self.comparisons = []

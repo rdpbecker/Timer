@@ -2,7 +2,7 @@ import tkinter as tk
 
 class ControlMenu(tk.Menu):
     def __init__(self,app):
-        tk.Menu.__init__(self,app.root)
+        super().__init__(app.root)
         menubar = tk.Menu(app.root, tearoff=False)
         self["tearoff"] = False
 

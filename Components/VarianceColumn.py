@@ -1,6 +1,6 @@
 import tkinter as tk
 from Components import ScrollableFrame
-from Variance import VarianceRow
+from Components import VarianceRow
 
 class VarianceColumn(tk.Frame):
     def __init__(self,parent,header):

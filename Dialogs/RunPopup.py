@@ -13,7 +13,7 @@ class RunPopup(Popup.Popup):
     cateCombo = None
 
     def __init__(self,master,callback,session):
-        Popup.Popup.__init__(self,master,callback)
+        super().__init__(master,callback)
         self.session = session
         self.splits = AllSplitNames.Splits()
         self.game = session.game

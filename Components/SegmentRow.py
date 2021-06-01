@@ -8,7 +8,7 @@ class SegmentRow(tk.Frame):
     padding = 0
 
     def __init__(self,parent,bg,font,fg,padding):
-        tk.Frame.__init__(self,parent)
+        super().__init__(parent)
         self.padding = padding
         self.configureColumns()
         self.configure(bg=bg,padx=padding)

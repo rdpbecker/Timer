@@ -14,7 +14,7 @@ class RunSelector(BaseDialog.Dialog):
     cateCombo = None
 
     def __init__(self,splits):
-        BaseDialog.Dialog.__init__(self)
+        super().__init__()
         self.root.title("Choose Run and Split")
         self.splits = splits
         self.retVal = {\

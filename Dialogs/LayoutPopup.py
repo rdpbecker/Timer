@@ -8,8 +8,8 @@ class LayoutPopup(Popup.Popup):
     session = None
 
     def __init__(self,master,callback,session):
+        super().__init__(master,callback)
         self.session = session
-        Popup.Popup.__init__(self,master,callback)
 
     def show(self):
         self.retVal = self.session.layoutName

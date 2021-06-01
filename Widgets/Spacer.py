@@ -1,9 +1,9 @@
 import tkinter as tk
-from Components import Component
+from Widgets import WidgetBase
 
-class Spacer(Component.Component):
+class Spacer(WidgetBase.WidgetBase):
     def __init__(self,parent,state,config):
-        Component.Component.__init__(self,parent,state,config)
+        super().__init__(parent,state,config)
         self.configure(\
             height=config["height"],\
             bg=config["colours"]["bg"]\

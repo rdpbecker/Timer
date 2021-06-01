@@ -1,14 +1,14 @@
 import tkinter as tk
-from Components import Component
+from Widgets import WidgetBase
 from util import fileio
 
-class Buttons(Component.Component):
+class Buttons(WidgetBase.WidgetBase):
     buttons = []
     rootWindow = None
 
     def __init__(self,parent,state,rootWindow):
         config = fileio.readJson("defaults/controlButtons.json")
-        Component.Component.__init__(self,parent,state,config)
+        super().__init__(parent,state,config)
         self.rootWindow = rootWindow
         bg = config["colours"]["bg"]
         fg = config["colours"]["text"]
