@@ -1,6 +1,6 @@
 from Apps import app
 from States import PracticeState
-from PracticeWidgets import Buttons, Timer, Segment
+from Widgets import PracticeButtons, PracticeTimer, PracticeSegment
 from util import readConfig as rc
 from DataClasses import AllSplitNames
 from DataClasses import PracticeSession
@@ -25,9 +25,9 @@ app.setupGui()
 setHotkeys(app,state)
 rootWindow = app.root
 
-app.addWidget(Segment.SegmentCompare(rootWindow,state))
-app.addWidget(Timer.Timer(rootWindow,state))
-app.addWidget(Buttons.Buttons(rootWindow,state,app))
+app.addWidget(PracticeSegment.SegmentCompare(rootWindow,state))
+app.addWidget(PracticeTimer.Timer(rootWindow,state))
+app.addWidget(PracticeButtons.Buttons(rootWindow,state,app))
 
 app.startGui()
 
