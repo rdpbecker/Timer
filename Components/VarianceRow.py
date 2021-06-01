@@ -5,7 +5,7 @@ class VarianceRow(tk.Frame):
     name = None
     variance = None
     def __init__(self,parent,row):
-        tk.Frame.__init__(self,parent)
+        super().__init__(parent)
         for i in range(12):
             self.columnconfigure(i,weight=1)
         self.number = tk.Label(self,text=f'{row[0]}:',fg="white",bg="black")

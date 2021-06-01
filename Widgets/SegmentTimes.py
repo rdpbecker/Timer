@@ -8,7 +8,7 @@ class SegmentTimes(WidgetBase.WidgetBase):
     goldTime = None
 
     def __init__(self,parent,state,config):
-        WidgetBase.WidgetBase.__init__(self,parent,state,config)
+        super().__init__(parent,state,config)
         fg = config["colours"]["text"]
         bg = config["colours"]["bg"]
         font = config["font"]

@@ -9,7 +9,7 @@ class Title(WidgetBase.WidgetBase):
     compName = None
 
     def __init__(self,parent,state,config):
-        WidgetBase.WidgetBase.__init__(self,parent,state,config)
+        super().__init__(parent,state,config)
         bg = config["colours"]["bg"]
         font = config["font"]
         textColour = config["colours"]["text"]

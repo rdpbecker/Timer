@@ -3,7 +3,7 @@ from Widgets import InfoBase
 
 class CompareInfo(InfoBase.InfoBase):
     def __init__(self,parent,state,config):
-        InfoBase.InfoBase.__init__(self,parent,state,config)
+        super().__init__(parent,state,config)
         self.resetUI()
 
     def resetUI(self):

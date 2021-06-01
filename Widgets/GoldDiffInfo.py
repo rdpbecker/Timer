@@ -4,7 +4,7 @@ from util import timeHelpers as timeh
 
 class GoldDiffInfo(InfoBase.InfoBase):
     def __init__(self,parent,state,config):
-        InfoBase.InfoBase.__init__(self,parent,state,config)
+        super().__init__(parent,state,config)
         self.header.configure(text="Last Split (vs Best):")
 
     def hide(self):

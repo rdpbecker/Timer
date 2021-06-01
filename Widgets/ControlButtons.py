@@ -6,7 +6,7 @@ class Buttons(WidgetBase.WidgetBase):
     rootWindow = None
 
     def __init__(self,parent,state,config,rootWindow):
-        WidgetBase.WidgetBase.__init__(self,parent,state,config)
+        super().__init__(parent,state,config)
         self.rootWindow = rootWindow
         bg = config["colours"]["bg"]
         fg = config["colours"]["text"]

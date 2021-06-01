@@ -9,7 +9,7 @@ class SegmentCompare(WidgetBase.WidgetBase):
 
     def __init__(self,parent,state):
         config = fileio.readJson("defaults/segmentTimes.json")
-        WidgetBase.WidgetBase.__init__(self,parent,state,config)
+        super().__init__(parent,state,config)
         fg = config["colours"]["text"]
         bg = config["colours"]["bg"]
 

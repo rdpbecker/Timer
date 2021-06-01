@@ -8,7 +8,7 @@ class Buttons(WidgetBase.WidgetBase):
 
     def __init__(self,parent,state,rootWindow):
         config = fileio.readJson("defaults/controlButtons.json")
-        WidgetBase.WidgetBase.__init__(self,parent,state,config)
+        super().__init__(parent,state,config)
         self.rootWindow = rootWindow
         bg = config["colours"]["bg"]
         fg = config["colours"]["text"]

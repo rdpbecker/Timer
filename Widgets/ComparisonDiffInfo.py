@@ -4,7 +4,7 @@ from util import timeHelpers as timeh
 
 class ComparisonDiffInfo(InfoBase.InfoBase):
     def __init__(self,parent,state,config):
-        InfoBase.InfoBase.__init__(self,parent,state,config)
+        super().__init__(parent,state,config)
         self.resetUI()
 
     def hide(self):

@@ -5,7 +5,7 @@ class WidgetBase(tk.Frame):
     config = None
 
     def __init__(self,parent,state,config):
-        tk.Frame.__init__(self,parent)
+        super().__init__(parent)
         self.state = state
         self.config = config
         self.configureColumns()

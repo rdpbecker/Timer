@@ -8,7 +8,7 @@ from util import varianceCalculator as varcalc
 
 class App(threading.Thread):
     def __init__(self):
-        threading.Thread.__init__(self)
+        super().__init__()
 
     ##########################################################
     ## Creates the window with the destruction callback, and

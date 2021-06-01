@@ -10,7 +10,7 @@ class State(BaseState.State):
     splitnum = 0
 
     def __init__(self,session):
-        BaseState.State.__init__(self,session)
+        super().__init__(session)
         self.splitName = session.split
         self.splitnum = self.splitnames.index(session.split)
         bestTimes = self.getTimes(1,self.comparesCsv)

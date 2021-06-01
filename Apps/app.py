@@ -23,7 +23,7 @@ class App(threading.Thread):
     ## Parameters: state - the state of the program
     ##########################################################
     def __init__(self,state,session):
-        threading.Thread.__init__(self)
+        super().__init__()
         self.state = state
         self.session = session
         self.components = []

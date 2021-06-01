@@ -7,7 +7,7 @@ class Timer(WidgetBase.WidgetBase):
     segment = None
 
     def __init__(self,parent,state,config):
-        WidgetBase.WidgetBase.__init__(self,parent,state,config)
+        super().__init__(parent,state,config)
         self.configure(bg=config["colours"]["bg"], padx=state.config["padx"])
         self.main = tk.Label(self, bg=config["colours"]["bg"], fg=config["mainTimer"]["colours"]["main"], font=config["mainTimer"]["font"])
 

@@ -8,7 +8,7 @@ class Timer(WidgetBase.WidgetBase):
 
     def __init__(self,parent,state):
         config = fileio.readJson("defaults/timer.json")
-        WidgetBase.WidgetBase.__init__(self,parent,state,config)
+        super().__init__(parent,state,config)
         self.configure(bg=config["colours"]["bg"])
         self.main = tk.Label(self, bg=config["colours"]["bg"], fg=config["colours"]["main"], font=config["font"])
         self.main.grid(row=0,column=0,columnspan=12)

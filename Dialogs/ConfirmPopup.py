@@ -3,7 +3,7 @@ from Dialogs import Popup
 
 class ConfirmPopup(Popup.Popup):
     def __init__(self,master,callback,title,message):
-        Popup.Popup.__init__(self,master,callback)
+        super().__init__(master,callback)
         self.window.title(title)
         for i in range(12):
             self.window.columnconfigure(i,weight=1)

@@ -13,7 +13,7 @@ class SegmentArea(WidgetBase.WidgetBase):
     updateFrame = 0
 
     def __init__(self,parent,state,config):
-        WidgetBase.WidgetBase.__init__(self,parent,state,config)
+        super().__init__(parent,state,config)
         self.rows = []
         self.resetUI()
 
