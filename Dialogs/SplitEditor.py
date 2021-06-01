@@ -6,7 +6,7 @@ from util import timeHelpers as timeh
 
 class SplitEditor(Popup.Popup):
     def __init__(self,master,callback,state):
-        Popup.Popup.__init__(self,master,callback)
+        super().__init__(master,callback)
         self.localComparisons = copy.deepcopy(state.comparesCsv)
 
         self.entries = EntryGrid(self.window,self.localComparisons)
