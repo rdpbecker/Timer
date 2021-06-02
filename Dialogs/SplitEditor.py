@@ -2,6 +2,7 @@ import tkinter as tk
 import copy
 from Dialogs import Popup
 from Components import ScrollableFrame
+from DataClasses import SumList
 from util import timeHelpers as timeh
 
 class SplitEditor(Popup.Popup):
@@ -19,9 +20,17 @@ class EntryGrid(ScrollableFrame.ScrollableFrame):
         self.headerRow.grid(row=0,column=0,sticky="NSEW")
         self.rows = []
         for i in range(1,len(comparisons)):
-            row = EntryRow(self.scrollable_frame,comparisons[i])
+            row = EntryRow(self.scrollable_frame,self,comparisons[i],i-1)
             row.grid(row=i,column=0,sticky="NSEW")
             self.rows.append(row)
+        self.comparisons = []
+        for i in range(1,len(comparisons[0]),2):
+            self.comparisons.append(SumList.SumList([timeh.stringToTime(comparisons[j][i]) for j in range(1,len(comparisons))]))
+
+    def updateComparison(self,splitIndex,comparison,time):
+        self.comparisons[comparison].update(timeh.stringToTime(time),splitIndex)
+        for i in range(len(self.rows)):
+            self.rows[i].updateLabel(comparison,self.comparisons[comparison].totalBests[i])
 
 class HeaderRow(tk.Frame):
     cellWidth = 10
@@ -38,9 +47,11 @@ class HeaderRow(tk.Frame):
 
 class EntryRow(tk.Frame):
     cellWidth = 10
-    def __init__(self,parent,comparisonsRow):
+    def __init__(self,parent,parentObj,comparisonsRow,index):
         super().__init__(parent)
+        self.parent = parentObj
         self.comparisonsRow = comparisonsRow
+        self.index = index
         for i in range(len(comparisonsRow)):
             self.columnconfigure(i,weight=1)
 
@@ -52,8 +63,26 @@ class EntryRow(tk.Frame):
         self.timevars = []
         for i in range(1,len(comparisonsRow),2):
             timevar = tk.StringVar(self,f'{timeh.trimTime(comparisonsRow[i])}')
+            timevar.trace('w',lambda *args, timeIndex=self.comparisonIndex(i): self.validateTime(timeIndex))
             pair = [tk.Entry(self,textvariable=timevar,width=self.cellWidth,justify="right"),tk.Label(self,text=f'{timeh.trimTime(comparisonsRow[i+1])}',width=self.cellWidth,anchor="e")]
             pair[0].grid(row=0,column=i)
             pair[1].grid(row=0,column=i+1)
             self.pairs.append(pair)
             self.timevars.append(timevar)
+
+    def updateLabel(self,index,time):
+        self.pairs[index][1]["text"] = timeh.timeToString(time,{"precision":2})
+
+    def validateTime(self,index):
+        time = self.timevars[index].get()
+        if timeh.validTime(time):
+            self.pairs[index][0]["bg"] = "white"
+            self.parent.updateComparison(self.index,index,time)
+        else:
+            self.pairs[index][0]["bg"] = "#ff6666"
+
+    def columnIndex(self,index):
+        return 2*index + 1
+
+    def comparisonIndex(self,index):
+        return int((index - 1)/2)

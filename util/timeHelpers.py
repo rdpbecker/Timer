@@ -20,6 +20,12 @@ def trimTime(time):
         return time
     return time[:min([index+3,len(time)])]
 
+def validTime(time):
+    secs = re.compile(r'^[1-5]?\d{1}\.\d{1,10}$')
+    mins = re.compile(r'^[1-5]?\d{1}:[0-5]\d{1}\.\d{1,10}$')
+    hours = re.compile(r'^\d{1,10}:[0-5]\d{1}:[0-5]\d{1}\.\d{1,10}$')
+    return secs.match(time) or mins.match(time) or hours.match(time)
+
 def parseOptions(options):
     newOptions = {\
         "showSign": False, \
