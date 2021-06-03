@@ -21,9 +21,15 @@ def trimTime(time):
     return time[:min([index+3,len(time)])]
 
 def validTime(time):
-    secs = re.compile(r'^[1-5]?\d{1}\.\d{1,10}$')
-    mins = re.compile(r'^[1-5]?\d{1}:[0-5]\d{1}\.\d{1,10}$')
-    hours = re.compile(r'^\d{1,10}:[0-5]\d{1}:[0-5]\d{1}\.\d{1,10}$')
+    if not type(time) in [float,str]:
+        return False
+    if type(time) == float:
+        return True
+    if time == "-":
+        return True
+    secs = re.compile(r'^[1-5]?\d{1}\.\d{1,5}$')
+    mins = re.compile(r'^[1-5]?\d{1}:[0-5]\d{1}\.\d{1,5}$')
+    hours = re.compile(r'^\d{1,10}:[0-5]\d{1}:[0-5]\d{1}\.\d{1,5}$')
     return secs.match(time) or mins.match(time) or hours.match(time)
 
 def parseOptions(options):

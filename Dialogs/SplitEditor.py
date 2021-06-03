@@ -1,17 +1,31 @@
 import tkinter as tk
 import copy
+from DataClasses import AllSplitNames
 from Dialogs import Popup
 from Components import ScrollableFrame
+from Components import SaveButton
 from DataClasses import SumList
 from util import timeHelpers as timeh
+from util import fileio
+from util import dataManip
 
 class SplitEditor(Popup.Popup):
     def __init__(self,master,callback,state):
         super().__init__(master,callback)
         self.localComparisons = copy.deepcopy(state.comparesCsv)
+        self.state = state
+        self.splits = AllSplitNames.Splits()
 
         self.entries = EntryGrid(self.window,self.localComparisons)
         self.entries.pack(side="left")
+        self.saveButton = SaveButton.SaveButton(self.window, {"callback": self.save})
+        self.saveButton.pack(side="bottom")
+
+    def save(self,retVal):
+        csvs = self.entries.generateCsvs()
+        csvs["complete"] = dataManip.adjustNames(csvs["names"],self.state.completeCsv)
+        fileio.writeCSVs(self.state.config["baseDir"],self.state.game,self.state.category,csvs["complete"],csvs["comparisons"])
+        self.splits.updateNames(self.state.game,self.state.category,csvs["names"])
 
 class EntryGrid(ScrollableFrame.ScrollableFrame):
     def __init__(self,parent,comparisons):
@@ -32,6 +46,17 @@ class EntryGrid(ScrollableFrame.ScrollableFrame):
         for i in range(len(self.rows)):
             self.rows[i].updateLabel(comparison,self.comparisons[comparison].totalBests[i])
 
+    def generateCsvs(self):
+        current = [[] for i in range(len(self.rows))]
+        for i in range(len(self.comparisons)):
+            dataManip.insertSumList(self.comparisons[i],2*i,current,{"precision":5})
+        for i in range(len(self.rows)):
+            current[i].insert(0,self.rows[i].namevar.get())
+        current.insert(0,self.headerRow.getHeaders())
+        retVal = {"comparisons": current}
+        retVal["names"] = [self.rows[i].namevar.get() for i in range(len(self.rows))]
+        return retVal
+
 class HeaderRow(tk.Frame):
     cellWidth = 10
     def __init__(self,parent,headerRow):
@@ -44,6 +69,9 @@ class HeaderRow(tk.Frame):
             entry.pack(side="left")
             self.entries.append(entry)
             self.entryvars.append(entryvar)
+
+    def getHeaders(self):
+        return [self.entryvars[i].get() for i in range(len(self.entryvars))]
 
 class EntryRow(tk.Frame):
     cellWidth = 10
