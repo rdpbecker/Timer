@@ -51,10 +51,10 @@ class EntryGrid(ScrollableFrame.ScrollableFrame):
         for i in range(len(self.comparisons)):
             dataManip.insertSumList(self.comparisons[i],0,2*i,current,{"precision":5})
         for i in range(len(self.rows)):
-            current[i].insert(0,self.rows[i].namevar.get())
-        current.insert(0,self.headerRow.getHeaders())
+            current[i].insert(0,self.rows[i].name)
+        current.insert(0,self.headerRow.headers)
         retVal = {"comparisons": current}
-        retVal["names"] = [self.rows[i].namevar.get() for i in range(len(self.rows))]
+        retVal["names"] = [self.rows[i].name for i in range(len(self.rows))]
         return retVal
 
 class HeaderRow(tk.Frame):
@@ -63,8 +63,10 @@ class HeaderRow(tk.Frame):
         super().__init__(parent)
         self.entries = []
         self.entryvars = []
+        self.headers = []
         for i in range(len(headerRow)):
             entryvar = tk.StringVar(self,headerRow[i])
+            entryvar.trace('w',lambda *args, column=i: self.validateName(column))
             if not i in [9,10]:
                 entry = tk.Entry(self,textvariable=entryvar,width=self.cellWidth)
             else:
@@ -72,9 +74,15 @@ class HeaderRow(tk.Frame):
             entry.pack(side="left")
             self.entries.append(entry)
             self.entryvars.append(entryvar)
+            self.headers.append(headerRow[i])
 
-    def getHeaders(self):
-        return [self.entryvars[i].get() for i in range(len(self.entryvars))]
+    def validateName(self,column):
+        name = self.entryvars[column].get()
+        if name.find(",") < 0:
+            self.headers[column] = name
+            self.entries[column]["bg"] = "white"
+        else:
+            self.entries[column]["bg"] = "#ff6666"
 
 class EntryRow(tk.Frame):
     cellWidth = 10
@@ -87,8 +95,10 @@ class EntryRow(tk.Frame):
             self.columnconfigure(i,weight=1)
 
         self.namevar = tk.StringVar(self,f'{comparisonsRow[0]}')
-        self.name = tk.Entry(self,textvariable=self.namevar,width=self.cellWidth)
-        self.name.grid(row=0,column=0)
+        self.namevar.trace('w',lambda *args: self.validateName())
+        self.nameEntry = tk.Entry(self,textvariable=self.namevar,width=self.cellWidth)
+        self.nameEntry.grid(row=0,column=0)
+        self.name = comparisonsRow[0]
 
         self.pairs = []
         self.timevars = []
@@ -115,6 +125,14 @@ class EntryRow(tk.Frame):
             self.parent.updateComparison(self.index,index,time)
         else:
             self.pairs[index][0]["bg"] = "#ff6666"
+
+    def validateName(self):
+        name = self.namevar.get()
+        if name.find(",") < 0:
+            self.nameEntry["bg"] = "white"
+            self.name = name
+        else:
+            self.nameEntry["bg"] = "#ff6666"
 
     def columnIndex(self,index):
         return 2*index + 1
