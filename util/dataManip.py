@@ -106,7 +106,7 @@ def replaceComparison(comparison,startRow,startCol,data_ref,options={}):
 def adjustNames(names,data_ref):
     new_data = copy.deepcopy(data_ref)
     for i in range(1,len(names)+1):
-        if i > len(new_data):
+        if i >= len(new_data):
             row = [names[i-1]]
             row.extend(['-' for j in range(len(new_data[0])-1)])
             new_data.append(row)
