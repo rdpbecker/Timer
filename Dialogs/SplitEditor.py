@@ -65,7 +65,10 @@ class HeaderRow(tk.Frame):
         self.entryvars = []
         for i in range(len(headerRow)):
             entryvar = tk.StringVar(self,headerRow[i])
-            entry = tk.Entry(self,textvariable=entryvar,width=self.cellWidth)
+            if not i in [9,10]:
+                entry = tk.Entry(self,textvariable=entryvar,width=self.cellWidth)
+            else:
+                entry = tk.Label(self,text=headerRow[i],width=self.cellWidth)
             entry.pack(side="left")
             self.entries.append(entry)
             self.entryvars.append(entryvar)
@@ -90,13 +93,17 @@ class EntryRow(tk.Frame):
         self.pairs = []
         self.timevars = []
         for i in range(1,len(comparisonsRow),2):
-            timevar = tk.StringVar(self,f'{timeh.trimTime(comparisonsRow[i])}')
-            timevar.trace('w',lambda *args, timeIndex=self.comparisonIndex(i): self.validateTime(timeIndex))
-            pair = [tk.Entry(self,textvariable=timevar,width=self.cellWidth,justify="right"),tk.Label(self,text=f'{timeh.trimTime(comparisonsRow[i+1])}',width=self.cellWidth,anchor="e")]
+            if not self.comparisonIndex(i) == 4:
+                timevar = tk.StringVar(self,f'{timeh.trimTime(comparisonsRow[i])}')
+                timevar.trace('w',lambda *args, timeIndex=self.comparisonIndex(i): self.validateTime(timeIndex))
+                self.timevars.append(timevar)
+                pair = [tk.Entry(self,textvariable=timevar,width=self.cellWidth,justify="right"),tk.Label(self,text=f'{timeh.trimTime(comparisonsRow[i+1])}',width=self.cellWidth,anchor="e")]
+            else:
+                self.timevars.append(None)
+                pair = [tk.Label(self,text=f'{timeh.trimTime(comparisonsRow[i])}',width=self.cellWidth,anchor="e"),tk.Label(self,text=f'{timeh.trimTime(comparisonsRow[i+1])}',width=self.cellWidth,anchor="e")]
             pair[0].grid(row=0,column=i)
             pair[1].grid(row=0,column=i+1)
             self.pairs.append(pair)
-            self.timevars.append(timevar)
 
     def updateLabel(self,index,time):
         self.pairs[index][1]["text"] = timeh.timeToString(time,{"precision":2})
