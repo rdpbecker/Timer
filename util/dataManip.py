@@ -34,7 +34,7 @@ def replaceCols(lines,startIndex,data_ref):
 ##             startIndex - the column to start inserting at
 ##########################################################
 def insertCols(lines,startIndex,data_ref):
-    for i in range(1,len(self.completeCsv)):
+    for i in range(1,len(data_ref)):
         for j in range(len(lines)):
             data_ref[i].insert(startIndex+j,lines[j][i-1])
 
@@ -51,10 +51,46 @@ def insertCols(lines,startIndex,data_ref):
 ##
 ## Returns: None
 ##############################################################
-def insertSumList(sumList,startIndex,data_ref,options={}):
+def insertSumList(sumList,startRow,startCol,data_ref,options={}):
     for i in range(len(sumList.bests)):
-        data_ref[i].insert(startIndex,timeh.timeToString(sumList.totalBests[i],options))
-        data_ref[i].insert(startIndex,timeh.timeToString(sumList.bests[i],options))
+        data_ref[startRow+i].insert(startCol,timeh.timeToString(sumList.totalBests[i],options))
+        data_ref[startRow+i].insert(startCol,timeh.timeToString(sumList.bests[i],options))
+
+##############################################################
+## Inserts a SumList object into the data_ref table as two
+## columns, starting with startIndex.
+##
+## Parameters: sumList: the SumList object to insert into the
+##                      table
+##             startIndex - the column to start inserting at
+##             data_ref - the table to insert the SumList into
+##             options - the options for converting the times
+##                       into strings
+##
+## Returns: None
+##############################################################
+def replaceSumList(sumList,startRow,startCol,data_ref,options={}):
+    for i in range(len(sumList.bests)):
+        data_ref[i+startRow][startCol] = timeh.timeToString(sumList.bests[i],options)
+        data_ref[i+startRow][startCol+1] = timeh.timeToString(sumList.totalBests[i],options)
+
+##############################################################
+## Inserts a SumList object into the data_ref table as two
+## columns, starting with startIndex.
+##
+## Parameters: sumList: the SumList object to insert into the
+##                      table
+##             startIndex - the column to start inserting at
+##             data_ref - the table to insert the SumList into
+##             options - the options for converting the times
+##                       into strings
+##
+## Returns: None
+##############################################################
+def replaceComparison(comparison,startRow,startCol,data_ref,options={}):
+    for i in range(len(comparison.segments)):
+        data_ref[i+startRow][startCol] = timeh.timeToString(comparison.segments[i],options)
+        data_ref[i+startRow][startCol+1] = timeh.timeToString(comparison.totals[i],options)
 
 ##############################################################
 ## Changes the names in the first column of the table in

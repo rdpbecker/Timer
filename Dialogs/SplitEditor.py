@@ -49,7 +49,7 @@ class EntryGrid(ScrollableFrame.ScrollableFrame):
     def generateCsvs(self):
         current = [[] for i in range(len(self.rows))]
         for i in range(len(self.comparisons)):
-            dataManip.insertSumList(self.comparisons[i],2*i,current,{"precision":5})
+            dataManip.insertSumList(self.comparisons[i],0,2*i,current,{"precision":5})
         for i in range(len(self.rows)):
             current[i].insert(0,self.rows[i].namevar.get())
         current.insert(0,self.headerRow.getHeaders())

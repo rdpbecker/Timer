@@ -3,6 +3,7 @@ from util import timeHelpers as timeh
 class CurrentRun:
     segments = []
     totals = []
+    empty = False
 
     def __init__(self):
         self.segments = []
@@ -17,6 +18,8 @@ class CurrentRun:
 
     def fillTimes(self,requiredLength):
         n = len(self.segments)
+        if not n:
+            self.empty = True
         for i in range(requiredLength-n):
             self.segments.append("BLANK")
             self.totals.append("BLANK")

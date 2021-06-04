@@ -39,11 +39,11 @@ class Splits:
 
     def updateNames(self,game,category,names,write=True):
         if not game in self.getGames():
-            addNewGame(game,category,names)
+            self.addNewGame(game,category,names)
         elif category not in self.getCategories(game):
-            addNewCategory(game,category,names)
+            self.addNewCategory(game,category,names)
         else:
-            updateExistingCategory(game,category,names)
+            self.updateExistingCategory(game,category,names)
 
         if write:
             fileio.writeCSV(self.splitsFile,self.splitNames)

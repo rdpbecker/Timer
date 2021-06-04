@@ -1,3 +1,4 @@
+from util import dataManip
 from util import fileio
 from util import timeHelpers as timeh
 from DataClasses import SumList
@@ -13,7 +14,7 @@ class State(BaseState.State):
         super().__init__(session)
         self.splitName = session.split
         self.splitnum = self.splitnames.index(session.split)
-        bestTimes = self.getTimes(1,self.comparesCsv)
+        bestTimes = dataManip.getTimesByCol(1,self.comparesCsv)
         self.bestTime = bestTimes[self.splitnum]
 
     def frameUpdate(self,time):
@@ -54,9 +55,9 @@ class State(BaseState.State):
     ## Save the times when we close the window.
     ##########################################################
     def saveTimes(self):
-        bests = SumList.SumList(self.getTimes(1,self.comparesCsv))
+        bests = SumList.SumList(dataManip.getTimesByCol(1,self.comparesCsv))
         bests.update(self.bestTime,self.splitnum)
         bestSplits = [timeh.timesToStringList(bests.bests,{"precision":5}), timeh.timesToStringList(bests.totalBests,{"precision":5})]
-        self.replaceCsvLines(bestSplits,1,self.comparesCsv)
+        dataManip.replaceCols(bestSplits,1,self.comparesCsv)
         fileio.writeCSVs(self.config["baseDir"],self.game,self.category,self.completeCsv,self.comparesCsv)
         print("Save successful.")
