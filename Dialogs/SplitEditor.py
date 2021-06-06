@@ -83,7 +83,7 @@ class EntryGrid(ScrollableFrame.ScrollableFrame):
             dataManip.insertSumList(self.comparisons[i],0,2*i,current,{"precision":5})
         for i in range(len(self.rows)):
             current[i].insert(0,self.leftFrame.splitNames()[i])
-        current.insert(0,[self.leftFrame.cornerName()] + self.headerRow.headers)
+        current.insert(0,[self.leftFrame.cornerName()] + self.headerRow.headers())
         retVal = {"comparisons": current}
         retVal["names"] = self.leftFrame.splitNames()
         return retVal
@@ -104,7 +104,7 @@ class LeftFrame(tk.Frame):
                 label = tk.Label(self)
             label.grid(row=i,column=0,sticky="NSWE")
 
-            name = VE.Entry(self,comparisons[i][0],lambda val: val.find(",") < 0,width=self.cellWidth)
+            name = VE.Entry(self,comparisons[i][0],{"validate":lambda val: val.find(",") < 0},width=self.cellWidth)
             name.grid(row=i,column=1,sticky="NSEW")
 
             self.labels.append(label)
@@ -149,27 +149,19 @@ class HeaderRow(tk.Frame):
     def __init__(self,parent,headerRow):
         super().__init__(parent)
         self.entries = []
-        self.entryvars = []
-        self.headers = []
         for i in range(len(headerRow)):
-            entryvar = tk.StringVar(self,headerRow[i])
-            entryvar.trace('w',lambda *args, column=i: self.validateName(column))
-            if not i in [9,10]:
-                entry = tk.Entry(self,textvariable=entryvar,width=self.cellWidth)
+            if not i in [8,9]:
+                entry = VE.Entry(self,headerRow[i],{"validate": lambda name: name.find(",") < 0},width=self.cellWidth)
             else:
                 entry = tk.Label(self,text=headerRow[i],width=self.cellWidth)
             entry.pack(side="left")
             self.entries.append(entry)
-            self.entryvars.append(entryvar)
-            self.headers.append(headerRow[i])
 
-    def validateName(self,column):
-        name = self.entryvars[column].get()
-        if name.find(",") < 0:
-            self.headers[column] = name
-            self.entries[column]["bg"] = "white"
-        else:
-            self.entries[column]["bg"] = "#ff6666"
+    def headers(self):
+        return\
+            [self.entries[i].val for i in range(8)]\
+            + [self.entries[8],self.entries[9]]\
+            + [self.entries[i].val for i in range(10,len(self.entries))]
 
 class EntryRow(tk.Frame):
     cellWidth = 10
@@ -177,44 +169,39 @@ class EntryRow(tk.Frame):
         super().__init__(parent)
         self.parent = parentObj
         self.comparisonsRow = comparisonsRow
-        self.index = index
         for i in range(len(comparisonsRow)):
             self.columnconfigure(i,weight=1)
 
         self.pairs = []
-        self.timevars = []
-        self.timeTraces = []
         for i in range(0,len(comparisonsRow),2):
             if not self.comparisonIndex(i) == 4:
                 timevar = tk.StringVar(self,f'{timeh.trimTime(comparisonsRow[i])}')
-                timeTrace = timevar.trace('w',lambda *args, timeIndex=self.comparisonIndex(i): self.validateTime(timeIndex))
-                self.timevars.append(timevar)
-                self.timeTraces.append(timeTrace)
-                pair = [tk.Entry(self,textvariable=timevar,width=self.cellWidth,justify="right"),tk.Label(self,text=f'{timeh.trimTime(comparisonsRow[i+1])}',width=self.cellWidth,anchor="e")]
+                pair = [\
+                    VE.Entry(\
+                        self,\
+                        timeh.trimTime(comparisonsRow[i]),\
+                        {\
+                            "validate": lambda time: timeh.validTime(time),\
+                            "followup": lambda time, timeIndex=i: self.parent.updateComparisonValue(self,timeIndex,time)\
+                        },\
+                        width=self.cellWidth,justify="right"),\
+                    tk.Label(self,text=f'{timeh.trimTime(comparisonsRow[i+1])}',width=self.cellWidth,anchor="e")
+                ]
             else:
-                self.timevars.append(None)
-                self.timeTraces.append(None)
-                pair = [tk.Label(self,text=f'{timeh.trimTime(comparisonsRow[i])}',width=self.cellWidth,anchor="e"),tk.Label(self,text=f'{timeh.trimTime(comparisonsRow[i+1])}',width=self.cellWidth,anchor="e")]
+                pair = [\
+                    tk.Label(self,text=f'{timeh.trimTime(comparisonsRow[i])}',width=self.cellWidth,anchor="e"),\
+                    tk.Label(self,text=f'{timeh.trimTime(comparisonsRow[i+1])}',width=self.cellWidth,anchor="e")\
+                ]
             pair[0].grid(row=0,column=i)
             pair[1].grid(row=0,column=i+1)
             self.pairs.append(pair)
 
     def updateEntry(self,index,time):
-        if self.timevars[index]:
-            self.timevars[index].trace_vdelete("w",self.timeTraces[index])
-            self.timevars[index].set(timeh.timeToString(time,{"precision":2}))
-            self.timeTraces[index] = self.timevars[index].trace('w',lambda *args, timeIndex=index: self.validateTime(timeIndex))
+        if not index == 4:
+            self.pairs[index][0].setText(timeh.timeToString(time,{"precision":2}))
 
     def updateLabel(self,index,time):
         self.pairs[index][1]["text"] = timeh.timeToString(time,{"precision":2})
-
-    def validateTime(self,index):
-        time = self.timevars[index].get()
-        if timeh.validTime(time):
-            self.pairs[index][0]["bg"] = "white"
-            self.parent.updateComparisonValue(self,index,time)
-        else:
-            self.pairs[index][0]["bg"] = "#ff6666"
 
     def columnIndex(self,index):
         return 2*index
