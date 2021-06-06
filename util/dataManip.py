@@ -113,3 +113,23 @@ def adjustNames(names,data_ref):
         else:
             new_data[i][0] = names[i-1]
     return new_data[:len(names)+1]
+
+##############################################################
+## Changes the names in the first column of the table in
+## data_ref, adding and removing rows from the table if the
+## lists of names do not have the same length.
+##
+## Parameters: names - a list of the new names
+##             data_ref - the data table to update
+##
+## Returns: A deep copy of the original data, with the names
+##          updated.
+##############################################################
+def adjustNamesMismatch(names,data_ref,originals):
+    new_data = [copy.deepcopy(data_ref[0])]
+    for i in range(len(names)):
+        if i in originals:
+            new_data.append(copy.deepcopy(data_ref[originals.index(i)+1]))
+        else:
+            new_data.append([names[i]]+['-' for j in range(len(new_data[0])-1)])
+    return new_data

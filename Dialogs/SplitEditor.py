@@ -20,18 +20,24 @@ class SplitEditor(Popup.Popup):
         self.entries = EntryGrid(self.window,self.localComparisons)
         self.entries.pack(side="left")
 
+        self.addSplitButton = tk.Button(self.window, text="Add Split", command=self.addSplit)
+        self.addSplitButton.pack()
+
         self.deleteSplitButton = tk.Button(self.window, text="Delete Split", command=self.deleteSplit)
         self.deleteSplitButton.pack()
 
         self.saveButton = SaveButton.SaveButton(self.window, {"callback": self.save})
         self.saveButton.pack(side="bottom")
 
+    def addSplit(self,event=None):
+        self.entries.addSplit()
+
     def deleteSplit(self,event=None):
         self.entries.removeSplit()
 
     def save(self,retVal):
         csvs = self.entries.generateCsvs()
-        csvs["complete"] = dataManip.adjustNames(csvs["names"],self.state.completeCsv)
+        csvs["complete"] = dataManip.adjustNamesMismatch(csvs["names"],self.state.completeCsv,self.entries.originals)
         fileio.writeCSVs(self.state.config["baseDir"],self.state.game,self.state.category,csvs["complete"],csvs["comparisons"])
         self.splits.updateNames(self.state.game,self.state.category,csvs["names"])
 
@@ -48,8 +54,9 @@ class EntryGrid(ScrollableFrame.ScrollableFrame):
         self.headerRow.pack(side="top",fill="both")
 
         self.rows = []
+        self.originals = list(range(len(comparisons)-1))
         for i in range(1,len(comparisons)):
-            row = EntryRow(self.rightFrame,self,comparisons[i][1:],i-1)
+            row = EntryRow(self.rightFrame,self,comparisons[i][1:])
             row.pack(side="top",fill="both")
             self.rows.append(row)
 
@@ -57,14 +64,41 @@ class EntryGrid(ScrollableFrame.ScrollableFrame):
         for i in range(1,len(comparisons[0]),2):
             self.comparisons.append(SumList.SumList([timeh.stringToTime(comparisons[j][i]) for j in range(1,len(comparisons))]))
 
+    def addSplit(self):
+        index = self.leftFrame.currentSplit
+        if index < 0:
+            index = len(self.rows)
+        self.leftFrame.addSplit(index)
+        newComparisons = []
+        for comparison in self.comparisons:
+            comparison.insertNewSegment(index)
+            newComparisons.extend(['-',timeh.timeToString(comparison.totalBests[index],{"precision":5})])
+        self.rows.insert(index,EntryRow(self.rightFrame,self,newComparisons))
+
+        for i in range(index+1,len(self.rows)):
+            self.rows[i].pack_forget()
+        for i in range(index,len(self.rows)):
+            self.rows[i].pack(side="top",fill="both")
+        for i in range(len(self.originals)):
+            if self.originals[i] >= index:
+                self.originals[i] = self.originals[i] + 1
+
     def removeSplit(self):
         currentSplit = self.leftFrame.currentSplit
+        if currentSplit < 0:
+            return
         self.leftFrame.removeSplit()
-        self.rows[currentSplit-1].pack_forget()
-        del self.rows[currentSplit-1]
+        self.rows[currentSplit].pack_forget()
+        del self.rows[currentSplit]
         for comparison in range(len(self.comparisons)):
-            self.comparisons[comparison].removeSegment(currentSplit-1)
+            self.comparisons[comparison].removeSegment(currentSplit)
             self.updateComparison(comparison,["entry"])
+
+        for i in range(len(self.originals)):
+            if self.originals[i] > currentSplit:
+                self.originals[i] = self.originals[i] - 1
+            elif self.originals[i] == currentSplit:
+                self.originals[i] = -1
 
     def updateComparisonValue(self,row,comparison,time):
         self.comparisons[comparison].update(timeh.stringToTime(time),self.rows.index(row))
@@ -100,14 +134,13 @@ class LeftFrame(tk.Frame):
             if i:
                 label = tk.Label(self,text=str(i))
                 label.bind("<Button-1>",self.onClicked)
+                self.labels.append(label)
             else:
                 label = tk.Label(self)
             label.grid(row=i,column=0,sticky="NSWE")
 
             name = VE.Entry(self,comparisons[i][0],{"validate":lambda val: val.find(",") < 0},width=self.cellWidth)
             name.grid(row=i,column=1,sticky="NSEW")
-
-            self.labels.append(label)
             self.names.append(name)
 
     def cornerName(self):
@@ -131,13 +164,33 @@ class LeftFrame(tk.Frame):
                 self.labels[i]["fg"] = "black"
         self.currentSplit = new
 
+    def addSplit(self,index):
+        label = tk.Label(self,text=len(self.labels)+1)
+        label.bind("<Button-1>",self.onClicked)
+        label.grid(row=len(self.labels)+1,column=0,sticky="NSWE")
+        self.labels.append(label)
+
+        name = VE.Entry(self,"",{"validate":lambda val: val.find(",") < 0},width=self.cellWidth)
+        name.grid(row=len(self.names),column=1,sticky="NSEW")
+        self.names.append(name)
+
+        if index < 0:
+            self.updateCurrentSplit(len(self.names))
+            return
+
+        names = self.splitNames()
+        self.names[index+1].setText("")
+        for i in range(index+2,len(self.names)):
+            self.names[i].setText(names[i-2])
+        self.updateCurrentSplit(index)
+
     def removeSplit(self):
-        if self.currentSplit <= 0:
+        if self.currentSplit < 0:
             return
         names = self.splitNames()
         self.names[-1].grid_forget()
         self.labels[-1].grid_forget()
-        del names[self.currentSplit-1]
+        del names[self.currentSplit]
         del self.names[-1]
         del self.labels[-1]
         for i in range(len(names)):
@@ -165,10 +218,9 @@ class HeaderRow(tk.Frame):
 
 class EntryRow(tk.Frame):
     cellWidth = 10
-    def __init__(self,parent,parentObj,comparisonsRow,index):
+    def __init__(self,parent,parentObj,comparisonsRow):
         super().__init__(parent)
         self.parent = parentObj
-        self.comparisonsRow = comparisonsRow
         for i in range(len(comparisonsRow)):
             self.columnconfigure(i,weight=1)
 
