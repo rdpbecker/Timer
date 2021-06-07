@@ -72,6 +72,14 @@ class EntryGrid(ScrollableFrame.ScrollableFrame):
             row.addComparison()
         self.comparisons.append(SumList.SumList([timeh.blank() for row in self.rows]))
 
+    def removeComparison(self):
+        if len(self.comparisons) <= 5:
+            return
+        del self.comparisons[-1]
+        self.headerRow.removeHeaders(2)
+        for row in self.rows:
+            row.removeComparison(1)
+
     def updateComparisonValue(self,row,comparison,time):
         self.comparisons[comparison].update(timeh.stringToTime(time),self.rows.index(row))
         self.updateComparison(comparison,["label"])

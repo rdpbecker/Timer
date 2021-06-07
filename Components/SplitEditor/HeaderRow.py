@@ -28,3 +28,8 @@ class HeaderRow(tk.Frame):
         entry = VE.Entry(self,text,{"validate": lambda name: name.find(",") < 0}, width=self.cellWidth)
         entry.pack(side="left")
         self.entries.append(entry)
+
+    def removeHeaders(self,num):
+        for i in range(num):
+            self.entries[-1].pack_forget()
+            del self.entries[-1]

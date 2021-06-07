@@ -26,6 +26,13 @@ class SplitEditor(Popup.Popup):
         self.addComparisonButton = tk.Button(self.window, text="Add Comparison", command=self.addComparison)
         self.addComparisonButton.pack(fill="x")
 
+        if len(self.entries.comparisons) < 5:
+            enabled = "active"
+        else:
+            enabled = "disabled"
+        self.deleteComparisonButton = tk.Button(self.window, text="Delete Comparison", command=self.deleteComparison, state=enabled)
+        self.deleteComparisonButton.pack(fill="x")
+
         self.saveButton = SaveButton.SaveButton(self.window, {"callback": self.save})
         self.saveButton.pack(side="bottom",fill="x")
 
@@ -37,6 +44,12 @@ class SplitEditor(Popup.Popup):
 
     def addComparison(self,event=None):
         self.entries.addComparison()
+        self.deleteComparisonButton["state"] = "active"
+
+    def deleteComparison(self,event=None):
+        self.entries.removeComparison()
+        if len(self.entries.comparisons) <= 5:
+            self.deleteComparisonButton["state"] = "disabled"
 
     def save(self,retVal):
         csvs = self.entries.generateCsvs()
