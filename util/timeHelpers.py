@@ -91,7 +91,7 @@ def timesToStringList(arr,options={}):
 
 def stringToTime(timestring):
     if timestring == "-":
-        return "BLANK"
+        return blank()
     parts1 = re.split("\.",timestring)
     parts2 = re.split(":",parts1[0])
     hours = 0
@@ -112,11 +112,14 @@ def stringToTime(timestring):
     return 3600*hours + 60*mins + secs + fracsecs
 
 def isBlank(time):
-    return time == "BLANK"
+    return time == blank()
+
+def blank():
+    return "BLANK"
 
 def sumTimeList(arr):
     if not len(arr):
-        return "BLANK"
+        return blank()
     total = arr[0]
     for i in range(1,len(arr)):
         total = add(total,arr[i])
@@ -124,20 +127,20 @@ def sumTimeList(arr):
 
 def difference(time1,time2):
     if isBlank(time1) or isBlank(time2):
-        return "BLANK"
+        return blank()
     return time1 - time2
 
 def add(time1,time2):
     if isBlank(time1) or isBlank(time2):
-        return "BLANK"
+        return blank()
     return time1 + time2
 
 def greater(time1,time2):
     if isBlank(time1) or isBlank(time2):
-        return "BLANK"
+        return blank()
     return time1 > time2
 
 def equal(time1,time2):
     if isBlank(time1) or isBlank(time2):
-        return "BLANK"
+        return blank()
     return time1 == time2
