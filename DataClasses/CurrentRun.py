@@ -13,7 +13,7 @@ class CurrentRun:
         if (not(len(self.segments)) or not timeh.isBlank(self.totals[-1])):
             self.segments.append(segment)
         else:
-            self.segments.append("BLANK")
+            self.segments.append(timeh.blank())
         self.totals.append(total)
 
     def fillTimes(self,requiredLength):
@@ -21,8 +21,8 @@ class CurrentRun:
         if not n:
             self.empty = True
         for i in range(requiredLength-n):
-            self.segments.append("BLANK")
-            self.totals.append("BLANK")
+            self.segments.append(timeh.blank())
+            self.totals.append(timeh.blank())
 
     def lastNonBlank(self):
         for i in range(len(self.totals)-1,-1,-1):

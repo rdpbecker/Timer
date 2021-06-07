@@ -15,11 +15,11 @@ class SumList:
         self.setTotals()
 
     def insertNewSegment(self,segment):
-        self.bests.insert(segment,"BLANK")
+        self.bests.insert(segment,timeh.blank())
         if segment < len(self.totalBests):
             self.totalBests.insert(segment,self.totalBests[segment])
         else:
-            self.totalBests.insert(segment,"BLANK")
+            self.totalBests.insert(segment,timeh.blank())
 
     def removeSegment(self,segment):
         del self.bests[segment]
@@ -29,7 +29,7 @@ class SumList:
 
     def setTotals(self):
         if not len(self.bests):
-            self.total = "BLANK"
+            self.total = timeh.blank()
             self.totalBests = []
             return
         total = self.bests[0]

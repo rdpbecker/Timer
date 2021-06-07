@@ -101,10 +101,10 @@ class State(BaseState.State):
     ## Parameters: time - the current system time
     ##########################################################
     def skipSegment(self,time):
-        self.currentRun.addSegment("BLANK","BLANK")
+        self.currentRun.addSegment(timeh.blank(),timeh.blank())
         self.bptList.update(time-self.starttime)
         for i in range(self.numComparisons):
-            self.comparisons[i].updateDiffs("BLANK","BLANK")
+            self.comparisons[i].updateDiffs(timeh.blank(),timeh.blank())
         self.splitnum = self.splitnum + 1
         self.splitstarttime = time
         if self.splitnum >= len(self.splitnames):
@@ -147,7 +147,7 @@ class State(BaseState.State):
                 average.append(self.currentRun.segments[i])
             averageTime = timeh.sumTimeList(average)
             if timeh.isBlank(averageTime):
-                averages.append("BLANK")
+                averages.append(timeh.blank())
             else:
                 averages.append(averageTime/len(average))
         return SumList.SumList(averages)
