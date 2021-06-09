@@ -5,6 +5,8 @@ from tkinter import messagebox as mb
 import threading
 from timeit import default_timer as timer
 from Components import Menu
+from DataClasses import AllSplitNames
+from DataClasses import Session
 from Dialogs import ConfirmPopup
 from Dialogs import RunPopup
 from Dialogs import LayoutPopup
@@ -220,8 +222,11 @@ class App(threading.Thread):
             return
         if self.state.unSaved:
             self.confirmSave(self.saveIfDesired)
+        self.setNewState(newSession)
+
+    def setNewState(self,session):
         compareNum = self.state.compareNum
-        self.session.setRun(newSession["game"],newSession["category"])
+        self.session.setRun(session["game"],session["category"])
         self.state = State.State(self.session)
         self.state.setComparison(compareNum)
         self.updateWidgets("runChanged",state=self.state)
@@ -263,4 +268,12 @@ class App(threading.Thread):
         self.root.destroy()
 
     def editSplits(self):
-        SplitEditor.SplitEditor(self.root,None,self.state)
+        SplitEditor.SplitEditor(self.root,self.newEditedState,self.state)
+
+    def newEditedState(self,retVal):
+        compareNum = self.state.compareNum
+        session = Session.Session(AllSplitNames.Splits())
+        session.setRun(self.state.game,self.state.category)
+        self.state = State.State(session)
+        self.state.setComparison(compareNum)
+        self.updateWidgets("runChanged",state=self.state)
