@@ -7,17 +7,20 @@ from DataClasses import SumList
 from util import timeHelpers as timeh
 from util import dataManip
 
-class EntryGrid(ScrollableFrame.ScrollableFrame):
+class EntryGrid(ScrollableFrame.ScrollableFramePin):
     def __init__(self,parent,comparisons):
         super().__init__(parent,width=600,height=300)
-        self.leftFrame = LeftFrame.LeftFrame(self.scrollable_frame,comparisons)
+        self.leftFrame = LeftFrame.LeftFrame(self.pinnedX(),comparisons[1:])
         self.leftFrame.pack(side="left",fill="both")
 
-        self.rightFrame = tk.Frame(self.scrollable_frame)
+        self.rightFrame = tk.Frame(self.main())
         self.rightFrame.pack(side="left",fill="y")
 
-        self.headerRow = HeaderRow.HeaderRow(self.rightFrame,comparisons[0][1:])
+        self.headerRow = HeaderRow.HeaderRow(self.pinnedY(),comparisons[0][1:])
         self.headerRow.pack(side="top",fill="both")
+
+        self.cornerLabel = tk.Label(self.corner(),text=comparisons[0][0])
+        self.cornerLabel.pack(side="right",fill="both")
 
         self.rows = []
         self.originals = list(range(len(comparisons)-1))
@@ -97,7 +100,7 @@ class EntryGrid(ScrollableFrame.ScrollableFrame):
             dataManip.insertSumList(self.comparisons[i],0,2*i,current,{"precision":5})
         for i in range(len(self.rows)):
             current[i].insert(0,self.leftFrame.splitNames()[i])
-        current.insert(0,[self.leftFrame.cornerName()] + self.headerRow.headers())
+        current.insert(0,[self.cornerLabel["text"]] + self.headerRow.headers())
         retVal = {"comparisons": current}
         retVal["names"] = self.leftFrame.splitNames()
         return retVal

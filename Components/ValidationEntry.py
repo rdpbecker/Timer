@@ -9,6 +9,7 @@ class Entry(tk.Entry):
         self.trace = self.var.trace('w',self.doValidation)
         self.val = val
         self.validate = cbs["validate"]
+        self.doValidation()
         if "followup" in cbs.keys():
             self.followup = cbs["followup"]
 
