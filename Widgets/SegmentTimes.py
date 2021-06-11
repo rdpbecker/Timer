@@ -23,11 +23,17 @@ class SegmentTimes(WidgetBase.WidgetBase):
 
         self.leftFrame.pack(side="left", padx=state.config["padx"])
         self.rightFrame.pack(side="left", padx=state.config["padx"])
+        row = 0
         if config["includeCurrentComparison"]:
-            self.segmentHeader.pack(side="top",anchor="nw")
-            self.segmentTime.pack(side="top",anchor="ne")
-        self.goldHeader.pack(side="bottom",anchor="sw")
-        self.goldTime.pack(side="bottom",anchor="se")
+            self.segmentHeader.grid(row=row,column=0,sticky="W")
+            self.segmentTime.grid(row=row,column=0,sticky="E")
+            row = 1
+            self.leftFrame.rowconfigure(1,weight=1)
+            self.rightFrame.rowconfigure(1,weight=1)
+        self.goldHeader.grid(row=row,column=0,sticky="W")
+        self.goldTime.grid(row=row,column=0,sticky="E")
+        self.leftFrame.rowconfigure(0,weight=1)
+        self.rightFrame.rowconfigure(0,weight=1)
 
         self.resetUI()
 

@@ -11,6 +11,7 @@ class WidgetBase(tk.Frame):
         self.configureColumns()
 
     def configureColumns(self):
+        self.rowconfigure(0,weight=1)
         for i in range(12):
             self.columnconfigure(i,minsize=27,weight=1)
 

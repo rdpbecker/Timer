@@ -36,3 +36,6 @@ class Buttons(WidgetBase.WidgetBase):
         button9.grid(row=4,column=6,columnspan=6,sticky='WE')
         button2.grid(row=5,column=0,columnspan=12,sticky='WE')
         self.buttons.extend([button1,button2,button3,button4,button5,button6,button7,button8,button9,button10,button11])
+
+        for i in range(6):
+            self.rowconfigure(i,weight=1)

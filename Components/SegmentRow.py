@@ -20,6 +20,7 @@ class SegmentRow(tk.Frame):
         self.header.grid(row=0,column=0,columnspan=7,sticky='W')
         self.diff.grid(row=0,column=7,columnspan=2,sticky='E')
         self.comparison.grid(row=0,column=9,columnspan=3,sticky='E')
+        self.rowconfigure(0,weight=1)
 
     def configureColumns(self):
         for i in range(12):

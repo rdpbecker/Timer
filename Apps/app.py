@@ -40,6 +40,8 @@ class App(threading.Thread):
     ##########################################################
     def addWidget(self,component):
         component.grid(row=self.numWidgets,column=0,columnspan=12,sticky='NSWE')
+        component.bind('<Configure>',self.updateWeights)
+        self.root.rowconfigure(self.numWidgets,weight=1)
         self.numWidgets = self.numWidgets + 1
         self.components.append(component)
 
@@ -95,6 +97,13 @@ class App(threading.Thread):
         self.root.after(17,self.update)
         self.root.mainloop()
         return self.retVal
+
+    def updateWeights(self,*args):
+        for i in range(self.numWidgets):
+            self.root.rowconfigure(i, weight=self.components[i].winfo_height())
+        if not len(list(filter(lambda x: x==1,[self.components[i].winfo_height() for i in range(self.numWidgets)]))):
+            for component in self.components:
+                component.unbind('<Configure>')
 
     ##########################################################
     ## Set the timer to update every time this is called
@@ -215,6 +224,7 @@ class App(threading.Thread):
         self.state = State.State(self.session)
         self.state.setComparison(compareNum)
         self.updateWidgets("runChanged",state=self.state)
+        self.updateWeights()
 
     def saveIfDesired(self,desired):
         if desired:
