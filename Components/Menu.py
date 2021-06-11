@@ -20,3 +20,4 @@ class ControlMenu(tk.Menu):
         menubar.add_command(label="Save", command=app.save)
         menubar.add_command(label="Finish", command=app.finish)
         menubar.add_command(label="Edit Splits", command=app.editSplits)
+        menubar.add_command(label="Add New Run", command=app.addRun)

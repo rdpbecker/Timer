@@ -133,3 +133,27 @@ def adjustNamesMismatch(names,data_ref,originals):
         else:
             new_data.append([names[i]]+['-' for j in range(len(new_data[0])-1)])
     return new_data
+
+def newCompleteCsv(names=[]):
+    data = [['Split Names']]
+    for name in names:
+        data.append([name])
+    return data
+
+def newComparisons(names=[]):
+    data = [[ \
+        'Split Names', \
+        'Best Split', \
+        'Sum of Bests', \
+        'Average Split', \
+        'Average', \
+        'PB Split', \
+        'Personal Best',\
+        'To Best Exit',\
+        'Best Exit',\
+        'Blank Split',\
+        'Blank'\
+    ]]
+    for name in names:
+        data.append([name] + ['-' for i in range(10)])
+    return data

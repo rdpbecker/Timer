@@ -7,6 +7,7 @@ from timeit import default_timer as timer
 from Components import Menu
 from DataClasses import AllSplitNames
 from DataClasses import Session
+from Dialogs import AddRun
 from Dialogs import ConfirmPopup
 from Dialogs import RunPopup
 from Dialogs import LayoutPopup
@@ -274,6 +275,20 @@ class App(threading.Thread):
         compareNum = self.state.compareNum
         session = Session.Session(AllSplitNames.Splits())
         session.setRun(self.state.game,self.state.category)
+        self.state = State.State(session)
+        self.state.setComparison(compareNum)
+        self.updateWidgets("runChanged",state=self.state)
+
+    def addRun(self):
+        AddRun.SplitEditor(self.root,self.addRunState,self.state)
+
+    def addRunState(self,retVal):
+        compareNum = self.state.compareNum
+        session = Session.Session(AllSplitNames.Splits())
+        if retVal["game"] and retVal["category"]:
+            session.setRun(retVal["game"],retVal["category"])
+        else:
+            session.setRun(self.state.game,self.state.category)
         self.state = State.State(session)
         self.state.setComparison(compareNum)
         self.updateWidgets("runChanged",state=self.state)
