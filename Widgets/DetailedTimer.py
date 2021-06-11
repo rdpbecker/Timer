@@ -36,6 +36,8 @@ class Timer(WidgetBase.WidgetBase):
             self.segment.grid(row=0,column=0,columnspan=10,sticky="E")
         elif s == "right":
             self.segment.grid(row=0,column=0,columnspan=12,sticky="E")
+        self.rowconfigure(0,weight=1)
+        self.rowconfigure(1,weight=1)
         self.resetUI()
 
     def onRestart(self):

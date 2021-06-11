@@ -31,6 +31,7 @@ class SegmentArea(WidgetBase.WidgetBase):
             for i in range(oldNumSplits,self.numRows):
                 row = SegmentRow.SegmentRow(self, self.config["main"]["colours"]["bg"], self.config["main"]["font"], self.config["main"]["colours"]["text"], self.state.config["padx"])
                 row.grid(row=i,column=0,columnspan=12,sticky='NSWE')
+                self.rowconfigure(i,weight=1)
                 self.rows.append(row)
         elif oldNumSplits > self.numRows:
             for i in range(oldNumSplits-1,self.numRows-1,-1):
