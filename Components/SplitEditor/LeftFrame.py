@@ -28,6 +28,12 @@ class LeftFrame(tk.Frame):
         name.grid(row=len(self.names),column=1,sticky="NSEW")
         self.names.append(name)
 
+    def removeRow(self,index):
+        self.names[-1].grid_forget()
+        self.labels[-1].grid_forget()
+        del self.names[-1]
+        del self.labels[-1]
+
     def updateCurrentSplit(self,new):
         if new == self.currentSplit:
             return
@@ -56,11 +62,8 @@ class LeftFrame(tk.Frame):
         if self.currentSplit < 0:
             return
         names = self.splitNames()
-        self.names[-1].grid_forget()
-        self.labels[-1].grid_forget()
+        self.removeRow(-1)
         del names[self.currentSplit]
-        del self.names[-1]
-        del self.labels[-1]
         for i in range(len(names)):
             self.names[i].setText(names[i])
         self.updateCurrentSplit(-1)

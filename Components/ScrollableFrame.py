@@ -36,13 +36,16 @@ class ScrollableFramePin(tk.Frame):
         xscrollbar = tk.Scrollbar(self, orient='horizontal', command=self.xScroll)
         xscrollbar.grid(row=2,column=1,sticky="EW")
 
-        self.canvases = []
+        self.canvases = [\
+            tk.Canvas(self, width=1, height=1),\
+            tk.Canvas(self, width=self.kwargs["width"], height=1),\
+            tk.Canvas(self, width=1, height=self.kwargs["height"]),\
+            tk.Canvas(self, width=self.kwargs["width"], height=self.kwargs["height"]),\
+        ]
         self.frames = []
         for i in range(4):
-            canvas = tk.Canvas(self, width=self.kwargs["width"]/2, height=self.kwargs["height"]/2)
-            frame = tk.Frame(canvas)
-            canvas.create_window((0,0), window=frame, anchor="nw")
-            self.canvases.append(canvas)
+            frame = tk.Frame(self.canvases[i])
+            self.canvases[i].create_window((0,0), window=frame, anchor="nw")
             self.frames.append(frame)
         self.canvases[0].grid(row=0,column=0)
         self.canvases[1].grid(row=0,column=1)
