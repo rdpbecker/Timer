@@ -15,11 +15,7 @@ class EntryGrid(ScrollableFrame.ScrollableFramePin):
 
         self.rightFrame = tk.Frame(self.main())
         self.rightFrame.pack(side="left",fill="y")
-
-        self.canvases[3].bind(\
-            "<Configure>",\
-            lambda e: self.insertHeaders(comparisons[0][1:])
-        )
+        self.headers = comparisons[0][1:]
 
         self.cornerLabel = tk.Label(self.corner(),text=comparisons[0][0])
         self.cornerLabel.pack(side="right",fill="both")
@@ -35,10 +31,9 @@ class EntryGrid(ScrollableFrame.ScrollableFramePin):
         for i in range(1,len(comparisons[0]),2):
             self.comparisons.append(SumList.SumList([timeh.stringToTime(comparisons[j][i]) for j in range(1,len(comparisons))]))
 
-    def insertHeaders(self,names):
-        self.headerRow = HeaderRow.HeaderRow(self.pinnedY(),names)
+    def insertPinnedX(self,*args):
+        self.headerRow = HeaderRow.HeaderRow(self.pinnedY(),self.headers)
         self.headerRow.pack(side="top",fill="both")
-        self.canvases[3].unbind("<Configure>")
 
     def addSplit(self):
         index = self.leftFrame.currentSplit

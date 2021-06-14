@@ -70,6 +70,10 @@ class ScrollableFramePin(tk.Frame):
                 scrollregion=self.canvases[3].bbox("all")\
             )\
         )
+        self.canvases[3].bind(\
+            "<Configure>",\
+            lambda e: self.insertContent(e)
+        )
 
     def corner(self):
         return self.frames[0]
@@ -90,6 +94,17 @@ class ScrollableFramePin(tk.Frame):
     def yScroll(self,*args):
         self.canvases[2].yview(*args)
         self.canvases[3].yview(*args)
+
+    def insertContent(self,*args):
+        self.insertPinnedX(args)
+        self.insertPinnedY(args)
+        self.canvases[3].unbind("<Configure>")
+
+    def insertPinnedX(self,*args):
+        pass
+
+    def insertPinnedY(self,*args):
+        pass
 
     def mainArea(self):
         return {\
