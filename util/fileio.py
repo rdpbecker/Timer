@@ -4,6 +4,9 @@ from util import dataManip
 def resolveFilename(arr):
     return "/".join(arr)
 
+def getDir(string):
+    return resolveFilename(string.split("/")[:-1])
+
 def csvReadStart(baseDir,name,category,splitList):
     csvName = resolveFilename([baseDir,name,category + ".csv"])
     compareCsvName = resolveFilename([baseDir,name,category + "_comparisons.csv"])
@@ -65,6 +68,8 @@ def writeCSVs(baseDir,name,category,splitWrite,comparesWrite):
         writeCSV(resolveFilename([baseDir,name,category + "_comparisons.csv"]),comparesWrite)
 
 def writeCSV(filename,rows):
+    if not os.path.exists(getDir(filename)):
+        os.mkdir(getDir(filename))
     with open(filename,'w') as writer:
         csvWriter = csv.writer(writer, delimiter = ',')
         for thing in rows:

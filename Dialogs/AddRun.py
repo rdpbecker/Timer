@@ -2,15 +2,20 @@ import tkinter as tk
 from DataClasses import AllSplitNames
 from Dialogs import Popup
 from Components.SplitEditor import EntryGrid
+from Components import GameSelector
 from Components import SaveButton
 from util import fileio
 from util import dataManip
+from util import readConfig as rc
 
 class SplitEditor(Popup.Popup):
     def __init__(self,master,callback,state):
         super().__init__(master,callback)
         self.localComparisons = dataManip.newComparisons()
         self.splits = AllSplitNames.Splits()
+
+        self.selection = GameSelector.Selector(self.window)
+        self.selection.pack(side="top",fill="x")
 
         self.entries = EntryGrid.EntryGrid(self.window,self.localComparisons)
         self.entries.pack(side="left")
@@ -52,7 +57,13 @@ class SplitEditor(Popup.Popup):
             self.deleteComparisonButton["state"] = "disabled"
 
     def save(self,retVal):
+        config = rc.getUserConfig()
+        game = self.selection.game
+        category = self.selection.category
+        if self.splits.validPair(game,category):
+            category = category + "Copy"
+        print(game,category)
         csvs = self.entries.generateCsvs()
         csvs["complete"] = dataManip.newCompleteCsv(csvs["names"])
-        fileio.writeCSVs(self.state.config["baseDir"],self.state.game,self.state.category,csvs["complete"],csvs["comparisons"])
-        self.splits.updateNames(self.state.game,self.state.category,csvs["names"])
+        fileio.writeCSVs(config["baseDir"],game,category,csvs["complete"],csvs["comparisons"])
+        self.splits.updateNames(game,category,csvs["names"])

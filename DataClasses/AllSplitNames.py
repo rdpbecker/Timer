@@ -25,7 +25,7 @@ class Splits:
             self.splitNames.append(csvLines[i])
 
     def getSplitNames(self,game,category):
-        if not game or not category:
+        if not self.validPair(game,category):
             return []
         return self.splitNames[self.indexDict[game][category]][2:]
 
@@ -33,9 +33,15 @@ class Splits:
         return list(self.indexDict.keys())
 
     def getCategories(self,game):
-        if not game:
+        if not self.validGame(game):
             return []
         return list(self.indexDict[game].keys())
+
+    def validGame(self,game):
+        return game and game in self.getGames()
+
+    def validPair(self,game,category):
+        return self.validGame(game) and category and category in self.getCategories(game)
 
     def updateNames(self,game,category,names,write=True):
         if not game in self.getGames():
@@ -52,8 +58,8 @@ class Splits:
                 print(line)
 
     def addNewGame(self,game,category,names):
-        self.index[game] = {}
-        self.index[category] = len(self.splitNames)
+        self.indexDict[game] = {}
+        self.indexDict[category] = len(self.splitNames)
         newNames = [game,category]
         newNames.extend(names)
         self.splitNames.append(newNames)
