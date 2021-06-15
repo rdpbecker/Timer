@@ -65,7 +65,7 @@ class Splits:
         self.splitNames.append(newNames)
 
     def addNewCategory(self,game,category,names):
-        cateIndex = max([self.indexDict[game][cate] for cate in self.getCategories(game)])
+        cateIndex = max([self.indexDict[game][cate] for cate in self.getCategories(game)]) + 1
         self.indexDict[game][category] = cateIndex
         newNames = ["",category]
         newNames.extend(names)
