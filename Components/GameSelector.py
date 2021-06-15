@@ -8,6 +8,7 @@ class Selector(tk.Frame):
     gameVar = None
     cateVar = None
     cateCombo = None
+    followup = None
 
     def __init__(self,parent):
         super().__init__(parent)
@@ -35,6 +36,8 @@ class Selector(tk.Frame):
 
     def setCate(self,*args):
         self.category = self.cateVar.get()
+        if self.followup:
+            self.followup(*args)
 
     def updateCateCombo(self):
         self.cateCombo["values"] = self.splits.getCategories(self.game)

@@ -10,12 +10,11 @@ from util import dataManip
 class EntryGrid(ScrollableFrame.ScrollableFramePin):
     def __init__(self,parent,comparisons):
         super().__init__(parent,width=600,height=300)
-        self.leftFrame = LeftFrame.LeftFrame(self.pinnedX(),comparisons[1:])
-        self.leftFrame.pack(side="left",fill="both")
 
         self.rightFrame = tk.Frame(self.main())
         self.rightFrame.pack(side="left",fill="y")
         self.headers = comparisons[0][1:]
+        self.comparisonData = comparisons
 
         self.cornerLabel = tk.Label(self.corner(),text=comparisons[0][0])
         self.cornerLabel.pack(side="right",fill="both")
@@ -34,6 +33,10 @@ class EntryGrid(ScrollableFrame.ScrollableFramePin):
     def insertPinnedX(self,*args):
         self.headerRow = HeaderRow.HeaderRow(self.pinnedY(),self.headers)
         self.headerRow.pack(side="top",fill="both")
+
+    def insertPinnedY(self,*args):
+        self.leftFrame = LeftFrame.LeftFrame(self.pinnedX(),self.comparisonData[1:])
+        self.leftFrame.pack(side="left",fill="both")
 
     def addSplit(self):
         index = self.leftFrame.currentSplit
