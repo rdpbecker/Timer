@@ -280,7 +280,7 @@ class App(threading.Thread):
         self.updateWidgets("runChanged",state=self.state)
 
     def addRun(self):
-        AddRun.SplitEditor(self.root,self.addRunState,self.state)
+        AddRun.SplitEditorP(self.root,self.addRunState)
 
     def addRunState(self,retVal):
         compareNum = self.state.compareNum

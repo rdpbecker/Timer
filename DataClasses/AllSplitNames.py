@@ -1,4 +1,4 @@
-import csv, sys
+import csv, sys, os
 from util import readConfig as rc
 from util import fileio
 
@@ -12,8 +12,18 @@ class Splits:
         self.indexDict = {}
         self.splitNames = []
         self.splitsFile = config["baseDir"] + "/splitNames.csv"
+        if not os.path.exists(config["baseDir"]):
+            os.mkdir(config["baseDir"])
+            self.writeSplits()
+            return
+        self.update()
+
+    def update(self):
+        self.indexDict = {}
+        self.splitNames = []
         csvLines = fileio.readCsv(self.splitsFile)
-        for i in range(len(csvLines)):
+        i = 0
+        while i < len(csvLines):
             if not i:
                 game = csvLines[i][0]
                 gameDict = {}
@@ -23,6 +33,9 @@ class Splits:
                 gameDict = {}
             gameDict[csvLines[i][1]] = i
             self.splitNames.append(csvLines[i])
+            i = i + 1
+        if i:
+            self.indexDict[game] = gameDict
 
     def getSplitNames(self,game,category):
         if not self.validPair(game,category):
@@ -75,3 +88,9 @@ class Splits:
         newNames = self.splitNames[self.indexDict[game][category]][:2]
         newNames.extend(names)
         self.splitNames[self.indexDict[game][category]] = newNames
+
+    def writeSplits(self):
+        if len(self.splitNames):
+            fileio.writeCSV(self.splitsFile,self.splitNames)
+        else:
+            fileio.writeCSV(self.splitsFile,[])

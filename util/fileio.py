@@ -80,6 +80,8 @@ def stripEmptyStrings(stringList):
         stringList.pop(-1)
 
 def stripEmptyStringsReturn(stringList):
+    if not len(stringList):
+        return []
     new = [stringList[i] for i in range(len(stringList))]
     while not new[-1]:
         new.pop(-1)
@@ -96,6 +98,8 @@ def writeJson(filepath,data):
         writer.write(jsonData)
 
 def readCsv(filepath):
+    if not os.path.exists(filepath):
+        return []
     with open(filepath,'r') as csvfile:
         reader = csv.reader(csvfile, delimiter=",",quotechar="|")
         csvlines = []
