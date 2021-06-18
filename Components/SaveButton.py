@@ -14,7 +14,7 @@ class SaveButton(tk.Button):
             self.parent,\
             self.options["callback"],\
             "Save",\
-            "Save local changes (closing will save automatically)?"\
+            "Save local changes?"\
         )
 
     def save(self,retVal):
