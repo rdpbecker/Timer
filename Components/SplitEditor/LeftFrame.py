@@ -53,9 +53,9 @@ class LeftFrame(tk.Frame):
             return
 
         names = self.splitNames()
-        self.names[index].setText("")
+        self.names[index].setText("",True)
         for i in range(index+1,len(self.names)):
-            self.names[i].setText(names[i-1])
+            self.names[i].setText(names[i-1],True)
         self.updateCurrentSplit(index)
 
     def removeSplit(self):

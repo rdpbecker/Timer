@@ -23,8 +23,10 @@ class Entry(tk.Entry):
         else:
             self["bg"] = "#ff6666"
 
-    def setText(self,text):
+    def setText(self,text,validate=False):
         self.val = text
-        self.var.trace_vdelete("w",self.trace)
+        if not validate:
+            self.var.trace_vdelete("w",self.trace)
         self.var.set(text)
-        self.trace = self.var.trace('w',self.doValidation)
+        if not validate:
+            self.trace = self.var.trace('w',self.doValidation)

@@ -32,16 +32,16 @@ class SplitEditor(tk.Frame):
 
         self.deleteSplitButton = tk.Button(self.buttonFrame, text="Delete Split", command=self.deleteSplit)
         self.deleteSplitButton.pack(fill="x")
+        if not len(self.entries.rows):
+            self.deleteSplitButton["state"] = "disabled"
 
         self.addComparisonButton = tk.Button(self.buttonFrame, text="Add Comparison", command=self.addComparison)
         self.addComparisonButton.pack(fill="x")
 
-        if len(self.entries.comparisons) < 5:
-            enabled = "active"
-        else:
-            enabled = "disabled"
-        self.deleteComparisonButton = tk.Button(self.buttonFrame, text="Delete Comparison", command=self.deleteComparison, state=enabled)
+        self.deleteComparisonButton = tk.Button(self.buttonFrame, text="Delete Comparison", command=self.deleteComparison)
         self.deleteComparisonButton.pack(fill="x")
+        if len(self.entries.comparisons) <= 5:
+            self.deleteComparisonButton["state"] = "disabled"
 
         self.saveButton = SaveButton.SaveButton(self.buttonFrame, {"callback": self.save})
         self.saveButton.pack(side="bottom",fill="x")
@@ -61,9 +61,12 @@ class SplitEditor(tk.Frame):
 
     def addSplit(self,event=None):
         self.entries.addSplit()
+        self.deleteSplitButton["state"] = "active"
 
     def deleteSplit(self,event=None):
         self.entries.removeSplit()
+        if not len(self.entries.rows):
+            self.deleteSplitButton["state"] = "disabled"
 
     def addComparison(self,event=None):
         self.entries.addComparison()
