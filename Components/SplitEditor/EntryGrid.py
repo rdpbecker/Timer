@@ -30,6 +30,9 @@ class EntryGrid(ScrollableFrame.ScrollableFramePin):
         for i in range(1,len(comparisons[0]),2):
             self.comparisons.append(SumList.SumList([timeh.stringToTime(comparisons[j][i]) for j in range(1,len(comparisons))]))
 
+    def shouldWarn(self):
+        return any([row.shouldWarn() for row in self.rows]) or self.leftFrame.shouldWarn()
+
     def insertPinnedX(self,*args):
         self.headerRow = HeaderRow.HeaderRow(self.pinnedY(),self.headers)
         self.headerRow.pack(side="top",fill="both")

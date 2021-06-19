@@ -67,3 +67,9 @@ class LeftFrame(tk.Frame):
         for i in range(len(names)):
             self.names[i].setText(names[i])
         self.updateCurrentSplit(-1)
+
+    def isValid(self):
+        return all(self.splitNames())
+
+    def shouldWarn(self):
+        return not all([name.isValid() for name in self.names])

@@ -30,3 +30,6 @@ class Entry(tk.Entry):
         self.var.set(text)
         if not validate:
             self.trace = self.var.trace('w',self.doValidation)
+
+    def isValid(self):
+        return self.validate(self.var.get())

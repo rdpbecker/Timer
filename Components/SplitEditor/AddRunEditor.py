@@ -43,8 +43,12 @@ class SplitEditor(tk.Frame):
         if len(self.entries.comparisons) <= 5:
             self.deleteComparisonButton["state"] = "disabled"
 
-        self.saveButton = SaveButton.SaveButton(self.buttonFrame, {"callback": self.save})
+        self.saveButton = SaveButton.SaveButton(self.buttonFrame, \
+            {"callback": self.save, \
+            "valid": self.validSave, \
+            "invalidMsg": "Runs must have a\nnon-empty game and\ncategory"})
         self.saveButton.pack(side="bottom",fill="x")
+        self.saveWarning = tk.Label(self.buttonFrame,text="Warning: some\ncurrent values are\ninvalid. For invalid\nvalues, the most\nrecent valid value\n will be saved.",fg="orange")
 
     def updateRows(self,*args):
         self.entries.pack_forget()
@@ -77,7 +81,22 @@ class SplitEditor(tk.Frame):
         if len(self.entries.comparisons) <= 5:
             self.deleteComparisonButton["state"] = "disabled"
 
+    def validSave(self):
+        self.saveWarning.pack_forget()
+        if not (self.selection.game and self.selection.category):
+            self.saveButton.options["invalidMsg"] = "Runs must have a\nnon-empty game and\ncategory."
+        elif not self.entries.leftFrame.isValid():
+            self.saveButton.options["invalidMsg"] = "All split names\nmust be non-empty."
+        elif self.deleteSplitButton["state"] == "disabled":
+            self.saveButton.options["invalidMsg"] = "This run has no splits."
+        elif self.entries.shouldWarn():
+            self.saveWarning.pack(side="bottom",fill="both")
+
+        return self.selection.game and self.selection.category and self.entries.leftFrame.isValid() and (not self.deleteSplitButton["state"] == "disabled")
+
     def save(self,retVal):
+        if not retVal:
+            return
         game = self.selection.game
         category = self.selection.category
         if self.splits.validPair(game,category):

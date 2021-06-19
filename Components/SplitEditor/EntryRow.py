@@ -33,6 +33,9 @@ class EntryRow(tk.Frame):
             pair[1].grid(row=0,column=i+1)
             self.pairs.append(pair)
 
+    def shouldWarn(self):
+        return not all([self.pairs[i][0].isValid() for i in filter(lambda x: not x == 4, range(len(self.pairs)))])
+
     def updateEntry(self,index,time):
         if not index == 4:
             self.pairs[index][0].setText(timeh.timeToString(time,{"precision":2}))
