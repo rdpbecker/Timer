@@ -3,8 +3,9 @@ from Components import ValidationEntry as VE
 
 class LeftFrame(tk.Frame):
     cellWidth = 10
-    def __init__(self,parent,comparisons):
+    def __init__(self,parent,comparisons,parentObj):
         super().__init__(parent)
+        self.grid = parentObj
         self.currentSplit = -1
         self.frames = []
         self.labels = []
@@ -17,6 +18,7 @@ class LeftFrame(tk.Frame):
 
     def onClicked(self,event):
         self.updateCurrentSplit(self.labels.index(event.widget))
+        self.grid.splitUpdated()
 
     def addRow(self,newName):
         label = tk.Label(self,text=len(self.labels)+1)
@@ -34,9 +36,9 @@ class LeftFrame(tk.Frame):
         del self.names[-1]
         del self.labels[-1]
 
-    def updateCurrentSplit(self,new):
-        if new == self.currentSplit:
-            return
+    def updateCurrentSplit(self,new,allowRemoval=True):
+        if new == self.currentSplit and allowRemoval:
+            new = -1
         for i in range(len(self.labels)):
             if i == new:
                 self.labels[i]["bg"] = "blue"
@@ -48,15 +50,14 @@ class LeftFrame(tk.Frame):
 
     def addSplit(self,index):
         self.addRow("")
+        self.updateCurrentSplit(index,False)
         if index < 0:
-            self.updateCurrentSplit(len(self.names))
             return
 
         names = self.splitNames()
         self.names[index].setText("",True)
         for i in range(index+1,len(self.names)):
             self.names[i].setText(names[i-1],True)
-        self.updateCurrentSplit(index)
 
     def removeSplit(self):
         if self.currentSplit < 0:

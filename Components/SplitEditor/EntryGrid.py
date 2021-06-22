@@ -8,8 +8,9 @@ from util import timeHelpers as timeh
 from util import dataManip
 
 class EntryGrid(ScrollableFrame.ScrollableFramePin):
-    def __init__(self,parent,comparisons):
+    def __init__(self,parent,comparisons,parentObj):
         super().__init__(parent,width=600,height=300)
+        self.editor = parentObj
 
         self.rightFrame = tk.Frame(self.main())
         self.rightFrame.pack(side="left",fill="y")
@@ -33,12 +34,15 @@ class EntryGrid(ScrollableFrame.ScrollableFramePin):
     def shouldWarn(self):
         return any([row.shouldWarn() for row in self.rows]) or self.leftFrame.shouldWarn()
 
+    def splitUpdated(self):
+        self.editor.updateDeleteState()
+
     def insertPinnedX(self,*args):
         self.headerRow = HeaderRow.HeaderRow(self.pinnedY(),self.headers)
         self.headerRow.pack(side="top",fill="both")
 
     def insertPinnedY(self,*args):
-        self.leftFrame = LeftFrame.LeftFrame(self.pinnedX(),self.comparisonData[1:])
+        self.leftFrame = LeftFrame.LeftFrame(self.pinnedX(),self.comparisonData[1:],self)
         self.leftFrame.pack(side="left",fill="both")
 
     def addSplit(self):

@@ -30,9 +30,9 @@ class SplitEditor(tk.Frame):
             if not self.splits.validPair(self.oldGame,self.oldCategory):
                 self.editor.entries.pack(side="left")
                 return
-            self.editor.entries = EntryGrid.EntryGrid(self.editor,dataManip.newComparisons())
+            self.editor.entries = EntryGrid.EntryGrid(self.editor,dataManip.newComparisons(),self.editor)
         else:
-            self.editor.entries = EntryGrid.EntryGrid(self.editor,fileio.csvReadStart(self.config["baseDir"],self.selection.game,self.selection.category,self.splits.getSplitNames(self.selection.game,self.selection.category))[1])
+            self.editor.entries = EntryGrid.EntryGrid(self.editor,fileio.csvReadStart(self.config["baseDir"],self.selection.game,self.selection.category,self.splits.getSplitNames(self.selection.game,self.selection.category))[1],self.editor)
         self.editor.entries.pack(side="left")
         self.oldGame = self.selection.game
         self.oldCategory = self.selection.category
