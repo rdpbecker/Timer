@@ -5,7 +5,7 @@ class SaveButton(tk.Frame):
     def __init__(self,parent,options):
         super().__init__(parent)
         self.parent = parent
-        self.options = {**{"text": "Save", "callback": self.save, "valid": self.validSave, "invalidMsg": ""},**options}
+        self.options = {**{"text": "Save", "save": self.save, "valid": self.validSave, "invalidMsg": ""},**options}
         self.button = tk.Button(self)
         self.button["command"] = self.confirmSave
         self.button["text"] = self.options["text"]
@@ -31,9 +31,9 @@ class SaveButton(tk.Frame):
         self.removeWarning()
         ConfirmPopup.ConfirmPopup(\
             self.parent,\
-            self.options["callback"],\
+            self.options["save"],\
             "Save",\
-            "Save local changes?"\
+            "Save local changes? (Closing this window will save automatically)"\
         )
 
     def save(self,retVal):

@@ -1,7 +1,6 @@
 # Run tkinter code in another thread
 
 import tkinter as tk
-from tkinter import messagebox as mb
 import threading
 from timeit import default_timer as timer
 from Components import Menu
@@ -223,11 +222,8 @@ class App(threading.Thread):
             return
         if self.state.unSaved:
             self.confirmSave(self.saveIfDesired)
-        self.setNewState(newSession)
-
-    def setNewState(self,session):
         compareNum = self.state.compareNum
-        self.session.setRun(session["game"],session["category"])
+        self.session.setRun(newSession["game"],newSession["category"])
         self.state = State.State(self.session)
         self.state.setComparison(compareNum)
         self.updateWidgets("runChanged",state=self.state)

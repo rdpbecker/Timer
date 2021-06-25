@@ -31,7 +31,7 @@ class Editor(tk.Frame):
             self.deleteComparisonButton["state"] = "disabled"
 
         self.saveButton = SaveButton.SaveButton(self.buttonFrame, \
-            {"callback": self.save, \
+            {"save": self.save, \
             "valid": self.validSave, \
             "invalidMsg": "Current data is invalid."})
         self.saveButton.pack(side="bottom",fill="x")
