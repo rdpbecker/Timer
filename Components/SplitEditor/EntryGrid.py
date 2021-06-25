@@ -106,7 +106,7 @@ class EntryGrid(ScrollableFrame.ScrollableFramePin):
             if "entry" in columns:
                 self.rows[i].updateEntry(comparison,self.comparisons[comparison].bests[i])
 
-    def generateCsvs(self):
+    def generateGrid(self):
         current = [[] for i in range(len(self.rows))]
         for i in range(len(self.comparisons)):
             dataManip.insertSumList(self.comparisons[i],0,2*i,current,{"precision":5})

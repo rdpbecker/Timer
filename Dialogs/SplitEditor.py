@@ -31,7 +31,7 @@ class SplitEditor(Popup.Popup):
     def save(self,retVal):
         if not retVal:
             return
-        csvs = self.editor.entries.generateCsvs()
+        csvs = self.editor.entries.generateGrid()
         csvs["complete"] = dataManip.adjustNamesMismatch(csvs["names"],self.state.completeCsv,self.editor.entries.originals)
         fileio.writeCSVs(self.state.config["baseDir"],self.state.game,self.state.category,csvs["complete"],csvs["comparisons"])
         self.splits.updateNames(self.state.game,self.state.category,csvs["names"])

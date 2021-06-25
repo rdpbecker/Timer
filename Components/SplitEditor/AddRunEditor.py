@@ -57,7 +57,7 @@ class SplitEditor(tk.Frame):
         category = self.selection.category
         if self.splits.validPair(game,category):
             category = category + "Copy"
-        csvs = self.editor.entries.generateCsvs()
+        csvs = self.editor.entries.generateGrid()
         csvs["complete"] = dataManip.newCompleteCsv(csvs["names"])
         fileio.writeCSVs(self.config["baseDir"],game,category,csvs["complete"],csvs["comparisons"])
         self.splits.updateNames(game,category,csvs["names"])
