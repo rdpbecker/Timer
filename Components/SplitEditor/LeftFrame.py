@@ -26,9 +26,12 @@ class LeftFrame(tk.Frame):
         label.grid(row=len(self.labels),column=0,sticky="NSWE")
         self.labels.append(label)
 
-        name = VE.Entry(self,newName,{"validate":lambda val: val and val.find(",") < 0},width=self.cellWidth)
+        name = VE.Entry(self,newName,{"validate": self.validate},width=self.cellWidth)
         name.grid(row=len(self.names),column=1,sticky="NSEW")
         self.names.append(name)
+
+    def validate(self,val):
+        return len(val) > 0 and val.find(",") < 0
 
     def removeRow(self,index):
         self.names[-1].grid_forget()
@@ -69,8 +72,8 @@ class LeftFrame(tk.Frame):
             self.names[i].setText(names[i])
         self.updateCurrentSplit(-1)
 
-    def isValid(self):
-        return all(self.splitNames())
-
     def shouldWarn(self):
-        return not all([name.isValid() for name in self.names])
+        return not all([self.validate(name) for name in self.splitNames()])
+
+    def isValid(self):
+        return all([name.isValid() for name in self.names])

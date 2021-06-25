@@ -21,7 +21,7 @@ class SplitEditor(tk.Frame):
 
         self.editor = MainEditor.Editor(self,dataManip.newComparisons())
         self.editor.pack(side="bottom")
-        self.editor.saveButton.options["callback"] = self.save
+        self.editor.saveButton.options["save"] = self.save
         self.editor.saveButton.options["valid"] = self.validSave
 
     def updateRows(self,*args):
@@ -43,19 +43,19 @@ class SplitEditor(tk.Frame):
             self.editor.saveButton.options["invalidMsg"] = "Runs must have a\nnon-empty game and\ncategory."
         elif not self.editor.entries.leftFrame.isValid():
             self.editor.saveButton.options["invalidMsg"] = "All split names\nmust be non-empty."
-        elif self.editor.deleteSplitButton["state"] == "disabled":
+        elif not len(self.editor.entries.rows):
             self.editor.saveButton.options["invalidMsg"] = "This run has no splits."
         elif self.editor.entries.shouldWarn():
             self.editor.saveWarning.pack(side="bottom",fill="both")
 
-        return self.selection.game and self.selection.category and self.editor.entries.leftFrame.isValid() and (not self.editor.deleteSplitButton["state"] == "disabled")
+        return self.selection.game and self.selection.category and self.editor.entries.leftFrame.isValid() and len(self.editor.entries.rows)
 
     def save(self,retVal):
         if not retVal:
             return
         game = self.selection.game
         category = self.selection.category
-        if self.splits.validPair(game,category):
+        while self.splits.validPair(game,category):
             category = category + "Copy"
         csvs = self.editor.entries.generateGrid()
         csvs["complete"] = dataManip.newCompleteCsv(csvs["names"])

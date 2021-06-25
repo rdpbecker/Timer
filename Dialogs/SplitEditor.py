@@ -16,17 +16,19 @@ class SplitEditor(Popup.Popup):
 
         self.editor = MainEditor.Editor(self.window,state.comparesCsv)
         self.editor.pack()
-        self.editor.saveButton.options["callback"] = self.save
+        self.editor.saveButton.options["save"] = self.save
         self.editor.saveButton.options["valid"] = self.validSave
 
     def validSave(self):
         self.editor.saveWarning.pack_forget()
-        if self.editor.deleteSplitButton["state"] == "disabled":
+        if not len(self.editor.entries.rows):
             self.editor.saveButton.options["invalidMsg"] = "This run has no splits."
+        elif not self.editor.entries.leftFrame.isValid():
+            self.editor.saveButton.options["invalidMsg"] = "All split names\nmust be non-empty."
         elif self.editor.entries.shouldWarn():
             self.editor.saveWarning.pack(side="bottom",fill="both")
 
-        return not self.editor.deleteSplitButton["state"] == "disabled"
+        return len(self.editor.entries.rows) > 0 and self.editor.entries.leftFrame.isValid()
 
     def save(self,retVal):
         if not retVal:
