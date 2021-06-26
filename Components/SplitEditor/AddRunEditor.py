@@ -23,6 +23,7 @@ class SplitEditor(tk.Frame):
         self.editor.pack(side="bottom")
         self.editor.saveButton.options["save"] = self.save
         self.editor.saveButton.options["valid"] = self.validSave
+        self.localEntries = EntryGrid.EntryGrid(self.editor,dataManip.newComparisons(),self.editor) 
 
         self.savedGame = ""
         self.savedCategory = ""
@@ -33,8 +34,10 @@ class SplitEditor(tk.Frame):
             if not self.splits.validPair(self.oldGame,self.oldCategory):
                 self.editor.entries.pack(side="left")
                 return
-            self.editor.entries = EntryGrid.EntryGrid(self.editor,dataManip.newComparisons(),self.editor)
+            self.editor.entries = self.localEntries
         else:
+            if not self.splits.validPair(self.oldGame,self.oldCategory):
+                self.localEntries = self.editor.entries
             self.editor.entries = EntryGrid.EntryGrid(self.editor,fileio.csvReadStart(self.config["baseDir"],self.selection.game,self.selection.category,self.splits.getSplitNames(self.selection.game,self.selection.category))[1],self.editor)
         self.editor.entries.pack(side="left")
         self.oldGame = self.selection.game
