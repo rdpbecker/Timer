@@ -4,6 +4,7 @@ from util import timeHelpers as timeh
 
 class EntryRow(tk.Frame):
     cellWidth = 10
+    blankIndex = 4
     def __init__(self,parent,parentObj,comparisonsRow):
         super().__init__(parent)
         self.parent = parentObj
@@ -12,46 +13,42 @@ class EntryRow(tk.Frame):
 
         self.pairs = []
         for i in range(0,len(comparisonsRow),2):
-            if not self.comparisonIndex(i) == 4:
-                pair = [\
-                    VE.Entry(\
-                        self,\
-                        timeh.trimTime(comparisonsRow[i]),\
-                        {\
-                            "validate": lambda time: timeh.validTime(time),\
-                            "followup": lambda time, timeIndex=i: self.parent.updateComparisonValue(self,timeIndex,time)\
-                        },\
-                        width=self.cellWidth,justify="right"),\
-                    tk.Label(self,text=f'{timeh.trimTime(comparisonsRow[i+1])}',width=self.cellWidth,anchor="e")
-                ]
+            if not self.comparisonIndex(i) == self.blankIndex:
+                pair = self.generalPair(i,comparisonsRow[i:i+2])
             else:
-                pair = [\
-                    tk.Label(self,text=f'{timeh.trimTime(comparisonsRow[i])}',width=self.cellWidth,anchor="e"),\
-                    tk.Label(self,text=f'{timeh.trimTime(comparisonsRow[i+1])}',width=self.cellWidth,anchor="e")\
-                ]
+                pair = self.blankPair(comparisonsRow[i:i+2])
             pair[0].grid(row=0,column=i)
             pair[1].grid(row=0,column=i+1)
             self.pairs.append(pair)
 
+    def generalPair(self,index,times):
+        return [\
+            VE.Entry(\
+                self,\
+                timeh.trimTime(times[0]),\
+                {\
+                    "validate": lambda time: timeh.validTime(time),\
+                    "followup": lambda time, timeIndex=index: self.parent.updateComparisonValue(self,timeIndex,time)\
+                },\
+                width=self.cellWidth,justify="right"),\
+            tk.Label(self,text=timeh.trimTime(times[1]),width=self.cellWidth,anchor="e")
+        ]
+
+    def blankPair(self,times):
+        return [\
+            tk.Label(self,text=timeh.trimTime(times[0]),width=self.cellWidth,anchor="e"),\
+            tk.Label(self,text=timeh.trimTime(times[1]),width=self.cellWidth,anchor="e")\
+        ]
+
     def shouldWarn(self):
-        return not all([self.pairs[i][0].isValid() for i in filter(lambda x: not x == 4, range(len(self.pairs)))])
+        return not all([self.pairs[i][0].isValid() for i in filter(lambda x: not x == self.blankIndex, range(len(self.pairs)))])
 
     def updateEntry(self,index,time):
-        if not index == 4:
+        if not index == self.blankIndex:
             self.pairs[index][0].setText(timeh.timeToString(time,{"precision":2}))
 
     def addComparison(self):
-        pair = [\
-            VE.Entry(\
-                self,\
-                '-',\
-                {\
-                    "validate": lambda time: timeh.validTime(time),\
-                    "followup": lambda time, timeIndex=len(self.pairs): self.parent.updateComparisonValue(self,timeIndex,time)\
-                },\
-                width=self.cellWidth,justify="right"),\
-            tk.Label(self,text='-',width=self.cellWidth,anchor="e")
-        ]
+        pair = self.generalPair(len(self.pairs),['-','-'])
         i = self.columnIndex(len(self.pairs))
         pair[0].grid(row=0,column=i)
         pair[1].grid(row=0,column=i+1)
