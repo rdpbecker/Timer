@@ -39,16 +39,19 @@ class SplitEditor(tk.Frame):
 
     def validSave(self):
         self.editor.saveWarning.pack_forget()
-        if not (self.selection.game and self.selection.category):
+        check1 = self.selection.game and self.selection.category
+        check2 = self.editor.entries.leftFrame.isValid()
+        check3 = len(self.editor.entries.rows) > 0
+        if not check1:
             self.editor.saveButton.options["invalidMsg"] = "Runs must have a\nnon-empty game and\ncategory."
-        elif not self.editor.entries.leftFrame.isValid():
+        elif not check2:
             self.editor.saveButton.options["invalidMsg"] = "All split names\nmust be non-empty."
-        elif not len(self.editor.entries.rows):
+        elif not check3:
             self.editor.saveButton.options["invalidMsg"] = "This run has no splits."
         elif self.editor.entries.shouldWarn():
             self.editor.saveWarning.pack(side="bottom",fill="both")
 
-        return self.selection.game and self.selection.category and self.editor.entries.leftFrame.isValid() and len(self.editor.entries.rows)
+        return check1 and check2 and check3
 
     def save(self,retVal):
         if not retVal:

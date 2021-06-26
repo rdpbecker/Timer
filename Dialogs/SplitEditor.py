@@ -21,14 +21,16 @@ class SplitEditor(Popup.Popup):
 
     def validSave(self):
         self.editor.saveWarning.pack_forget()
-        if not len(self.editor.entries.rows):
+        check1 = len(self.editor.entries.rows) > 0
+        check2 = self.editor.entries.leftFrame.isValid()
+        if not check1:
             self.editor.saveButton.options["invalidMsg"] = "This run has no splits."
-        elif not self.editor.entries.leftFrame.isValid():
+        elif not check2:
             self.editor.saveButton.options["invalidMsg"] = "All split names\nmust be non-empty."
         elif self.editor.entries.shouldWarn():
             self.editor.saveWarning.pack(side="bottom",fill="both")
 
-        return len(self.editor.entries.rows) > 0 and self.editor.entries.leftFrame.isValid()
+        return check1 and check2
 
     def save(self,retVal):
         if not retVal:
