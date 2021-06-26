@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from Components import GameSelector
+from Components import LayoutSelector
 from Components import RunsMenu
 from Dialogs import BaseDialog
 from util import fileio
@@ -17,18 +18,15 @@ class RunSelector(BaseDialog.Dialog):
         self.root.configure(bg="black",menu=RunsMenu.Menu(self.root,self.setRun))
 
         self.selector = GameSelector.Selector(self.root)
-        self.selector.grid(row=0,column=0,columnspan=12,sticky="WE")
+        self.selector.pack(fill="x")
 
-        self.layoutVar = tk.StringVar()
-        self.layoutVar.set("System Default")
-        self.layoutVar.trace('w',self.setLayout)
-        self.layoutCombo = tk.ttk.Combobox(self.root,values=lh.getLayouts(),textvariable=self.layoutVar)
-        layoutLabel = tk.Label(self.root,bg="black",fg="white",text="Layout:")
-        self.layoutCombo.grid(row=1,column=4,columnspan=8,sticky="WE")
-        layoutLabel.grid(row=1,column=0,columnspan=4,sticky="W")
+        self.layouts = LayoutSelector.Selector(self.root)
+        self.layouts.pack(fill="x")
 
         confirm = tk.Button(self.root,fg="black",bg="steel blue",text="Confirm Selection",command=self.accept)
-        confirm.grid(row=2,column=0,columnspan=12,sticky="WE")
+        confirm.pack(fill="x")
+
+        self.error = None
 
     def setRun(self,game,category):
         self.selector.game = game
@@ -37,13 +35,11 @@ class RunSelector(BaseDialog.Dialog):
         self.selector.cateVar.set(category)
         self.selector.updateCateCombo()
 
-    def setLayout(self,*args):
-        self.layoutName = self.layoutVar.get()
-
     def accept(self):
-        if not self.selector.game or not self.selector.category or not self.layoutName:
-            error = tk.Label(self.root,bg="black",fg="white",text="A game and category must both be selected.")
-            error.grid(row=3,column=0,columnspan=12,sticky="WE")
+        if not self.selector.game or not self.selector.category or not self.layouts.layoutName:
+            if not self.error:
+                self.error = tk.Label(self.root,bg="black",fg="white",text="A game and category must both be selected.")
+                self.error.pack(fill="x")
             return
         self.setReturn()
         self.retVal["exitCode"] = "accept"
@@ -56,4 +52,4 @@ class RunSelector(BaseDialog.Dialog):
         self.retVal["game"] = self.selector.game
         self.retVal["category"] = self.selector.category
         self.retVal["splitNames"] = self.selector.splits.getSplitNames(self.selector.game,self.selector.category)
-        self.retVal["layoutName"] = self.layoutName
+        self.retVal["layoutName"] = self.layouts.layoutName
