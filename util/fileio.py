@@ -114,3 +114,9 @@ def getLayouts():
     else:
         layoutFiles = ["System Default"]
     return layoutFiles
+
+def removeCategory(baseDir,game,category):
+    csvName = resolveFilename([baseDir,game,category + ".csv"])
+    compareCsvName = resolveFilename([baseDir,game,category + "_comparisons.csv"])
+    os.remove(csvName)
+    os.remove(compareCsvName)

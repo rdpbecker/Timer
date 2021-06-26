@@ -84,6 +84,19 @@ class Splits:
         newNames.extend(names)
         self.splitNames.insert(cateIndex,newNames)
 
+    def removePair(self,game,category,write=True):
+        if not self.validPair(game,category):
+            return
+        toRemove = self.indexDict[game][category]
+        del self.indexDict[game][category]
+        del self.splitNames[toRemove]
+        for game in self.getGames():
+            for category in self.getCategories(game):
+                if self.indexDict[game][category] > toRemove:
+                    self.indexDict[game][category] = self.indexDict[game][category] - 1
+        if write:
+            self.writeSplits()
+
     def updateExistingCategory(self,game,category,names):
         newNames = self.splitNames[self.indexDict[game][category]][:2]
         newNames.extend(names)

@@ -24,6 +24,9 @@ class SplitEditor(tk.Frame):
         self.editor.saveButton.options["save"] = self.save
         self.editor.saveButton.options["valid"] = self.validSave
 
+        self.savedGame = ""
+        self.savedCategory = ""
+
     def updateRows(self,*args):
         self.editor.entries.pack_forget()
         if not self.splits.validPair(self.selection.game,self.selection.category):
@@ -36,6 +39,9 @@ class SplitEditor(tk.Frame):
         self.editor.entries.pack(side="left")
         self.oldGame = self.selection.game
         self.oldCategory = self.selection.category
+
+    def hasSaved(self,game,category):
+        return game == self.savedGame and category == self.savedCategory
 
     def validSave(self):
         self.editor.saveWarning.pack_forget()
@@ -58,9 +64,14 @@ class SplitEditor(tk.Frame):
             return
         game = self.selection.game
         category = self.selection.category
-        while self.splits.validPair(game,category):
+        while self.splits.validPair(game,category) and not self.hasSaved(game,category):
             category = category + "Copy"
+        if self.splits.validPair(self.savedGame,self.savedCategory):
+            self.splits.removePair(self.savedGame,self.savedCategory)
+            fileio.removeCategory(self.config["baseDir"],self.savedGame,self.savedCategory)
         csvs = self.editor.entries.generateGrid()
         csvs["complete"] = dataManip.newCompleteCsv(csvs["names"])
         fileio.writeCSVs(self.config["baseDir"],game,category,csvs["complete"],csvs["comparisons"])
         self.splits.updateNames(game,category,csvs["names"])
+        self.savedGame = game
+        self.savedCategory = category
