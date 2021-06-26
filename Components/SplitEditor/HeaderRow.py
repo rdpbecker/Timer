@@ -3,11 +3,12 @@ from Components import ValidationEntry as VE
 
 class HeaderRow(tk.Frame):
     cellWidth = 10
+    blankIndex = 4
     def __init__(self,parent,headerRow):
         super().__init__(parent)
         self.entries = []
         for i in range(len(headerRow)):
-            if not i in [8,9]:
+            if not i in [2*self.blankIndex,2*self.blankIndex+1]:
                 self.addHeader(headerRow[i])
             else:
                 entry = tk.Label(self,text=headerRow[i],width=self.cellWidth)
@@ -16,9 +17,9 @@ class HeaderRow(tk.Frame):
 
     def headers(self):
         return\
-            [self.entries[i].val for i in range(8)]\
-            + [self.entries[8]["text"],self.entries[9]["text"]]\
-            + [self.entries[i].val for i in range(10,len(self.entries))]
+            [self.entries[i].val for i in range(2*self.blankIndex)]\
+            + [self.entries[2*self.blankIndex]["text"],self.entries[2*self.blankIndex+1]["text"]]\
+            + [self.entries[i].val for i in range(2*(self.blankIndex+1),len(self.entries))]
 
     def addHeaders(self,newHeaders):
         for header in newHeaders:
