@@ -1,10 +1,7 @@
 import tkinter as tk
-import copy
 from DataClasses import AllSplitNames
 from Dialogs import Popup
-from Components.SplitEditor import EntryGrid
 from Components.SplitEditor import MainEditor
-from Components import SaveButton
 from util import fileio
 from util import dataManip
 
