@@ -1,7 +1,6 @@
 import tkinter as tk
-from tkinter import ttk
+from Components import LayoutSelector
 from Dialogs import Popup
-from util import layoutHelper as lh
 
 class LayoutPopup(Popup.Popup):
     layoutVar = None
@@ -11,21 +10,16 @@ class LayoutPopup(Popup.Popup):
         super().__init__(master,callback)
         self.session = session
 
-    def show(self):
-        self.retVal = self.session.layoutName
         self.window.configure(bg="black")
         self.window.title("Choose Layout")
 
-        self.layoutVar = tk.StringVar()
-        self.layoutVar.set(self.session.layoutName)
-        self.layoutVar.trace('w',self.setLayout)
-        layoutCombo = tk.ttk.Combobox(self.window,values=lh.getLayouts(),textvariable=self.layoutVar)
-        layoutLabel = tk.Label(self.window,bg="black",fg="white",text="Layout:")
-        layoutCombo.grid(row=0,column=4,columnspan=8,sticky="WE")
-        layoutLabel.grid(row=0,column=0,columnspan=4,sticky="W")
+        self.layouts = LayoutSelector.Selector(self.window)
+        self.layouts.pack()
+        self.retVal["layoutName"] = self.session.layoutName
+        self.layouts.layoutVar.set(self.session.layoutName)
 
         confirm = tk.Button(self.window,fg="black",bg="steel blue",text="Confirm Selection",command=self.accept)
-        confirm.grid(row=1,column=0,columnspan=12,sticky="WE")
+        confirm.pack(fill="x")
 
-    def setLayout(self,*args):
-        self.retVal = self.layoutVar.get()
+    def setReturn(self):
+        self.retVal["layoutName"] = self.layouts.layoutName

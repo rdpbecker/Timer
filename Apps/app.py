@@ -202,7 +202,8 @@ class App(threading.Thread):
             return
         LayoutPopup.LayoutPopup(self.root,self.setLayout,self.session).show()
 
-    def setLayout(self,layoutName):
+    def setLayout(self,retVal):
+        layoutName = retVal["layoutName"]
         if not layoutName == self.session.layoutName:
             self.session.setLayout(layoutName)
             self.retVal = 1

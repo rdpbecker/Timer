@@ -7,11 +7,12 @@ class Selector(tk.Frame):
         for i in range(3):
             self.columnconfigure(i,weight=1)
 
+        self.layouts = lh.getLayouts()
         self.layoutName = "System Default"
         self.layoutVar = tk.StringVar()
         self.layoutVar.set(self.layoutName)
         self.layoutVar.trace('w',self.setLayout)
-        self.layoutCombo = tk.ttk.Combobox(self,values=lh.getLayouts(),textvariable=self.layoutVar)
+        self.layoutCombo = tk.ttk.Combobox(self,values=self.layouts,textvariable=self.layoutVar)
         layoutLabel = tk.Label(self,text="Layout:")
         self.layoutCombo.grid(row=0,column=1,columnspan=2,sticky="WE")
         layoutLabel.grid(row=0,column=0,sticky="W")
