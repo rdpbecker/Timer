@@ -256,10 +256,6 @@ class State(BaseState.State):
             self.completeCsv[0].insert(1,"Run #"+str(int((len(self.completeCsv[1])+1)/2)))
             self.completeCsv[0].insert(2,"Totals")
             dataManip.insertSumList(SumList.SumList(self.currentRun.segments),1,1,self.completeCsv)
-        for line in self.completeCsv:
-            print(line)
-        for line in self.comparesCsv:
-            print(line)
         self.unSaved = True
 
     ##########################################################
