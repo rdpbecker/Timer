@@ -1,7 +1,11 @@
 import os, csv, json
+from util import dataManip
 
 def resolveFilename(arr):
     return "/".join(arr)
+
+def getDir(string):
+    return resolveFilename(string.split("/")[:-1])
 
 def csvReadStart(baseDir,name,category,splitList):
     csvName = resolveFilename([baseDir,name,category + ".csv"])
@@ -23,14 +27,7 @@ def csvReadStart(baseDir,name,category,splitList):
             csvReader = csv.reader(reader, delimiter = ',')
             for row in csvReader:
                 splitWrite[0].append(row)
-        if len(splitWrite[0]) > len(splitList) + 1:
-            while len(splitWrite[0]) > len(splitList) + 1:
-                splitWrite[0].pop(-1)
-        elif len(splitWrite[0]) < len(splitList) + 1:
-            while len(splitWrite[0]) < len(splitList) + 1:
-                row = [splitList[len(splitWrite[0])-1]]
-                row.extend(['-' for i in range(len(splitWrite[0][0])-1)])
-                splitWrite[0].append(row)
+        splitWrite[0] = dataManip.adjustNames(splitList,splitWrite[0])
 
     if not os.path.exists(compareCsvName):
         if not os.path.isdir(resolveFilename([baseDir,name])):
@@ -60,14 +57,7 @@ def csvReadStart(baseDir,name,category,splitList):
             csvReader = csv.reader(reader, delimiter = ',')
             for row in csvReader:
                 splitWrite[1].append(row)
-        if len(splitWrite[1]) > len(splitList) + 1:
-            while len(splitWrite[1]) > len(splitList) + 1:
-                splitWrite[1].pop(-1)
-        elif len(splitWrite[1]) < len(splitList) + 1:
-            while len(splitWrite[1]) < len(splitList) + 1:
-                row = [splitList[len(splitWrite[1])-1]]
-                row.extend(['-' for i in range(len(splitWrite[1][1])-1)])
-                splitWrite[1].append(row)
+        splitWrite[1] = dataManip.adjustNames(splitList,splitWrite[1])
 
     return splitWrite
 
@@ -78,6 +68,8 @@ def writeCSVs(baseDir,name,category,splitWrite,comparesWrite):
         writeCSV(resolveFilename([baseDir,name,category + "_comparisons.csv"]),comparesWrite)
 
 def writeCSV(filename,rows):
+    if not os.path.exists(getDir(filename)):
+        os.mkdir(getDir(filename))
     with open(filename,'w') as writer:
         csvWriter = csv.writer(writer, delimiter = ',')
         for thing in rows:
@@ -88,6 +80,8 @@ def stripEmptyStrings(stringList):
         stringList.pop(-1)
 
 def stripEmptyStringsReturn(stringList):
+    if not len(stringList):
+        return []
     new = [stringList[i] for i in range(len(stringList))]
     while not new[-1]:
         new.pop(-1)
@@ -104,6 +98,8 @@ def writeJson(filepath,data):
         writer.write(jsonData)
 
 def readCsv(filepath):
+    if not os.path.exists(filepath):
+        return []
     with open(filepath,'r') as csvfile:
         reader = csv.reader(csvfile, delimiter=",",quotechar="|")
         csvlines = []
@@ -118,3 +114,9 @@ def getLayouts():
     else:
         layoutFiles = ["System Default"]
     return layoutFiles
+
+def removeCategory(baseDir,game,category):
+    csvName = resolveFilename([baseDir,game,category + ".csv"])
+    compareCsvName = resolveFilename([baseDir,game,category + "_comparisons.csv"])
+    os.remove(csvName)
+    os.remove(compareCsvName)

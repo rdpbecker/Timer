@@ -4,6 +4,7 @@ import errors as Errors
 from DataClasses import AllSplitNames
 from DataClasses import Session
 from Dialogs import RunSelector
+from Dialogs import AddRun
 from States import State
 from util import fileio
 from util import layoutHelper as lh
@@ -24,6 +25,9 @@ def setHotkeys(app,state):
     app.root.bind(state.config["hotkeys"]["chooseRun"], app.chooseRun)
 
 splits = AllSplitNames.Splits()
+if not len(splits.getGames()):
+    AddRun.SplitEditorD().show()
+    splits.update()
 session = Session.Session(splits)
 
 app = None

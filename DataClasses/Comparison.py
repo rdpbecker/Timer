@@ -25,13 +25,13 @@ class Comparison:
             return timeh.timeToString(self.segmentDiffs[index],options)
         if (name == "totalDiffs"):
             return timeh.timeToString(self.totalDiffs[index],options)
-        return "BLANK"
+        return timeh.blank()
 
     def updateDiffs(self,splittime,totaltime):
         if (not(len(self.segmentDiffs)) or not timeh.isBlank(self.totalDiffs[-1])):
             self.segmentDiffs.append(timeh.difference(splittime,self.segments[len(self.segmentDiffs)]))
         else:
-            self.segmentDiffs.append("BLANK")
+            self.segmentDiffs.append(timeh.blank())
         self.totalDiffs.append(timeh.difference(totaltime,self.totals[len(self.totalDiffs)]))
 
     def lastNonBlank(self):

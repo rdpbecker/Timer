@@ -1,13 +1,16 @@
 # Run tkinter code in another thread
 
 import tkinter as tk
-from tkinter import messagebox as mb
 import threading
 from timeit import default_timer as timer
 from Components import Menu
+from DataClasses import AllSplitNames
+from DataClasses import Session
+from Dialogs import AddRun
 from Dialogs import ConfirmPopup
 from Dialogs import RunPopup
 from Dialogs import LayoutPopup
+from Dialogs import SplitEditor
 from States import State
 
 class App(threading.Thread):
@@ -260,3 +263,28 @@ class App(threading.Thread):
         if self.updater:
             self.root.after_cancel(self.updater)
         self.root.destroy()
+
+    def editSplits(self):
+        SplitEditor.SplitEditor(self.root,self.newEditedState,self.state)
+
+    def newEditedState(self,retVal):
+        compareNum = self.state.compareNum
+        session = Session.Session(AllSplitNames.Splits())
+        session.setRun(self.state.game,self.state.category)
+        self.state = State.State(session)
+        self.state.setComparison(compareNum)
+        self.updateWidgets("runChanged",state=self.state)
+
+    def addRun(self):
+        AddRun.SplitEditorP(self.root,self.addRunState)
+
+    def addRunState(self,retVal):
+        compareNum = self.state.compareNum
+        session = Session.Session(AllSplitNames.Splits())
+        if retVal["game"] and retVal["category"]:
+            session.setRun(retVal["game"],retVal["category"])
+        else:
+            session.setRun(self.state.game,self.state.category)
+        self.state = State.State(session)
+        self.state.setComparison(compareNum)
+        self.updateWidgets("runChanged",state=self.state)

@@ -7,7 +7,7 @@ class VarianceColumn(tk.Frame):
         super().__init__(parent)
         self.configure(bg="black")
         tk.Label(self,text=header,fg="white",bg="black").pack(side="top")
-        self.scrollable = ScrollableFrame.ScrollableFrame(self)
+        self.scrollable = ScrollableFrame.ScrollableFrame(self,bg="black",width=200)
         self.scrollable.pack(side="bottom")
         self.rows = []
 

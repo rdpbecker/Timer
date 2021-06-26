@@ -1,6 +1,6 @@
 import os
+from util import dataManip
 from util import fileio
-from util import readConfig as rc
 from util import timeHelpers as timeh
 from DataClasses import BptList
 from DataClasses import Comparison
@@ -26,8 +26,8 @@ class State(BaseState.State):
 
     def __init__(self,session):
         super().__init__(session)
-        self.currentBests = SumList.SumList(self.getTimes(1,self.comparesCsv))
-        self.bestExits = DifferenceList.DifferenceList(self.getTimes(8,self.comparesCsv))
+        self.currentBests = SumList.SumList(dataManip.getTimesByCol(1,self.comparesCsv))
+        self.bestExits = DifferenceList.DifferenceList(dataManip.getTimesByCol(8,self.comparesCsv))
         self.comparisons = []
         self.setComparisons()
 
@@ -35,22 +35,22 @@ class State(BaseState.State):
     ## Initialize the comparisons, BPT list, and current run.
     ##########################################################
     def setComparisons(self):
-        self.bptList = BptList.BptList(self.getTimes(1,self.comparesCsv))
+        self.bptList = BptList.BptList(dataManip.getTimesByCol(1,self.comparesCsv))
         
         for i in range(int((len(self.comparesCsv[0])-1)/2)):
             self.comparisons.append(Comparison.Comparison( \
                 self.comparesCsv[0][2*i+1], \
                 self.comparesCsv[0][2*i+2], \
-                self.getTimes(2*i+1,self.comparesCsv), \
-                self.getTimes(2*i+2,self.comparesCsv) \
+                dataManip.getTimesByCol(2*i+1,self.comparesCsv), \
+                dataManip.getTimesByCol(2*i+2,self.comparesCsv) \
              ))
 
         if len(self.completeCsv[0]) > 1:
             self.comparisons.append(Comparison.Comparison( \
                 "Last Run Splits", \
                 "Last Run", \
-                self.getTimes(1,self.completeCsv), \
-                self.getTimes(2,self.completeCsv) \
+                dataManip.getTimesByCol(1,self.completeCsv), \
+                dataManip.getTimesByCol(2,self.completeCsv) \
             ))
 
         self.numComparisons = len(self.comparisons)
@@ -101,10 +101,10 @@ class State(BaseState.State):
     ## Parameters: time - the current system time
     ##########################################################
     def skipSegment(self,time):
-        self.currentRun.addSegment("BLANK","BLANK")
+        self.currentRun.addSegment(timeh.blank(),timeh.blank())
         self.bptList.update(time-self.starttime)
         for i in range(self.numComparisons):
-            self.comparisons[i].updateDiffs("BLANK","BLANK")
+            self.comparisons[i].updateDiffs(timeh.blank(),timeh.blank())
         self.splitnum = self.splitnum + 1
         self.splitstarttime = time
         if self.splitnum >= len(self.splitnames):
@@ -147,7 +147,7 @@ class State(BaseState.State):
                 average.append(self.currentRun.segments[i])
             averageTime = timeh.sumTimeList(average)
             if timeh.isBlank(averageTime):
-                averages.append("BLANK")
+                averages.append(timeh.blank())
             else:
                 averages.append(averageTime/len(average))
         return SumList.SumList(averages)
@@ -244,24 +244,18 @@ class State(BaseState.State):
     ##########################################################
     def localSave(self):
         self.currentRun.fillTimes(len(self.splitnames))
-        bests = self.currentBests
-        averages = self.getAverages()
+        dataManip.replaceCols([self.splitnames],0,self.completeCsv)
+        dataManip.replaceSumList(self.currentBests,1,1,self.comparesCsv,{"precision":5})
+        dataManip.replaceSumList(self.getAverages(),1,3,self.comparesCsv,{"precision":5})
         if self.isPB():
-            pbSplits = [timeh.timesToStringList(self.currentRun.segments,{"precision":5}),timeh.timesToStringList(self.currentRun.totals,{"precision":5})]
-        else:
-            pbSplits = [timeh.timesToStringList(self.comparisons[2].segments,{"precision":5}),timeh.timesToStringList(self.comparisons[2].totals,{"precision":5})]
-        bestSplits = [timeh.timesToStringList(bests.bests,{"precision":5}), timeh.timesToStringList(bests.totalBests,{"precision":5})]
-        averageSplits = [timeh.timesToStringList(averages.bests,{"precision":5}), timeh.timesToStringList(averages.totalBests,{"precision":5})]
-        bestExits = [timeh.timesToStringList(self.bestExits.segments,{"precision":5}), timeh.timesToStringList(self.bestExits.totals,{"precision":5})]
+            dataManip.replaceComparison(self.currentRun,1,5,self.comparesCsv,{"precision":5})
+        dataManip.replaceComparison(self.bestExits,1,7,self.comparesCsv,{"precision":5})
+
         lastRun = [timeh.timesToStringList(self.currentRun.segments,{"precision":5}),timeh.timesToStringList(self.currentRun.totals,{"precision":5})]
-        self.completeCsv[0].insert(1,"Run #"+str(int((len(self.completeCsv[1])+1)/2)))
-        self.completeCsv[0].insert(2,"Totals")
-        self.replaceCsvLines([self.splitnames],0,self.completeCsv)
-        self.replaceCsvLines(bestSplits,1,self.comparesCsv)
-        self.replaceCsvLines(averageSplits,3,self.comparesCsv)
-        self.replaceCsvLines(pbSplits,5,self.comparesCsv)
-        self.replaceCsvLines(bestExits,7,self.comparesCsv)
-        self.insertCsvLines(lastRun,1)
+        if not self.currentRun.empty:
+            self.completeCsv[0].insert(1,"Run #"+str(int((len(self.completeCsv[1])+1)/2)))
+            self.completeCsv[0].insert(2,"Totals")
+            dataManip.insertSumList(SumList.SumList(self.currentRun.segments),1,1,self.completeCsv)
         self.unSaved = True
 
     ##########################################################

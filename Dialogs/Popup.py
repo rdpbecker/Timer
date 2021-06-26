@@ -26,4 +26,5 @@ class Popup:
 
     def finish(self,event=None):
         self.window.destroy()
-        self.callback(self.retVal)
+        if self.callback:
+            self.callback(self.retVal)
