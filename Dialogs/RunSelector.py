@@ -1,40 +1,20 @@
 import tkinter as tk
 from tkinter import ttk
 from Components import GameSelector
+from Components import RunsMenu
 from Dialogs import BaseDialog
 from util import fileio
 from util import layoutHelper as lh
 
 class RunSelector(BaseDialog.Dialog):
-    game = ""
-    category = ""
     layoutName = "System Default"
-    splits = None
-    gameVar = None
-    cateVar = None
     layoutVar = None
-    cateCombo = None
 
     def __init__(self,splits):
         super().__init__()
+
         self.root.title("Choose Run and Layout")
-        self.splits = splits
-
-        menubar = tk.Menu(self.root, tearoff=False)
-        fileMenu = tk.Menu(self.root, tearoff=False)
-
-        menubar.add_cascade(label="Run Reference", menu=fileMenu)
-        lambdas = [[lambda game=game, category=category: self.setRun(game,category) for category in splits.getCategories(game)] for game in splits.getGames()]
-        i = 0
-        for game in splits.getGames():
-            recentMenu = tk.Menu(self.root, tearoff=False)
-            fileMenu.add_cascade(label=game,menu=recentMenu)
-            j = 0
-            for category in splits.getCategories(game):
-                recentMenu.add_command(label=category,command=lambdas[i][j])
-                j = j + 1
-            i = i + 1
-        self.root.configure(bg="black",menu=menubar)
+        self.root.configure(bg="black",menu=RunsMenu.Menu(self.root,self.setRun))
 
         self.selector = GameSelector.Selector(self.root)
         self.selector.grid(row=0,column=0,columnspan=12,sticky="WE")
