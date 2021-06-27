@@ -18,4 +18,6 @@ class Selector(tk.Frame):
         layoutLabel.grid(row=0,column=0,sticky="W")
 
     def setLayout(self,*args):
-        self.layoutName = self.layoutVar.get()
+        name = self.layoutVar.get()
+        if name in self.layouts:
+            self.layoutName = self.layoutVar.get()
