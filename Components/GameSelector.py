@@ -38,7 +38,6 @@ class Selector(tk.Frame):
         else:
             self.game = ""
         self.updateCateCombo()
-        self.category = ""
         self.cateVar.set("")
 
     def setCate(self,*args):

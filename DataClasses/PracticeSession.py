@@ -36,7 +36,7 @@ class Session:
         })
 
     def getSession(self):
-        session = PracticeRunSelector.RunSelector(self.splits).show()
+        session = PracticeRunSelector.RunSelector().show()
         self.setRun(session["game"],session["category"],session["split"])
 
     def setRun(self,game,category,split):
