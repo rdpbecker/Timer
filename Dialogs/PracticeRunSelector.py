@@ -11,29 +11,27 @@ class RunSelector(BaseDialog.Dialog):
         self.root.configure(bg="black",menu=RunsMenu.PracticeMenu(self.root,self.setSplit))
 
         self.selector = SplitSelector.Selector(self.root)
-        self.selector.grid(row=0,column=0,columnspan=12,sticky="WE")
+        self.selector.pack(fill="x")
 
         confirm = tk.Button(self.root,fg="black",bg="steel blue",text="Confirm Selection",command=self.accept)
-        confirm.grid(row=1,column=0,columnspan=12,sticky="WE")
+        confirm.pack(fill="x")
+
+        self.error = None
 
     def setSplit(self,game,category,split):
-        self.selector.game = game
         self.selector.gameVar.set(game)
-        self.selector.category = category
         self.selector.cateVar.set(category)
-        self.selector.split = split
         self.selector.splitVar.set(split)
         self.selector.updateCateCombo()
         self.selector.updateNameCombo()
 
     def accept(self):
         if not self.selector.game or not self.selector.category or not self.selector.split:
-            error = tk.Label(self.root,bg="black",fg="white",text="A game, category, and segment must all be selected.")
-            error.grid(row=2,column=0,columnspan=12,sticky="WE")
+            if not self.error:
+                self.error = tk.Label(self.root,bg="black",fg="white",text="A game, category, and segment must all be selected.")
+                self.error.pack(fill="x")
             return
-        self.retVal["exitCode"] = "accept"
-        self.setReturn()
-        self.root.destroy()
+        super().accept()
 
     def finish(self):
         self.accept()
