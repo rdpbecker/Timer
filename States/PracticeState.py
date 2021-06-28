@@ -46,6 +46,7 @@ class State(BaseState.State):
         if timeh.greater(self.bestTime,splitTime):
             self.bestTime = splitTime
         self.unSaved = True
+        return 4
 
     ##########################################################
     ## Restart the run

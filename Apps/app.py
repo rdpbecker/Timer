@@ -92,9 +92,13 @@ class App(threading.Thread):
         for i in range(12):
             self.root.columnconfigure(i,weight=1)
         if isPractice:
-            self.root.configure(menu=MainMenu.PracticeMenu(self))
+            self.menu = MainMenu.PracticeMenu(self)
+            self.root.configure(menu=self.menu)
         elif (self.state.config["showMenu"]):
-            self.root.configure(menu=MainMenu.Menu(self))
+            self.menu = MainMenu.Menu(self)
+            self.root.configure(menu=self.menu)
+        else:
+            self.menu = None
 
     ##########################################################
     ## Show the window, and call the first update after one
@@ -130,6 +134,7 @@ class App(threading.Thread):
     def start(self, event=None):
         if not self.state.onStarted(timer()):
             self.updateWidgets("start")
+            self.menu.updateMenuState("during")
 
     ##########################################################
     ## At the end of each split, record and store the times, 
@@ -140,8 +145,13 @@ class App(threading.Thread):
         exitCode = self.state.onSplit(timer())
         if exitCode == 1:
             return
-        elif exitCode == 2:
+        elif exitCode and exitCode > 6:
             self.togglePause()
+        if exitCode:
+            if exitCode%3 == 1:
+                self.menu.updateMenuState("after")
+            elif exitCode%3 == 2:
+                self.menu.updateMenuState("last")
         self.updateWidgets("split")
 
     ##########################################################
@@ -170,6 +180,7 @@ class App(threading.Thread):
     def reset(self, event=None):
         if not self.state.onReset():
             self.updateWidgets("reset")
+            self.menu.updateMenuState("after")
 
     ##########################################################
     ## Skip a split
@@ -191,6 +202,7 @@ class App(threading.Thread):
     def restart(self,event=None):
         if not self.state.onRestart():
             self.updateWidgets("restart")
+            self.updateMenuState("before")
 
     ##########################################################
     ## Saves the data stored in the state.

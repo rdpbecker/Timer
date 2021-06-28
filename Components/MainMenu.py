@@ -3,36 +3,182 @@ import tkinter as tk
 class Menu(tk.Menu):
     def __init__(self,app):
         super().__init__(app.root)
-        menubar = tk.Menu(app.root, tearoff=False)
+        self.menubar = tk.Menu(app.root, tearoff=False)
         self["tearoff"] = False
 
-        self.add_cascade(label="Control", menu=menubar)
+        self.add_cascade(label="Control", menu=self.menubar)
 
-        menubar.add_command(label="Choose Layout", command=app.chooseLayout)
-        menubar.add_command(label="Choose Run", command=app.chooseRun)
-        menubar.add_command(label="Start", command=app.start)
-        menubar.add_command(label="Split", command=app.onSplitEnd)
-        menubar.add_command(label="Skip Split", command=app.skip)
-        menubar.add_command(label="Reset", command=app.reset)
-        menubar.add_command(label="Restart", command=app.restart)
-        menubar.add_command(label="Change Compare", command=app.guiSwitchCompareCW)
-        menubar.add_command(label="Pause", command=app.togglePause)
-        menubar.add_command(label="Save", command=app.save)
-        menubar.add_command(label="Finish", command=app.finish)
-        menubar.add_command(label="Edit Splits", command=app.editSplits)
-        menubar.add_command(label="Add New Run", command=app.addRun)
+        self.entries = [\
+            {\
+                "name": "Choose Layout", \
+                "command": app.chooseLayout, \
+                "before": "normal", \
+                "during": "disabled", \
+                "last": "disabled", \
+                "after": "disabled"\
+            },\
+            {\
+                "name": "Choose Run", \
+                "command": app.chooseRun, \
+                "before": "normal", \
+                "during": "disabled", \
+                "last": "disabled", \
+                "after": "disabled"\
+            },\
+            {\
+                "name": "Start", \
+                "command": app.start, \
+                "before": "normal", \
+                "during": "disabled", \
+                "last": "disabled", \
+                "after": "disabled"\
+            },\
+            {\
+                "name": "Split", \
+                "command": app.onSplitEnd, \
+                "before": "disabled", \
+                "during": "normal", \
+                "last": "normal", \
+                "after": "disabled"\
+            },\
+            {\
+                "name": "Skip Split", \
+                "command": app.skip, \
+                "before": "disabled", \
+                "during": "normal", \
+                "last": "disabled", \
+                "after": "disabled"\
+            },\
+            {\
+                "name": "Reset", \
+                "command": app.reset, \
+                "before": "disabled", \
+                "during": "normal", \
+                "last": "normal", \
+                "after": "disabled"\
+            },\
+            {\
+                "name": "Restart", \
+                "command": app.restart, \
+                "before": "disabled", \
+                "during": "disabled", \
+                "last": "disabled", \
+                "after": "normal"\
+            },\
+            {\
+                "name": "Change Compare", \
+                "command": app.guiSwitchCompareCW, \
+                "before": "normal", \
+                "during": "normal", \
+                "last": "normal", \
+                "after": "normal"\
+            },\
+            {\
+                "name": "Pause", \
+                "command": app.togglePause, \
+                "before": "disabled", \
+                "during": "normal", \
+                "last": "normal", \
+                "after": "disabled"\
+            },\
+            {\
+                "name": "Save", \
+                "command": app.save, \
+                "before": "normal", \
+                "during": "disabled", \
+                "last": "disabled", \
+                "after": "normal"\
+            },\
+            {\
+                "name": "Finish", \
+                "command": app.finish, \
+                "before": "normal", \
+                "during": "disabled", \
+                "last": "disabled", \
+                "after": "normal"\
+            },\
+            {\
+                "name": "Edit Splits", \
+                "command": app.editSplits, \
+                "before": "active", \
+                "during": "disabled", \
+                "last": "disabled", \
+                "after": "disabled"\
+            },\
+            {\
+                "name": "Add New Run", \
+                "command": app.addRun, \
+                "before": "active", \
+                "during": "disabled", \
+                "last": "disabled", \
+                "after": "disabled"\
+            }\
+        ]
+
+        for item in self.entries:
+            self.menubar.add_command(label=item["name"], command=item["command"])
+        self.updateMenuState("before")
+
+    def updateMenuState(self,state):
+        for item in self.entries:
+            self.menubar.entryconfig(item["name"],state=item[state])
 
 class PracticeMenu(tk.Menu):
     def __init__(self,app):
         super().__init__(app.root)
-        menubar = tk.Menu(app.root, tearoff=False)
+        self.menubar = tk.Menu(app.root, tearoff=False)
         self["tearoff"] = False
+        self.add_cascade(label="Control", menu=self.menubar)
 
-        self.add_cascade(label="Control", menu=menubar)
+        self.entries = [\
+            {\
+                "name": "Choose Split", \
+                "command": app.chooseSplit, \
+                "before": "normal", \
+                "during": "disabled", \
+                "after": "disabled"\
+            },\
+            {\
+                "name": "Start", \
+                "command": app.start, \
+                "before": "normal", \
+                "during": "disabled", \
+                "after": "disabled"\
+            },\
+            {\
+                "name": "Split", \
+                "command": app.onSplitEnd, \
+                "before": "disabled", \
+                "during": "normal", \
+                "after": "disabled"\
+            },\
+            {\
+                "name": "Restart", \
+                "command": app.restart, \
+                "before": "disabled", \
+                "during": "disabled", \
+                "after": "normal"\
+            },\
+            {\
+                "name": "Save", \
+                "command": app.save, \
+                "before": "normal", \
+                "during": "disabled", \
+                "after": "normal"\
+            },\
+            {\
+                "name": "Finish", \
+                "command": app.finish, \
+                "before": "normal", \
+                "during": "disabled", \
+                "after": "normal"\
+            }\
+        ]
 
-        menubar.add_command(label="Choose Split", command=app.chooseSplit)
-        menubar.add_command(label="Start", command=app.start)
-        menubar.add_command(label="Split", command=app.onSplitEnd)
-        menubar.add_command(label="Restart", command=app.restart)
-        menubar.add_command(label="Save", command=app.save)
-        menubar.add_command(label="Finish", command=app.finish)
+        for item in self.entries:
+            self.menubar.add_command(label=item["name"], command=item["command"])
+        self.updateMenuState("before")
+
+    def updateMenuState(self,state):
+        for item in self.entries:
+            self.menubar.entryconfig(item["name"],state=item[state])
