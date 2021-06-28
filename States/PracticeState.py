@@ -16,6 +16,7 @@ class State(BaseState.State):
         self.splitnum = self.splitnames.index(session.split)
         bestTimes = dataManip.getTimesByCol(1,self.comparesCsv)
         self.bestTime = bestTimes[self.splitnum]
+        self.unSaved = False
 
     def frameUpdate(self,time):
         if not (self.started and not self.runEnded):
@@ -44,6 +45,7 @@ class State(BaseState.State):
         self.unSaved = True
         if timeh.greater(self.bestTime,splitTime):
             self.bestTime = splitTime
+        self.unSaved = True
 
     ##########################################################
     ## Restart the run
