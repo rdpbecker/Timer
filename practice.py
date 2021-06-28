@@ -24,7 +24,7 @@ state = PracticeState.State(session)
 rc.validateHotkeys(state.config)
 
 app = app.App(state,session)
-app.setupGui()
+app.setupGui(True)
 
 setHotkeys(app,state)
 rootWindow = app.root

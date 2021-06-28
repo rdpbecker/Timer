@@ -3,6 +3,7 @@ from Components import PracticeSelectorFrame
 from Components import RunsMenu
 from Components import SplitSelector
 from Dialogs import BaseDialog
+from Dialogs import Popup
 
 class RunSelector(BaseDialog.Dialog):
     def __init__(self):
@@ -14,6 +15,13 @@ class RunSelector(BaseDialog.Dialog):
         self.content.pack(fill="x")
 
         self.error = None
+
+    def setSplit(self,game,cate,split):
+        self.content.selector.gameVar.set(game)
+        self.content.selector.cateVar.set(cate)
+        self.content.selector.splitVar.set(split)
+        self.content.selector.updateCateCombo()
+        self.content.selector.updateNameCombo()
 
     def accept(self):
         if not self.content.selector.game or not self.content.selector.category or not self.content.selector.split:
@@ -30,4 +38,37 @@ class RunSelector(BaseDialog.Dialog):
         self.retVal["game"] = self.content.selector.game
         self.retVal["category"] = self.content.selector.category
         self.retVal["split"] = self.content.selector.split
-        self.retVal["splitNames"] = self.content.selector.splits.getSplitNames(self.content.selector.game,self.content.selector.category)
+
+class SelectorP(Popup.Popup):
+    def __init__(self,master,callback,session):
+        super().__init__(master,callback)
+        self.window.title("Choose Run and Split")
+        self.window.configure(bg="black",menu=RunsMenu.PracticeMenu(self.window,self.setSplit))
+
+        self.content = PracticeSelectorFrame.Frame(self.window,self.accept)
+        self.content.selector.gameVar.set(session.game)
+        self.content.selector.cateVar.set(session.category)
+        self.content.selector.splitVar.set(session.split)
+        self.content.pack(fill="x")
+
+        self.error = None
+
+    def setSplit(self,game,cate,split):
+        self.content.selector.gameVar.set(game)
+        self.content.selector.cateVar.set(cate)
+        self.content.selector.splitVar.set(split)
+        self.content.selector.updateCateCombo()
+        self.content.selector.updateNameCombo()
+
+    def accept(self):
+        if not self.content.selector.game or not self.content.selector.category or not self.content.selector.split:
+            if not self.error:
+                self.error = tk.Label(self.window,bg="black",fg="white",text="A game, category, and segment must all be selected.")
+                self.error.pack(fill="x")
+            return
+        super().accept()
+
+    def setReturn(self):
+        self.retVal["game"] = self.content.selector.game
+        self.retVal["category"] = self.content.selector.category
+        self.retVal["split"] = self.content.selector.split

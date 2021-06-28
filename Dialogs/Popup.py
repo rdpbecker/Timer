@@ -17,14 +17,17 @@ class Popup:
         pass
 
     def accept(self,event=None):
+        self.setReturn()
         self.retVal["exitCode"] = "accept"
         self.finish()
 
     def close(self,event=None):
+        self.setReturn()
         self.retVal["exitCode"] = "close"
         self.finish()
 
     def reject(self,event=None):
+        self.setReturn()
         self.retVal["exitCode"] = "reject"
         self.finish()
 

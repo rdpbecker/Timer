@@ -3,14 +3,16 @@
 import tkinter as tk
 import threading
 from timeit import default_timer as timer
-from Components import Menu
+from Components import MainMenu
 from DataClasses import AllSplitNames
 from DataClasses import Session
 from Dialogs import AddRun
 from Dialogs import ConfirmPopup
 from Dialogs import RunPopup
 from Dialogs import LayoutPopup
+from Dialogs import PracticeRunSelector
 from Dialogs import SplitEditor
+from States import PracticeState
 from States import State
 
 class App(threading.Thread):
@@ -83,14 +85,16 @@ class App(threading.Thread):
     ## Creates the window with the destruction callback, and
     ## sets control callbacks.
     ##########################################################
-    def setupGui(self):
+    def setupGui(self,isPractice=False):
         self.root = tk.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.finish)
         self.root.title("Base Timer")
         for i in range(12):
             self.root.columnconfigure(i,weight=1)
-        if (self.state.config["showMenu"]):
-            self.root.configure(menu=Menu.ControlMenu(self))
+        if isPractice:
+            self.root.configure(menu=MainMenu.PracticeMenu(self))
+        elif (self.state.config["showMenu"]):
+            self.root.configure(menu=MainMenu.Menu(self))
 
     ##########################################################
     ## Show the window, and call the first update after one
@@ -229,6 +233,25 @@ class App(threading.Thread):
         self.state.setComparison(compareNum)
         self.updateWidgets("runChanged",state=self.state)
         self.updateWeights()
+
+    ##########################################################
+    ## Opens a window to change the current split (practice
+    ## only)
+    ##########################################################
+    def chooseSplit(self,event=None):
+        if self.state.started:
+            return
+        newRun = PracticeRunSelector.SelectorP(self.root,self.setSplit,self.session).show()
+
+    def setSplit(self,newSession):
+        if newSession["game"] == self.state.game\
+            and newSession["category"] == self.state.category:
+            return
+        if self.state.unSaved:
+            self.confirmSave(self.saveIfDesired)
+        self.session.setRun(newSession["game"],newSession["category"],newSession["split"])
+        self.state = PracticeState.State(self.session)
+        self.updateWidgets("runChanged",state=self.state)
 
     def saveIfDesired(self,desired):
         if desired:
