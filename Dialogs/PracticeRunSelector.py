@@ -9,19 +9,13 @@ class RunSelector(BaseDialog.Dialog):
     def __init__(self):
         super().__init__()
         self.root.title("Choose Run and Split")
-        self.root.configure(bg="black",menu=RunsMenu.PracticeMenu(self.root,self.setSplit))
 
         self.content = PracticeSelectorFrame.Frame(self.root,self.accept)
         self.content.pack(fill="x")
 
-        self.error = None
+        self.root.configure(bg="black",menu=RunsMenu.PracticeMenu(self.root,self.content))
 
-    def setSplit(self,game,cate,split):
-        self.content.selector.gameVar.set(game)
-        self.content.selector.cateVar.set(cate)
-        self.content.selector.splitVar.set(split)
-        self.content.selector.updateCateCombo()
-        self.content.selector.updateNameCombo()
+        self.error = None
 
     def accept(self):
         if not self.content.selector.game or not self.content.selector.category or not self.content.selector.split:
@@ -43,7 +37,6 @@ class SelectorP(Popup.Popup):
     def __init__(self,master,callback,session):
         super().__init__(master,callback)
         self.window.title("Choose Run and Split")
-        self.window.configure(bg="black",menu=RunsMenu.PracticeMenu(self.window,self.setSplit))
 
         self.content = PracticeSelectorFrame.Frame(self.window,self.accept)
         self.content.selector.gameVar.set(session.game)
@@ -51,14 +44,9 @@ class SelectorP(Popup.Popup):
         self.content.selector.splitVar.set(session.split)
         self.content.pack(fill="x")
 
-        self.error = None
+        self.window.configure(bg="black",menu=RunsMenu.PracticeMenu(self.window,self.content))
 
-    def setSplit(self,game,cate,split):
-        self.content.selector.gameVar.set(game)
-        self.content.selector.cateVar.set(cate)
-        self.content.selector.splitVar.set(split)
-        self.content.selector.updateCateCombo()
-        self.content.selector.updateNameCombo()
+        self.error = None
 
     def accept(self):
         if not self.content.selector.game or not self.content.selector.category or not self.content.selector.split:
