@@ -13,8 +13,8 @@ class SplitEditor(tk.Frame):
         self.config = rc.getUserConfig()
         self.splits = AllSplitNames.Splits()
 
-        self.selection = GameSelector.Selector(self)
-        self.selection.pack(side="top",fill="x")
+        self.selection = GameSelector.Selector(self,allowInvalid=True)
+        self.selection.pack(side="top",anchor='w')
         self.selection.followup = self.updateRows
         self.oldGame = ""
         self.oldCategory = ""

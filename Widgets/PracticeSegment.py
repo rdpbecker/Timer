@@ -37,3 +37,7 @@ class SegmentCompare(WidgetBase.WidgetBase):
 
     def updateGoldTime(self):
         self.goldTime.configure(text=timeh.timeToString(self.state.bestTime,{"precision":self.config["precision"]}))
+
+    def resetUI(self):
+        self.updateGoldHeader()
+        self.updateGoldTime()

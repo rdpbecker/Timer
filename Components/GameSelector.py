@@ -10,34 +10,42 @@ class Selector(tk.Frame):
     cateCombo = None
     followup = None
 
-    def __init__(self,parent):
+    def __init__(self,parent,allowInvalid=False):
         super().__init__(parent)
+        for i in range(3):
+            self.columnconfigure(i,weight=1)
+
         self.splits = AllSplitNames.Splits()
+        self.allowInvalid = allowInvalid
 
         self.gameVar = tk.StringVar()
         self.gameVar.trace('w',self.setGame)
         gameCombo = tk.ttk.Combobox(self,values=self.splits.getGames(),textvariable=self.gameVar)
         gameLabel = tk.Label(self,text="Game:")
-        gameCombo.grid(row=0,column=4,columnspan=8,sticky="WE")
-        gameLabel.grid(row=0,column=0,columnspan=4,sticky="W")
+        gameCombo.grid(row=0,column=1,columnspan=2,sticky="WE")
+        gameLabel.grid(row=0,column=0,sticky="W")
 
         self.cateVar = tk.StringVar()
         self.cateVar.trace('w',self.setCate)
         self.cateCombo = tk.ttk.Combobox(self,values=self.splits.getCategories(self.game),textvariable=self.cateVar)
         cateLabel = tk.Label(self,text="Category:")
-        self.cateCombo.grid(row=1,column=4,columnspan=8,sticky="WE")
-        cateLabel.grid(row=1,column=0,columnspan=4,sticky="W")
+        self.cateCombo.grid(row=1,column=1,columnspan=2,sticky="WE")
+        cateLabel.grid(row=1,column=0,sticky="W")
 
     def setGame(self,*args):
-        self.game = self.gameVar.get()
+        if self.allowInvalid or self.gameVar.get() in self.splits.getGames():
+            self.game = self.gameVar.get()
+        else:
+            self.game = ""
         self.updateCateCombo()
-        self.category = ""
         self.cateVar.set("")
 
     def setCate(self,*args):
-        self.category = self.cateVar.get()
-        if self.followup:
-            self.followup(*args)
+        cate = self.cateVar.get()
+        if self.allowInvalid or not cate or self.splits.validPair(self.game,cate):
+            self.category = cate
+            if self.followup:
+                self.followup(*args)
 
     def updateCateCombo(self):
         self.cateCombo["values"] = self.splits.getCategories(self.game)

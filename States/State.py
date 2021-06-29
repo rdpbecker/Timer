@@ -195,11 +195,16 @@ class State(BaseState.State):
         if not self.started or self.paused or self.runEnded:
             return 1
 
+        retVal = 0
         if self.splitnames[self.splitnum][-3:] == "[P]" and not self.splitnum == len(self.splitnames) and not self.paused:
-            self.completeSegment(time)
-            return 2
+            retVal = retVal + 3
 
         self.completeSegment(time)
+        if self.splitnum == len(self.splitnames):
+            retVal = retVal + 4
+        elif self.splitnum == len(self.splitnames) - 1:
+            retVal = retVal + 5
+        return retVal
 
     def onComparisonChanged(self,rotation):
         self.compareNum = (self.compareNum+rotation)%self.numComparisons

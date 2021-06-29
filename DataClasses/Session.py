@@ -19,6 +19,7 @@ class Session:
         self.splits = splits
         self.config = rc.getUserConfig()
         self.saveFile = self.config["baseDir"] + "/.save"
+        self.exit = False
         if os.path.exists(self.saveFile):
             self.loadSave()
         else:
@@ -38,6 +39,8 @@ class Session:
 
     def getSession(self):
         session = RunSelector.RunSelector(self.splits).show()
+        if not session["exitCode"]:
+            self.exit = True
         self.setRun(session["game"],session["category"])
         self.setLayout(session["layoutName"])
 
