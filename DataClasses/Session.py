@@ -39,7 +39,7 @@ class Session:
 
     def getSession(self):
         session = RunSelector.RunSelector(self.splits).show()
-        if not session["exitType"]:
+        if not session["exitCode"]:
             self.exit = True
         self.setRun(session["game"],session["category"])
         self.setLayout(session["layoutName"])

@@ -7,7 +7,7 @@ class Dialog():
     def __init__(self):
         self.root = tk.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.finish)
-        self.retVal = {"exitType": ""}
+        self.retVal = {"exitCode": ""}
 
     def show(self):
         self.root.mainloop()
@@ -15,12 +15,12 @@ class Dialog():
 
     def accept(self):
         self.setReturn()
-        self.retVal["exitType"] = "accept"
+        self.retVal["exitCode"] = "accept"
         self.root.destroy()
 
     def reject(self):
         self.setReturn()
-        self.retVal["exitType"] = "reject"
+        self.retVal["exitCode"] = "reject"
         self.root.destroy()
 
     def finish(self):

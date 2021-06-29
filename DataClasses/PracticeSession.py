@@ -38,7 +38,7 @@ class Session:
 
     def getSession(self):
         session = PracticeRunSelector.RunSelector().show()
-        if not session["exitType"]:
+        if not session["exitCode"]:
             self.exit = True
             return
         self.setRun(session["game"],session["category"],session["split"])
