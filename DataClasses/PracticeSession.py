@@ -19,6 +19,7 @@ class Session:
         self.splits = splits
         self.config = rc.getUserConfig()
         self.saveFile = self.config["baseDir"] + "/.practiceSave"
+        self.exit = False
         if os.path.exists(self.saveFile):
             self.loadSave()
         else:
@@ -37,6 +38,9 @@ class Session:
 
     def getSession(self):
         session = PracticeRunSelector.RunSelector().show()
+        if not session["exitType"]:
+            self.exit = True
+            return
         self.setRun(session["game"],session["category"],session["split"])
 
     def setRun(self,game,category,split):

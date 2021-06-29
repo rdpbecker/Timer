@@ -41,12 +41,7 @@ class RunSelector(BaseDialog.Dialog):
                 self.error = tk.Label(self.root,bg="black",fg="white",text="A game and category must both be selected.")
                 self.error.pack(fill="x")
             return
-        self.setReturn()
-        self.retVal["exitCode"] = "accept"
-        self.root.destroy()
-
-    def finish(self):
-        self.accept()
+        super().accept()
 
     def setReturn(self):
         self.retVal["game"] = self.selector.game

@@ -1,3 +1,4 @@
+import sys
 from Apps import app as App
 import WidgetLoader
 import errors as Errors
@@ -29,6 +30,8 @@ if not len(splits.getGames()):
     AddRun.SplitEditorD().show()
     splits.update()
 session = Session.Session(splits)
+if session.exit:
+    sys.exit()
 
 app = None
 exitCode = None

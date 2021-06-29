@@ -25,9 +25,6 @@ class RunSelector(BaseDialog.Dialog):
             return
         super().accept()
 
-    def finish(self):
-        self.accept()
-
     def setReturn(self):
         self.retVal["game"] = self.content.selector.game
         self.retVal["category"] = self.content.selector.category

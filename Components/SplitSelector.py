@@ -10,6 +10,7 @@ class Selector(GameSelector.Selector):
         splitLabel = tk.Label(self,text="Segment Name:")
         self.splitCombo.grid(row=2,column=1,columnspan=2,sticky="WE")
         splitLabel.grid(row=2,column=0,sticky="W")
+        self.split = ""
 
     def setGame(self,*args):
         super().setGame(args)
