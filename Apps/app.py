@@ -85,7 +85,7 @@ class App(threading.Thread):
     ## Creates the window with the destruction callback, and
     ## sets control callbacks.
     ##########################################################
-    def setupGui(self,isPractice=False):
+    def setupGui(self,isPractice=False,showMenu=True):
         self.root = tk.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.finish)
         self.root.title("Base Timer")
@@ -94,7 +94,7 @@ class App(threading.Thread):
         if isPractice:
             self.menu = MainMenu.PracticeMenu(self)
             self.root.configure(menu=self.menu)
-        elif (self.state.config["showMenu"]):
+        elif (showMenu):
             self.menu = MainMenu.Menu(self)
             self.root.configure(menu=self.menu)
         else:

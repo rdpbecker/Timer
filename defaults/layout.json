@@ -1,44 +1,47 @@
-[
-    {
-        "type": "title"
-    },
-    {
-        "type": "spacer"
-    },
-    {
-        "type": "segmentArea"
-    },
-    {
-        "type": "spacer"
-    },
-    {
-        "type": "segmentTimes"
-    },
-    {
-        "type": "spacer"
-    },
-    {
-        "type": "detailedTimer"
-    },
-    {
-        "type": "spacer"
-    },
-    {
-        "type": "timeSaveInfo"
-    },
-    {
-        "type": "goldDiffInfo"
-    },
-    {
-        "type": "bptInfo"
-    },
-    {
-        "type": "sobInfo"
-    },
-    {
-        "type": "pbInfo"
-    },
-    {
-        "type": "compareInfo"
-    }
-]
+{
+    "menu": true,
+    "components": [
+        {
+            "type": "title"
+        },
+        {
+            "type": "spacer"
+        },
+        {
+            "type": "segmentArea"
+        },
+        {
+            "type": "spacer"
+        },
+        {
+            "type": "segmentTimes"
+        },
+        {
+            "type": "spacer"
+        },
+        {
+            "type": "detailedTimer"
+        },
+        {
+            "type": "spacer"
+        },
+        {
+            "type": "timeSaveInfo"
+        },
+        {
+            "type": "goldDiffInfo"
+        },
+        {
+            "type": "bptInfo"
+        },
+        {
+            "type": "sobInfo"
+        },
+        {
+            "type": "pbInfo"
+        },
+        {
+            "type": "compareInfo"
+        }
+    ]
+}
