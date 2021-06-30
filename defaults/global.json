@@ -12,8 +12,9 @@
         "start": "<space>",
         "restart": "R",
         "finish": "f",
-        "save": "S",
-        "chooseLayout": "l",
-        "chooseRun": "q"
+        "save": "<Control-s>",
+        "chooseLayout": "<Control-l>",
+        "chooseRun": "<Control-r>",
+        "chooseSplit": "<Control-i>"
     }
 }

@@ -14,6 +14,7 @@ def setHotkeys(app,state):
     app.root.bind(state.config["hotkeys"]["restart"], app.restart)
     app.root.bind(state.config["hotkeys"]["finish"], app.finish)
     app.root.bind(state.config["hotkeys"]["save"], app.save)
+    app.root.bind(state.config["hotkeys"]["chooseSplit"], app.chooseSplit)
 
 splits = AllSplitNames.Splits()
 if not len(splits.getGames()):
