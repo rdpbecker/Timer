@@ -43,14 +43,14 @@ while not app or exitCode:
     rc.validateHotkeys(state.config)
 
     app = App.App(state,session)
-    app.setupGui()
+    app.setupGui(showMenu=session.layout["menu"])
 
     setHotkeys(app,state)
     rootWindow = app.root
 
     loader = WidgetLoader.WidgetLoader(app,state,rootWindow)
 
-    for component in session.layout:
+    for component in session.layout["components"]:
         try:
             if "config" in component.keys():
                 app.addWidget(loader.loadWidget(component["type"],component["config"]))

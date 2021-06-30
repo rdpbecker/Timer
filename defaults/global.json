@@ -1,7 +1,6 @@
 {
     "baseDir": "../",
     "padx": 10,
-    "showMenu": true,
     "hotkeys": {
         "decreaseComparison": "<Left>",
         "split": "<Return>",

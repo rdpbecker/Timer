@@ -5,6 +5,15 @@ found in the `examples` directory, along with a description of each
 of the files.
 
 ## Category/Segment Names
+The first time you run the timer, the "Add Split" Editor will pop up
+automatically, which will allow you to create a run before starting
+without having to manually edit any .csv files. You will be forced
+to save a run before the timer will become visible. In the future,
+you can add runs using the `Add Run` command in the menu, and
+you can edit the run that is currently open using the `Edit Splits`
+command.
+
+If you want to create splits manually, you can do the following:
 In the parent directory, create a file called *splitNames.csv*. This 
 file stores the list of games and categories, along with the list
 of segments for each game/category pair.  More explanation and an 
