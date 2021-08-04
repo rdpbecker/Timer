@@ -84,7 +84,7 @@ class State(BaseState.State):
 
         for i in range(self.numComparisons):
             self.comparisons[i].updateDiffs(splitTime,totalTime)
-        if timeh.greater(self.currentBests.bests[self.splitnum],splitTime):
+        if not timeh.greater(self.currentRun.segments[-1],self.currentBests.bests[self.splitnum]):
             self.currentBests.update(splitTime,self.splitnum)
         if timeh.greater(self.bestExits.totals[self.splitnum],totalTime):
             self.bestExits.update(totalTime,self.splitnum)
