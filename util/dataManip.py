@@ -38,6 +38,20 @@ def insertCols(lines,startIndex,data_ref):
         for j in range(len(lines)):
             data_ref[i].insert(startIndex+j,lines[j][i-1])
 
+##########################################################
+## Inserts a run into a data table as the second and third
+## columns.
+##
+## Parameters:
+##   run - the run to insert
+##   data_ref - the data table to insert the run into
+##########################################################
+def insertRun(run,data_ref):
+    lastRun = [timeh.timesToStringList(run.segments,{"precision":5}),timeh.timesToStringList(run.totals,{"precision":5})]
+    data_ref[0].insert(1,"Run #"+str(int((len(data_ref[1])+1)/2)))
+    data_ref[0].insert(2,"Totals")
+    insertCols(lastRun,1,data_ref)
+
 ##############################################################
 ## Inserts a SumList object into the data_ref table as two 
 ## columns, starting with startIndex.

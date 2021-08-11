@@ -256,9 +256,7 @@ class State(BaseState.State):
         dataManip.replaceComparison(self.bestExits,1,7,self.comparesCsv,{"precision":5})
 
         if not self.currentRun.empty:
-            self.completeCsv[0].insert(1,"Run #"+str(int((len(self.completeCsv[1])+1)/2)))
-            self.completeCsv[0].insert(2,"Totals")
-            dataManip.insertSumList(SumList.SumList(self.currentRun.segments),1,1,self.completeCsv)
+            dataManip.insertRun(self.currentRun,self.completeCsv)
         self.unSaved = True
 
     ##########################################################
