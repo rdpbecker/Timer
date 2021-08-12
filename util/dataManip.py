@@ -108,7 +108,7 @@ def adjustNames(names,data_ref):
     for i in range(1,len(names)+1):
         if i >= len(new_data):
             row = [names[i-1]]
-            row.extend(['-' for j in range(len(new_data[0])-1)])
+            row.extend(['-' for _ in range(len(new_data[0])-1)])
             new_data.append(row)
         else:
             new_data[i][0] = names[i-1]
@@ -131,7 +131,7 @@ def adjustNamesMismatch(names,data_ref,originals):
         if i in originals:
             new_data.append(copy.deepcopy(data_ref[originals.index(i)+1]))
         else:
-            new_data.append([names[i]]+['-' for j in range(len(new_data[0])-1)])
+            new_data.append([names[i]]+['-' for _ in range(len(new_data[0])-1)])
     return new_data
 
 def newCompleteCsv(names=[]):
@@ -155,5 +155,5 @@ def newComparisons(names=[]):
         'Blank'\
     ]]
     for name in names:
-        data.append([name] + ['-' for i in range(10)])
+        data.append([name] + ['-' for _ in range(10)])
     return data

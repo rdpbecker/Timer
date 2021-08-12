@@ -13,7 +13,7 @@ class Entry(tk.Entry):
         if "followup" in cbs.keys():
             self.followup = cbs["followup"]
 
-    def doValidation(self,*args):
+    def doValidation(self,*_):
         val = self.var.get()
         if self.validate(val):
             self.val = val

@@ -55,7 +55,7 @@ class EntryRow(tk.Frame):
         self.pairs.append(pair)
 
     def removeComparison(self,num):
-        for i in range(num):
+        for _ in range(num):
             self.pairs[-1][0].grid_forget()
             self.pairs[-1][1].grid_forget()
             del self.pairs[-1]

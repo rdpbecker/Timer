@@ -10,7 +10,7 @@ class ScrollableFrame(tk.Frame):
 
         self.scrollable_frame.bind(\
             "<Configure>",\
-            lambda e: canvas.configure(\
+            lambda _: canvas.configure(\
                 scrollregion=canvas.bbox("all")\
             )\
         )
@@ -66,7 +66,7 @@ class ScrollableFramePin(tk.Frame):
         )
         self.main().bind(\
             "<Configure>",\
-            lambda e: self.canvases[3].configure(\
+            lambda _: self.canvases[3].configure(\
                 scrollregion=self.canvases[3].bbox("all")\
             )\
         )
@@ -100,10 +100,10 @@ class ScrollableFramePin(tk.Frame):
         self.insertPinnedY(args)
         self.canvases[3].unbind("<Configure>")
 
-    def insertPinnedX(self,*args):
+    def insertPinnedX(self,*_):
         pass
 
-    def insertPinnedY(self,*args):
+    def insertPinnedY(self,*_):
         pass
 
     def mainArea(self):

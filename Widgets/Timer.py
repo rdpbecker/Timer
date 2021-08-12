@@ -3,7 +3,7 @@ from Widgets import WidgetBase
 from util import timeHelpers as timeh
 
 class Timer(WidgetBase.WidgetBase):
-    main = None
+    # main = None
 
     def __init__(self,parent,state,config):
         super().__init__(parent,state,config)

@@ -1,11 +1,11 @@
-import csv, sys, os
+import os
 from util import readConfig as rc
 from util import fileio
 
 class Splits:
-    indexDict = None
-    splitNames = None
-    splitsFile = ""
+    # indexDict = None
+    # splitNames = None
+    # splitsFile = ""
 
     def __init__(self):
         config = rc.getUserConfig()
@@ -23,6 +23,8 @@ class Splits:
         self.splitNames = []
         csvLines = fileio.readCsv(self.splitsFile)
         i = 0
+        game = ""
+        gameDict = {}
         while i < len(csvLines):
             if not i:
                 game = csvLines[i][0]

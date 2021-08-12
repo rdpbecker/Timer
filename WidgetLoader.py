@@ -4,11 +4,11 @@ from util import readConfig as rc
 import errors as Errors
 
 class WidgetLoader:
-    app = None
-    state = None
-    rootWindow = None
-    configDict = None
-    configKeys = None
+    # app = None
+    # state = None
+    # rootWindow = None
+    # configDict = None
+    # configKeys = None
 
     def __init__(self,app,state,rootWindow):
         self.app = app

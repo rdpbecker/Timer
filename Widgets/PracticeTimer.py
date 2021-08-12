@@ -4,7 +4,7 @@ from util import timeHelpers as timeh
 from util import fileio
 
 class Timer(WidgetBase.WidgetBase):
-    main = None
+    # main = None
 
     def __init__(self,parent,state):
         config = fileio.readJson("defaults/timer.json")

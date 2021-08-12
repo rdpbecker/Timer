@@ -5,10 +5,10 @@ from DataClasses import SumList
 from States import BaseState
 
 class State(BaseState.State):
-    bestTime = 0
+    # bestTime = 0
     currentTime = 0
-    splitName = ""
-    splitnum = 0
+    # splitName = ""
+    # splitnum = 0
 
     def __init__(self,session):
         super().__init__(session)

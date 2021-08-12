@@ -1,4 +1,3 @@
-import tkinter as tk
 from Widgets import InfoBase
 from util import timeHelpers as timeh
 

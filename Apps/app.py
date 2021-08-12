@@ -16,9 +16,10 @@ from States import PracticeState
 from States import State
 
 class App(threading.Thread):
-    state = None
-    components = []
-    numWidgets = 0
+    # state = None
+    # components = []
+    # numWidgets = 0
+    # session = None
     retVal = None
     updated = None
 
@@ -70,7 +71,7 @@ class App(threading.Thread):
             "runChanged": component.runChanged,
             "preStart": component.preStart
         }
-        signals.get(signalType)(**kwargs)
+        signals.get(signalType,component.frameUpdate)(**kwargs)
 
     ##########################################################
     ## Updates all the components with a given signal type.
@@ -109,7 +110,7 @@ class App(threading.Thread):
         self.root.mainloop()
         return self.retVal
 
-    def updateWeights(self,*args):
+    def updateWeights(self,*_):
         for i in range(self.numWidgets):
             self.root.rowconfigure(i, weight=self.components[i].winfo_height())
         if not len(list(filter(lambda x: x==1,[self.components[i].winfo_height() for i in range(self.numWidgets)]))):
@@ -131,23 +132,24 @@ class App(threading.Thread):
     ## Initialize the start and first split times when the run
     ## starts
     ##########################################################
-    def start(self, event=None):
+    def start(self, _=None):
         if not self.state.onStarted(timer()):
             self.updateWidgets("start")
-            self.menu.updateMenuState("during")
+            if self.menu:
+                self.menu.updateMenuState("during")
 
     ##########################################################
     ## At the end of each split, record and store the times, 
     ## calculate all the diffs, and call the helper functions 
     ## to update the GUI
     ##########################################################
-    def onSplitEnd(self,event=None):
+    def onSplitEnd(self,_=None):
         exitCode = self.state.onSplit(timer())
         if exitCode == 1:
             return
         elif exitCode and exitCode > 6:
             self.togglePause()
-        if exitCode:
+        if exitCode and self.menu:
             if exitCode%3 == 1:
                 self.menu.updateMenuState("after")
             elif exitCode%3 == 2:
@@ -157,13 +159,13 @@ class App(threading.Thread):
     ##########################################################
     ## Move the comparison counter-clockwise (backwards)
     ##########################################################
-    def guiSwitchCompareCCW(self,event=None):
+    def guiSwitchCompareCCW(self,_=None):
         self.rotateCompare(-1)
 
     ##########################################################
     ## Move the comparison clockwise (forwards)
     ##########################################################
-    def guiSwitchCompareCW(self,event=None):
+    def guiSwitchCompareCW(self,_=None):
         self.rotateCompare(1)
 
     ##########################################################
@@ -177,43 +179,45 @@ class App(threading.Thread):
     ##########################################################
     ## Stop the run here
     ##########################################################
-    def reset(self, event=None):
+    def reset(self, _=None):
         if not self.state.onReset():
             self.updateWidgets("reset")
-            self.menu.updateMenuState("after")
+            if self.menu:
+                self.menu.updateMenuState("after")
 
     ##########################################################
     ## Skip a split
     ##########################################################
-    def skip(self,event=None):
+    def skip(self,_=None):
         if not self.state.onSplitSkipped(timer()):
             self.updateWidgets("skip")
 
     ##########################################################
     ## If paused, unpause. If not paused, pause.
     ##########################################################
-    def togglePause(self,event=None):
+    def togglePause(self,_=None):
         if not self.state.onPaused(timer()):
             self.updateWidgets("pause")
 
     ##########################################################
     ## Restart the run by resetting the timer state.
     ##########################################################
-    def restart(self,event=None):
+    def restart(self,_=None):
         if not self.state.onRestart():
             self.updateWidgets("restart")
-            self.updateMenuState("before")
+            if self.menu:
+                self.menu.updateMenuState("before")
 
     ##########################################################
     ## Saves the data stored in the state.
     ##########################################################
-    def save(self,event=None):
+    def save(self,_=None):
         self.state.saveTimes()
 
     ##########################################################
     ## Opens a window to change the current layout
     ##########################################################
-    def chooseLayout(self,event=None):
+    def chooseLayout(self,_=None):
         if self.state.started:
             return
         LayoutPopup.LayoutPopup(self.root,self.setLayout,self.session).show()
@@ -228,10 +232,10 @@ class App(threading.Thread):
     ##########################################################
     ## Opens a window to change the current run
     ##########################################################
-    def chooseRun(self,event=None):
+    def chooseRun(self,_=None):
         if self.state.started:
             return
-        newRun = RunPopup.RunPopup(self.root,self.setRun,self.session).show()
+        RunPopup.RunPopup(self.root,self.setRun,self.session).show()
 
     def setRun(self,newSession):
         if newSession["game"] == self.state.game\
@@ -250,10 +254,10 @@ class App(threading.Thread):
     ## Opens a window to change the current split (practice
     ## only)
     ##########################################################
-    def chooseSplit(self,event=None):
+    def chooseSplit(self,_=None):
         if self.state.started:
             return
-        newRun = PracticeRunSelector.SelectorP(self.root,self.setSplit,self.session).show()
+        PracticeRunSelector.SelectorP(self.root,self.setSplit,self.session).show()
 
     def setSplit(self,newSession):
         if newSession["game"] == self.state.game\
@@ -285,7 +289,7 @@ class App(threading.Thread):
     ## Finish the run by saving the splits and closing the
     ## window.
     ##########################################################
-    def finish(self,event=None):
+    def finish(self,_=None):
         if not self.state.shouldFinish():
             return
         if self.state.unSaved:
@@ -303,7 +307,7 @@ class App(threading.Thread):
     def editSplits(self):
         SplitEditor.SplitEditor(self.root,self.newEditedState,self.state)
 
-    def newEditedState(self,retVal):
+    def newEditedState(self,_):
         compareNum = self.state.compareNum
         session = Session.Session(AllSplitNames.Splits())
         session.setRun(self.state.game,self.state.category)

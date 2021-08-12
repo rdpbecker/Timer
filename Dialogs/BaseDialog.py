@@ -1,8 +1,8 @@
 import tkinter as tk
 
 class Dialog():
-    root = None
-    retVal = None
+    # root = None
+    # retVal = None
 
     def __init__(self):
         self.root = tk.Tk()

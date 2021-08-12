@@ -15,14 +15,14 @@ class ConfirmPopup(Popup.Popup):
         button1.grid(row=1,column=0,columnspan=6,sticky="WE")
         button2.grid(row=1,column=6,columnspan=6,sticky="WE")
 
-    def accept(self,event=None):
+    def accept(self,_=None):
         self.retVal = True
         self.finish()
 
-    def close(self,event=None):
+    def close(self,_=None):
         self.retVal = True
         self.finish()
 
-    def reject(self,event=None):
+    def reject(self,_=None):
         self.retVal = False
         self.finish()

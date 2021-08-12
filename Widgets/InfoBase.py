@@ -2,8 +2,8 @@ import tkinter as tk
 from Widgets import WidgetBase
 
 class InfoBase(WidgetBase.WidgetBase):
-    header = None
-    info = None
+    # header = None
+    # info = None
 
     def __init__(self,parent,state,config):
         super().__init__(parent,state,config)

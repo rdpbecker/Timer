@@ -1,9 +1,9 @@
 import tkinter as tk
 
 class VarianceRow(tk.Frame):
-    number = None
-    name = None
-    variance = None
+    # number = None
+    # name = None
+    # variance = None
     def __init__(self,parent,row):
         super().__init__(parent)
         for i in range(12):

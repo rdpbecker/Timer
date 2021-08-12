@@ -37,11 +37,11 @@ class EntryGrid(ScrollableFrame.ScrollableFramePin):
     def splitUpdated(self):
         self.editor.updateDeleteState()
 
-    def insertPinnedX(self,*args):
+    def insertPinnedX(self,*_):
         self.headerRow = HeaderRow.HeaderRow(self.pinnedY(),self.headers)
         self.headerRow.pack(side="top",fill="both")
 
-    def insertPinnedY(self,*args):
+    def insertPinnedY(self,*_):
         self.leftFrame = LeftFrame.LeftFrame(self.pinnedX(),self.comparisonData[1:],self)
         self.leftFrame.pack(side="left",fill="both")
 
@@ -85,7 +85,7 @@ class EntryGrid(ScrollableFrame.ScrollableFramePin):
         self.headerRow.addHeaders(["New Split","New Comparison"])
         for row in self.rows:
             row.addComparison()
-        self.comparisons.append(SumList.SumList([timeh.blank() for row in self.rows]))
+        self.comparisons.append(SumList.SumList([timeh.blank() for _ in self.rows]))
 
     def removeComparison(self):
         if len(self.comparisons) <= 5:
@@ -107,7 +107,7 @@ class EntryGrid(ScrollableFrame.ScrollableFramePin):
                 self.rows[i].updateEntry(comparison,self.comparisons[comparison].bests[i])
 
     def generateGrid(self):
-        current = [[] for i in range(len(self.rows))]
+        current = [[] for _ in range(len(self.rows))]
         for i in range(len(self.comparisons)):
             dataManip.insertSumList(self.comparisons[i],0,2*i,current,{"precision":5})
         for i in range(len(self.rows)):

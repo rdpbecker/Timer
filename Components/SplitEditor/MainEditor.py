@@ -37,19 +37,19 @@ class Editor(tk.Frame):
         self.saveButton.pack(side="bottom",fill="x")
         self.saveWarning = tk.Label(self.buttonFrame,text="Warning: some\ncurrent values are\ninvalid. For invalid\nvalues, the most\nrecent valid value\n will be saved.",fg="orange")
 
-    def addSplit(self,event=None):
+    def addSplit(self,_=None):
         self.entries.addSplit()
         self.deleteSplitButton["state"] = "active"
 
-    def deleteSplit(self,event=None):
+    def deleteSplit(self,_=None):
         self.entries.removeSplit()
         self.updateDeleteState()
 
-    def addComparison(self,event=None):
+    def addComparison(self,_=None):
         self.entries.addComparison()
         self.deleteComparisonButton["state"] = "active"
 
-    def deleteComparison(self,event=None):
+    def deleteComparison(self,_=None):
         self.entries.removeComparison()
         if len(self.entries.comparisons) <= 5:
             self.deleteComparisonButton["state"] = "disabled"
@@ -63,5 +63,5 @@ class Editor(tk.Frame):
     def validSave(self):
         pass
 
-    def save(self,retVal):
+    def save(self,_):
         pass

@@ -2,10 +2,10 @@ import tkinter as tk
 import tkinter.font as tkfont
 
 class SegmentRow(tk.Frame):
-    header = None
-    diff = None
-    comparison = None
-    padding = 0
+    # header = None
+    # diff = None
+    # comparison = None
+    # padding = 0
 
     def __init__(self,parent,bg,font,fg,padding):
         super().__init__(parent)
@@ -31,7 +31,6 @@ class SegmentRow(tk.Frame):
         low = 0
         high = len(text)
         current = int(len(text)/2)
-        last = 0
         while low < high - 1:
             if self.font.measure(text[:current]+ellipsis) <= maxLength:
                 low = current

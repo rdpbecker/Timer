@@ -31,6 +31,6 @@ class HeaderRow(tk.Frame):
         self.entries.append(entry)
 
     def removeHeaders(self,num):
-        for i in range(num):
+        for _ in range(num):
             self.entries[-1].pack_forget()
             del self.entries[-1]

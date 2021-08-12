@@ -1,4 +1,3 @@
-import tkinter as tk
 from Widgets import WidgetBase
 from Components import SegmentRow
 from util import timeHelpers as timeh

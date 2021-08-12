@@ -1,12 +1,12 @@
 from util import timeHelpers as timeh
 
 class DifferenceList:
-    segments = []
-    totals = []
+    # segments = []
+    # totals = []
 
     def __init__(self,totals):
         self.totals = totals
-        self.segments = [0 for i in range(len(totals))]
+        self.segments = [0 for _ in range(len(totals))]
         self.setSegments()
 
     def update(self,time,index):

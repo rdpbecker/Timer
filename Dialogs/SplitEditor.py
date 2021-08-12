@@ -1,4 +1,3 @@
-import tkinter as tk
 from DataClasses import AllSplitNames
 from Dialogs import Popup
 from Components.SplitEditor import MainEditor

@@ -1,12 +1,11 @@
 import tkinter as tk
 from Widgets import WidgetBase
-from util import timeHelpers as timeh
 
 class Title(WidgetBase.WidgetBase):
-    game = None
-    category = None
-    compHeader = None
-    compName = None
+    # game = None
+    # category = None
+    # compHeader = None
+    # compName = None
 
     def __init__(self,parent,state,config):
         super().__init__(parent,state,config)

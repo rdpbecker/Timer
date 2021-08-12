@@ -1,7 +1,6 @@
 import tkinter as tk
 from Components import PracticeSelectorFrame
 from Components import RunsMenu
-from Components import SplitSelector
 from Dialogs import BaseDialog
 from Dialogs import Popup
 

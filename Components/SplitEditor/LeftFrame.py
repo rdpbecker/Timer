@@ -33,7 +33,7 @@ class LeftFrame(tk.Frame):
     def validate(self,val):
         return len(val) > 0 and val.find(",") < 0
 
-    def removeRow(self,index):
+    def removeRow(self,_):
         self.names[-1].grid_forget()
         self.labels[-1].grid_forget()
         del self.names[-1]

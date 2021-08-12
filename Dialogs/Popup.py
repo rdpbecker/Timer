@@ -1,10 +1,10 @@
 import tkinter as tk
 
 class Popup:
-    master = None
-    callback = None
-    window = None
-    retVal = None
+    # master = None
+    # callback = None
+    # window = None
+    # retVal = None
 
     def __init__(self,master,callback):
         self.master = master
@@ -16,22 +16,22 @@ class Popup:
     def show(self):
         pass
 
-    def accept(self,event=None):
+    def accept(self,_=None):
         self.setReturn()
         self.retVal["exitCode"] = "accept"
         self.finish()
 
-    def close(self,event=None):
+    def close(self,_=None):
         self.setReturn()
         self.retVal["exitCode"] = "close"
         self.finish()
 
-    def reject(self,event=None):
+    def reject(self,_=None):
         self.setReturn()
         self.retVal["exitCode"] = "reject"
         self.finish()
 
-    def finish(self,event=None):
+    def finish(self,_=None):
         self.setReturn()
         self.window.destroy()
         if self.callback:
