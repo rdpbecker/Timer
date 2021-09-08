@@ -1,7 +1,6 @@
 import os
 from Dialogs import PracticeRunSelector
 from util import fileio
-from util import layoutHelper as lh
 from util import readConfig as rc
 
 class Session:
@@ -11,9 +10,9 @@ class Session:
     layoutName = ""
     layout = []
 
-    splits = []
-    config = None
-    saveFile = ""
+    # splits = []
+    # config = None
+    # saveFile = ""
 
     def __init__(self,splits):
         self.splits = splits

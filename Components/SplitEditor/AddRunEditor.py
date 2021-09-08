@@ -28,7 +28,7 @@ class SplitEditor(tk.Frame):
         self.savedGame = ""
         self.savedCategory = ""
 
-    def updateRows(self,*args):
+    def updateRows(self,*_):
         self.editor.entries.pack_forget()
         if not self.splits.validPair(self.selection.game,self.selection.category):
             if not self.splits.validPair(self.oldGame,self.oldCategory):

@@ -33,7 +33,7 @@ class SplitEditorD(BaseDialog.Dialog):
             return
         self.finish()
 
-    def preSave(self,*args):
+    def preSave(self,*_):
         self.saved = True
         self.editFrame.save(True)
         if not self.note:

@@ -20,7 +20,7 @@ class CurrentRun:
         n = len(self.segments)
         if not n:
             self.empty = True
-        for i in range(requiredLength-n):
+        for _ in range(requiredLength-n):
             self.segments.append(timeh.blank())
             self.totals.append(timeh.blank())
 

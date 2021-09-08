@@ -49,7 +49,7 @@ def main():
             insertCsvLines(newCompares,7,comparesCsv)
 
             newCompares = [['Blank Split','Blank']]
-            newCompares.extend(['-','-'] for i in range(len(comparesCsv)-1))
+            newCompares.extend(['-','-'] for _ in range(len(comparesCsv)-1))
             insertCsvLines(newCompares,9,comparesCsv)
 
             fileio.writeCSVs(config["baseDir"],game+"tmp",category,None,comparesCsv)

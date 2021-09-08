@@ -6,7 +6,6 @@ from util import readConfig as rc
 from DataClasses import AllSplitNames
 from DataClasses import PracticeSession
 from Dialogs import AddRun
-from Dialogs import PracticeRunSelector
 
 def setHotkeys(app,state):
     app.root.bind(state.config["hotkeys"]["split"], app.onSplitEnd)

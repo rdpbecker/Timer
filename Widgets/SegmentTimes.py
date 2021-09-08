@@ -2,16 +2,15 @@ import tkinter as tk
 from Widgets import WidgetBase
 
 class SegmentTimes(WidgetBase.WidgetBase):
-    segmentHeader = None
-    segmentTime = None
-    goldHeader = None
-    goldTime = None
+    # segmentHeader = None
+    # segmentTime = None
+    # goldHeader = None
+    # goldTime = None
 
     def __init__(self,parent,state,config):
         super().__init__(parent,state,config)
         fg = config["colours"]["text"]
         bg = config["colours"]["bg"]
-        font = config["font"]
 
         self.configure(bg=bg)
         self.leftFrame = tk.Frame(self,bg=bg)

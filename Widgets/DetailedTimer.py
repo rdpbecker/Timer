@@ -3,8 +3,8 @@ from Widgets import WidgetBase
 from util import timeHelpers as timeh
 
 class Timer(WidgetBase.WidgetBase):
-    main = None
-    segment = None
+    # main = None
+    # segment = None
 
     def __init__(self,parent,state,config):
         super().__init__(parent,state,config)

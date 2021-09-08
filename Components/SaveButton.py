@@ -22,7 +22,7 @@ class SaveButton(tk.Frame):
         self.warning.destroy()
         self.warning = None
 
-    def confirmSave(self,event=None):
+    def confirmSave(self,_=None):
         if not self.options["valid"]():
             self.removeWarning()
             self.warning = tk.Label(self,text=self.options["invalidMsg"],fg="red")
@@ -36,5 +36,5 @@ class SaveButton(tk.Frame):
             "Save local changes? (Closing this window will save automatically)"\
         )
 
-    def save(self,retVal):
+    def save(self,_):
         pass

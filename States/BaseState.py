@@ -11,16 +11,16 @@ class State:
     totalTime = 0
 
     splitnum = 0
-    splitnames = []
-    numSplits = 0
+    # splitnames = []
+    # numSplits = 0
 
-    game = ""
-    category = ""
+    # game = ""
+    # category = ""
 
-    completeCsv = None
-    comparesCsv = None
+    # completeCsv = None
+    # comparesCsv = None
 
-    config = None
+    # config = None
 
     unSaved = False
 
@@ -49,19 +49,19 @@ class State:
     def frameUpdate(self):
         pass
 
-    def onStarted(self,time):
+    def onStarted(self,_):
         pass
 
-    def onSplit(self,time):
+    def onSplit(self,_):
         pass
 
-    def onComparisonChanged(self,rotation):
+    def onComparisonChanged(self,_):
         pass
 
-    def onPaused(self,time):
+    def onPaused(self,_):
         pass
 
-    def onSplitSkipped(self,time):
+    def onSplitSkipped(self,_):
         pass
 
     def onReset(self):

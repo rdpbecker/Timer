@@ -11,7 +11,7 @@ class Session:
     layoutName = ""
     layout = []
 
-    splits = []
+    # splits = []
     config = None
     saveFile = ""
 

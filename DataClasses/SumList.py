@@ -7,7 +7,7 @@ class SumList:
 
     def __init__(self,bests):
         self.bests = bests
-        self.totalBests = [0 for i in range(len(bests))]
+        self.totalBests = [0 for _ in range(len(bests))]
         self.setTotals()
 
     def update(self,time,index):

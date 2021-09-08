@@ -1,10 +1,7 @@
 import tkinter as tk
-from tkinter import ttk
 from Components import GameSelector
 from Components import RunsMenu
-from DataClasses import AllSplitNames
 from Dialogs import Popup
-from util import layoutHelper as lh
 
 class RunPopup(Popup.Popup):
     def __init__(self,master,callback,session):

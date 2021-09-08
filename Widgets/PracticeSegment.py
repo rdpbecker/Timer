@@ -4,8 +4,8 @@ from util import fileio
 from util import timeHelpers as timeh
 
 class SegmentCompare(WidgetBase.WidgetBase):
-    goldHeader = None
-    goldTime = None
+    # goldHeader = None
+    # goldTime = None
 
     def __init__(self,parent,state):
         config = fileio.readJson("defaults/segmentTimes.json")

@@ -1,4 +1,3 @@
-import os
 from util import dataManip
 from util import fileio
 from util import timeHelpers as timeh
@@ -13,14 +12,14 @@ class State(BaseState.State):
     pauseTime = 0
     splitstarttime = 0
 
-    bptList = None
-    currentBests = None
-    bestExits = None
+    # bptList = None
+    # currentBests = None
+    # bestExits = None
 
-    currentRun = None
+    # currentRun = None
 
     comparisons = []
-    currentComparison = None
+    # currentComparison = None
     compareNum = 2
     numComparisons = 0
 
@@ -256,7 +255,6 @@ class State(BaseState.State):
             dataManip.replaceComparison(self.currentRun,1,5,self.comparesCsv,{"precision":5})
         dataManip.replaceComparison(self.bestExits,1,7,self.comparesCsv,{"precision":5})
 
-        lastRun = [timeh.timesToStringList(self.currentRun.segments,{"precision":5}),timeh.timesToStringList(self.currentRun.totals,{"precision":5})]
         if not self.currentRun.empty:
             self.completeCsv[0].insert(1,"Run #"+str(int((len(self.completeCsv[1])+1)/2)))
             self.completeCsv[0].insert(2,"Totals")

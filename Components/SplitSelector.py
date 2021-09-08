@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 from Components import GameSelector
 
 class Selector(GameSelector.Selector):
@@ -6,7 +7,7 @@ class Selector(GameSelector.Selector):
         super().__init__(parent)
         self.splitVar = tk.StringVar()
         self.splitVar.trace('w',self.setName)
-        self.splitCombo = tk.ttk.Combobox(self,values=self.splits.getSplitNames(self.game,self.category),textvariable=self.splitVar)
+        self.splitCombo = ttk.Combobox(self,values=self.splits.getSplitNames(self.game,self.category),textvariable=self.splitVar)
         splitLabel = tk.Label(self,text="Segment Name:")
         self.splitCombo.grid(row=2,column=1,columnspan=2,sticky="WE")
         splitLabel.grid(row=2,column=0,sticky="W")
@@ -22,7 +23,7 @@ class Selector(GameSelector.Selector):
         self.updateNameCombo()
         self.splitVar.set("")
 
-    def setName(self,*args):
+    def setName(self,*_):
         split = self.splitVar.get()
         if split in self.splits.getSplitNames(self.game,self.category):
             self.split = split

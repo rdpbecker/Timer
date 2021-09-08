@@ -1,4 +1,3 @@
-import tkinter as tk
 from Widgets import InfoBase
 
 class CompareInfo(InfoBase.InfoBase):

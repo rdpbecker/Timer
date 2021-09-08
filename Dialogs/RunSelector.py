@@ -1,11 +1,8 @@
 import tkinter as tk
-from tkinter import ttk
 from Components import GameSelector
 from Components import LayoutSelector
 from Components import RunsMenu
 from Dialogs import BaseDialog
-from util import fileio
-from util import layoutHelper as lh
 
 class RunSelector(BaseDialog.Dialog):
     layoutName = "System Default"

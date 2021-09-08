@@ -1,8 +1,8 @@
 import tkinter as tk
 
 class WidgetBase(tk.Frame):
-    state = None
-    config = None
+    # state = None
+    # config = None
 
     def __init__(self,parent,state,config):
         super().__init__(parent)
