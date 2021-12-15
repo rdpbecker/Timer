@@ -84,9 +84,9 @@ class State(BaseState.State):
 
         for i in range(self.numComparisons):
             self.comparisons[i].updateDiffs(splitTime,totalTime)
-        if timeh.greater(self.currentBests.bests[self.splitnum],splitTime):
+        if timeh.isBlank(self.currentBests.bests[self.splitnum]) or not timeh.greater(self.currentRun.segments[-1],self.currentBests.bests[self.splitnum]):
             self.currentBests.update(splitTime,self.splitnum)
-        if timeh.greater(self.bestExits.totals[self.splitnum],totalTime):
+        if timeh.isBlank(self.bestExits.totals[self.splitnum]) or not timeh.greater(totalTime,self.bestExits.totals[self.splitnum]):
             self.bestExits.update(totalTime,self.splitnum)
         self.splitnum = self.splitnum + 1
         self.splitstarttime = time
@@ -256,9 +256,7 @@ class State(BaseState.State):
         dataManip.replaceComparison(self.bestExits,1,7,self.comparesCsv,{"precision":5})
 
         if not self.currentRun.empty:
-            self.completeCsv[0].insert(1,"Run #"+str(int((len(self.completeCsv[1])+1)/2)))
-            self.completeCsv[0].insert(2,"Totals")
-            dataManip.insertSumList(SumList.SumList(self.currentRun.segments),1,1,self.completeCsv)
+            dataManip.insertRun(self.currentRun,self.completeCsv)
         self.unSaved = True
 
     ##########################################################
