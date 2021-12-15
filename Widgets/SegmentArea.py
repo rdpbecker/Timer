@@ -1,13 +1,11 @@
 from Widgets import WidgetBase
 from Components import SegmentRow
+from DataClasses import Splits
 from util import timeHelpers as timeh
 
 class SegmentArea(WidgetBase.WidgetBase):
     rows = []
     numRows = 0
-    trueNumSplits = 0
-    trueActiveSplit = 0
-    topRowSplitnum = 0
     activeIndex = 0
     updateFrame = 0
 
@@ -17,15 +15,15 @@ class SegmentArea(WidgetBase.WidgetBase):
         self.resetUI()
 
     def resetUI(self):
+        self.splits = Splits.SplitList(self.state.splitnames)
         oldNumSplits = len(self.rows)
         if self.config["numSplits"] > len(self.state.splitnames):
-            self.trueNumSplits = len(self.state.splitnames)
-            self.trueActiveSplit = len(self.state.splitnames) - 2
+            self.splits.setVisualConfig(len(self.state.splitnames),len(self.state.splitnames) - 2)
         else:
-            self.trueNumSplits = self.config["numSplits"]
-            self.trueActiveSplit = self.config["activeSplit"]
+            self.splits.setVisualConfig(self.config["numSplits"],self.config["activeSplit"])
+        self.currentSplits = self.splits.getSplits(self.state.splitnum)
 
-        self.numRows = self.trueNumSplits
+        self.numRows = self.splits.visibleSplits
         if oldNumSplits < self.numRows:
             for i in range(oldNumSplits,self.numRows):
                 row = SegmentRow.SegmentRow(self, self.config["main"]["colours"]["bg"], self.config["main"]["font"], self.config["main"]["colours"]["text"], self.state.config["padx"])
@@ -44,7 +42,7 @@ class SegmentArea(WidgetBase.WidgetBase):
         self.rows[-1].setComparison(fg=self.config["endColour"])
 
     def onRestart(self):
-        self.topRowSplitnum = 0
+        self.currentSplits = self.splits.getSplits(0)
         self.activeIndex = 0
         self.updateFrame = 0
         self.setAllHeaders()
@@ -79,17 +77,10 @@ class SegmentArea(WidgetBase.WidgetBase):
         self.setAllDiffs()
         self.setAllComparisons()
 
-    def getTopSplitIndex(self):
-        if self.state.splitnum <= self.trueActiveSplit - 1:
-            return 0
-        if self.state.splitnum >= self.state.numSplits - (self.trueNumSplits-self.trueActiveSplit):
-            return self.state.numSplits - self.trueNumSplits
-        return self.state.splitnum - (self.trueActiveSplit - 1)
-
     def toNextSplit(self):
-        self.topRowSplitnum = self.getTopSplitIndex()
-        if not (self.state.splitnum - self.topRowSplitnum == self.activeIndex):
-            self.activeIndex = self.state.splitnum - self.topRowSplitnum
+        self.currentSplits = self.splits.getSplits(self.state.splitnum)
+        if not (self.state.splitnum - self.splits.topSplitIndex == self.activeIndex):
+            self.activeIndex = self.state.splitnum - self.splits.topSplitIndex
             self.setHighlight()
         self.setMainHeaders()
         self.setAllDiffs()
@@ -100,13 +91,13 @@ class SegmentArea(WidgetBase.WidgetBase):
     def setMainHeaders(self):
         try:
             for i in range(self.numRows-1):
-                self.rows[i].setHeaderText(self.state.splitnames[i+self.topRowSplitnum])
+                self.rows[i].setHeaderText(self.currentSplits[i].name)
         except:
             pass
 
     def setLastHeader(self):
         try:
-            self.rows[-1].setHeaderText(self.state.splitnames[-1])
+            self.rows[-1].setHeaderText(self.currentSplits[-1].name)
         except:
             pass
 
@@ -116,18 +107,18 @@ class SegmentArea(WidgetBase.WidgetBase):
 
     def setMainDiffs(self):
         for i in range(self.numRows-1):
-            if (i+self.topRowSplitnum < self.state.splitnum):
+            if (self.currentSplits[i].index < self.state.splitnum):
                 self.rows[i].setDiff(\
                     text=\
                         timeh.timeToString(\
-                            self.state.currentComparison.totalDiffs[i+self.topRowSplitnum],\
+                            self.state.currentComparison.totalDiffs[self.currentSplits[i].index],\
                             {
                                 "showSign": True,\
                                 "precision": self.config["diff"]["precision"],\
                                 "noPrecisionOnMinute": self.config["diff"]["noPrecisionOnMinute"]\
                             }\
                         ),\
-                    fg=self.findDiffColour(i+self.topRowSplitnum)\
+                    fg=self.findDiffColour(self.currentSplits[i].index)\
                 )
             else:
                 self.rows[i].setDiff(text="")
@@ -155,11 +146,11 @@ class SegmentArea(WidgetBase.WidgetBase):
 
     def setMainComparisons(self):
         for i in range(self.numRows-1):
-            if (i+self.topRowSplitnum < self.state.splitnum):
+            if (self.currentSplits[i].index < self.state.splitnum):
                 self.rows[i].setComparison(\
                     text=\
                         timeh.timeToString(\
-                            self.state.currentRun.totals[i+self.topRowSplitnum],\
+                            self.state.currentRun.totals[self.currentSplits[i].index],\
                             {\
                                 "precision": self.config["main"]["precision"],\
                                 "noPrecisionOnMinute": self.config["main"]["noPrecisionOnMinute"]\
@@ -170,7 +161,7 @@ class SegmentArea(WidgetBase.WidgetBase):
                 self.rows[i].setComparison(\
                     text=\
                         timeh.timeToString(\
-                            self.state.currentComparison.totals[i+self.topRowSplitnum],\
+                            self.state.currentComparison.totals[self.currentSplits[i].index],\
                             {\
                                 "precision": self.config["main"]["precision"],\
                                 "noPrecisionOnMinute": self.config["main"]["noPrecisionOnMinute"]\
