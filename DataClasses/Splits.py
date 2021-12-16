@@ -12,6 +12,7 @@ class SplitList:
         self.activeIndex = 0
         self.state = state
         self.groupStart = -1
+        self.setOpenOnEnd = True
 
     def parseSplits(self,names):
         splits = []
@@ -32,14 +33,18 @@ class SplitList:
                 groupStart = -1
         return splits, groups
 
-    def setVisualConfig(self,numSplits,visuallyActive):
+    def setVisualConfig(self,numSplits,visuallyActive,setOpenOnEnd):
         self.visibleSplits = numSplits
         self.visuallyActive = visuallyActive
+        self.setOpenOnEnd = setOpenOnEnd
 
     def updateCurrent(self,currentSplit):
         self.setOpen(currentSplit)
-        if currentSplit == self.numSplits and self.groups[-1].end == self.numSplits - 1:
-            group = copy.deepcopy(self.groups[-1])
+        if currentSplit == self.numSplits and len(self.groups) and self.groups[-1].end == self.numSplits - 1:
+            if self.setOpenOnEnd:
+                group = copy.deepcopy(self.groups[-1])
+            else:
+                group = None
         else:
             group = self.findGroup(currentSplit)
         subs = []

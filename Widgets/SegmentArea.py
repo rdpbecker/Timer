@@ -18,9 +18,9 @@ class SegmentArea(WidgetBase.WidgetBase):
         self.splits = Splits.SplitList(self.state)
         oldNumSplits = len(self.rows)
         if self.config["numSplits"] > len(self.state.splitnames):
-            self.splits.setVisualConfig(len(self.state.splitnames),len(self.state.splitnames) - 2)
+            self.splits.setVisualConfig(len(self.state.splitnames),len(self.state.splitnames) - 2,self.config["setOpenOnEnd"])
         else:
-            self.splits.setVisualConfig(self.config["numSplits"],self.config["activeSplit"])
+            self.splits.setVisualConfig(self.config["numSplits"],self.config["activeSplit"],self.config["setOpenOnEnd"])
         self.splits.updateCurrent(self.state.splitnum)
 
         self.numRows = self.splits.visibleSplits
@@ -220,7 +220,7 @@ class SegmentArea(WidgetBase.WidgetBase):
                     self.rows[i].setComparison(\
                         text=self.formatComparison(self.state.currentRun.totals[split.end])\
                     )
-                elif self.state.splitnum < split.start:
+                else:
                     self.rows[i].setComparison(\
                         text=self.formatComparison(self.state.currentComparison.totals[split.end])\
                     )
