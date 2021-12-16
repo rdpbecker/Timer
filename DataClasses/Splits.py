@@ -35,7 +35,6 @@ class SplitList:
         self.visuallyActive = visuallyActive
 
     def updateCurrent(self,currentSplit):
-        self.setTopSplitIndex(currentSplit)
         if currentSplit == self.numSplits:
             group = copy.deepcopy(self.groups[-1])
         else:
@@ -98,14 +97,6 @@ class SplitList:
                 topLevel.append(copy.deepcopy(self.splits[i]))
             i = i + 1
         return topLevel
-
-    def setTopSplitIndex(self,current):
-        if current <= self.visuallyActive - 1:
-            self.topSplitIndex = 0
-        elif current >= self.numSplits - (self.visibleSplits-self.visuallyActive):
-            self.topSplitIndex = self.numSplits - self.visibleSplits
-        else:
-            self.topSplitIndex = current - (self.visuallyActive - 1)
 
     def trueTopSplitIndex(self,current,available):
         if current <= self.visuallyActive - 1:
