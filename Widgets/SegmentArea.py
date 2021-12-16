@@ -17,13 +17,10 @@ class SegmentArea(WidgetBase.WidgetBase):
     def resetUI(self):
         self.splits = Splits.SplitList(self.state)
         oldNumSplits = len(self.rows)
-        if self.config["numSplits"] > len(self.state.splitnames):
-            self.splits.setVisualConfig(len(self.state.splitnames),len(self.state.splitnames) - 2,self.config["setOpenOnEnd"])
-        else:
-            self.splits.setVisualConfig(self.config["numSplits"],self.config["activeSplit"],self.config["setOpenOnEnd"])
+        self.splits.setVisualConfig(self.config["numSplits"],self.config["activeSplit"],self.config["setOpenOnEnd"])
         self.splits.updateCurrent(self.state.splitnum)
-
         self.numRows = self.splits.visibleSplits
+
         if oldNumSplits < self.numRows:
             for i in range(oldNumSplits,self.numRows):
                 row = SegmentRow.SegmentRow(self, self.config["main"]["colours"]["bg"], self.config["main"]["font"], self.config["main"]["colours"]["text"], self.state.config["padx"])
@@ -35,6 +32,7 @@ class SegmentArea(WidgetBase.WidgetBase):
                 self.rows[i].grid_forget()
                 self.rows[i].destroy()
                 self.rows.pop(-1)
+
         self.setAllHeaders()
         self.setAllComparisons()
         self.setHighlight()
