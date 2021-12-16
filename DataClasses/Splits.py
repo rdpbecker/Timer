@@ -1,15 +1,17 @@
 import copy
 
 class SplitList:
-    def __init__(self,names):
-        self.splits, self.groups = self.parseSplits(names)
+    def __init__(self,state):
+        self.splits, self.groups = self.parseSplits(state.splitnames)
         self.visibleSplits = 0
         self.visuallyActive = 0
-        self.numSplits = len(names)
+        self.numSplits = len(state.splitnames)
         self.topSplitIndex = 0
         self.typeChecker = TypeChecker()
         self.currentSplits = []
         self.activeIndex = 0
+        self.state = state
+        self.groupStart = -1
 
     def parseSplits(self,names):
         splits = []
@@ -43,6 +45,8 @@ class SplitList:
         subs = []
         if group:
             subs = self.splits[group.start:group.end+1]
+            if currentSplit == group.start:
+                self.groupStart = self.state.splitstarttime - self.state.starttime
         available = self.synthesizeSplits(subs)
         if currentSplit == self.numSplits:
             self.activeIndex = self.numSplits

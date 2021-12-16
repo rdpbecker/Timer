@@ -15,7 +15,7 @@ class SegmentArea(WidgetBase.WidgetBase):
         self.resetUI()
 
     def resetUI(self):
-        self.splits = Splits.SplitList(self.state.splitnames)
+        self.splits = Splits.SplitList(self.state)
         oldNumSplits = len(self.rows)
         if self.config["numSplits"] > len(self.state.splitnames):
             self.splits.setVisualConfig(len(self.state.splitnames),len(self.state.splitnames) - 2)
@@ -64,6 +64,7 @@ class SegmentArea(WidgetBase.WidgetBase):
             or not timeh.greater(self.state.comparisons[0].segments[self.state.splitnum],self.state.segmentTime)):
 
             self.showCurrentSplitDiff()
+            self.updateGroupTimer()
 
     def onSplit(self):
         self.toNextSplit()
@@ -198,6 +199,15 @@ class SegmentArea(WidgetBase.WidgetBase):
             }\
        )\
 
+    def updateGroupTimer(self):
+        for i in range(len(self.splits.currentSplits)):
+            split = self.splits.currentSplits[i]
+            if self.splits.typeChecker.isGroup(split) and split.open:
+                self.rows[i].setComparison(\
+                    text=self.formatComparison(timeh.difference(self.state.totalTime,self.splits.groupStart)),\
+                    fg="grey"
+                )
+
     def setMainComparisons(self):
         for i in range(self.numRows-1):
             split = self.splits.currentSplits[i]
@@ -210,7 +220,7 @@ class SegmentArea(WidgetBase.WidgetBase):
                     self.rows[i].setComparison(\
                         text=self.formatComparison(self.state.currentRun.totals[split.end])\
                     )
-                else:
+                elif self.state.splitnum < split.start:
                     self.rows[i].setComparison(\
                         text=self.formatComparison(self.state.currentComparison.totals[split.end])\
                     )
