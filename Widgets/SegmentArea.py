@@ -137,9 +137,25 @@ class SegmentArea(WidgetBase.WidgetBase):
                 self.rows[i].setDiff(text="")
             elif self.splits.typeChecker.isGroup(split):
                 if (split.end < self.state.splitnum):
+                    if split.start > 0:
+                        groupChange = timeh.difference(\
+                            timeh.difference(\
+                                self.state.currentRun.totals[split.end],\
+                                self.state.currentRun.totals[split.start]\
+                            ),\
+                            timeh.difference(\
+                                self.state.currentComparison.totals[split.end],\
+                                self.state.currentComparison.totals[split.start]\
+                            )\
+                        )
+                    else:
+                        groupChange = timeh.blank()
                     self.rows[i].setDiff(\
                         text=self.formatDiff(self.state.currentComparison.totalDiffs[split.end]),\
-                        fg=self.findDiffColour(split.end)\
+                        fg=self.getCurrentDiffColour(\
+                            groupChange,\
+                            self.state.currentComparison.totalDiffs[split.end]\
+                        )
                     )
                 else:
                     self.rows[i].setDiff(text="")
