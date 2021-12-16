@@ -35,6 +35,7 @@ class SplitList:
         self.visuallyActive = visuallyActive
 
     def updateCurrent(self,currentSplit):
+        self.setOpen(currentSplit)
         if currentSplit == self.numSplits:
             group = copy.deepcopy(self.groups[-1])
         else:
@@ -62,6 +63,13 @@ class SplitList:
             if split.index == index:
                 return i
         return -1
+
+    def setOpen(self,index):
+        for group in self.groups:
+            if group.start <= index and group.end >= index:
+                group.open = True
+            else:
+                group.open = False
 
     def synthesizeSplits(self,openSubsplits):
         topLevel = self.getTopLevelSplits()
@@ -129,9 +137,10 @@ class SplitGroup:
         self.end = end
         self.name = name
         self.count = end - start + 1
+        self.open = False
 
     def __str__(self):
-        return "Name: " + self.name + " | Indexes: " + str(self.start) + "-" + str(self.end)
+        return "Name: " + self.name + " | Indexes: " + str(self.start) + "-" + str(self.end) + " | Open: " + str(self.open)
 
 class EmptySplit:
     def __init__(self):

@@ -85,18 +85,34 @@ class SegmentArea(WidgetBase.WidgetBase):
         if self.state.runEnded:
             self.setLastComparison()
 
+    def subAdjuster(self,isSub):
+        if not isSub:
+            return ""
+        return "    "
+
     def setMainHeaders(self):
         try:
             for i in range(self.numRows-1):
-                if self.splits.typeChecker.isEmpty(self.splits.currentSplits[i]):
-                    continue
-                self.rows[i].setHeaderText(self.splits.currentSplits[i].name)
+                split = self.splits.currentSplits[i]
+                if self.splits.typeChecker.isEmpty(split):
+                    self.rows[i].setHeaderText("")
+                else:
+                    if self.splits.typeChecker.isNormal(split):
+                        isSub = split.subsplit
+                    else:
+                        isSub = False
+                    self.rows[i].setHeaderText(self.subAdjuster(isSub)+split.name)
         except:
             pass
 
     def setLastHeader(self):
         try:
-            self.rows[-1].setHeaderText(self.splits.currentSplits[-1].name)
+            split = self.splits.currentSplits[-1]
+            if self.splits.typeChecker.isNormal(split):
+                isSub = split.subsplit
+            else:
+                isSub = False
+            self.rows[-1].setHeaderText(self.subAdjuster(isSub)+self.splits.currentSplits[-1].name)
         except:
             pass
 
@@ -279,7 +295,13 @@ class SegmentArea(WidgetBase.WidgetBase):
             colour = self.config["activeHighlight"]["colours"]["bg"]
         else:
             colour = self.config["main"]["colours"]["bg"]
-        self.rows[index].configure(bg=colour)
+        if self.splits.typeChecker.isGroup(self.splits.currentSplits[index]) and self.splits.currentSplits[index].open:
+            relief = "sunken"
+            borderwidth = 1
+        else:
+            relief = "flat"
+            borderwidth = 0
+        self.rows[index].configure(bg=colour,borderwidth=borderwidth,relief=relief)
         self.rows[index].setHeader(bg=colour)
         self.rows[index].setDiff(bg=colour)
         self.rows[index].setComparison(bg=colour)
