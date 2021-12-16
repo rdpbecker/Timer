@@ -9,6 +9,7 @@ class SplitList:
         self.topSplitIndex = 0
         self.typeChecker = TypeChecker()
         self.currentSplits = []
+        self.activeIndex = 0
 
     def parseSplits(self,names):
         splits = []
@@ -35,21 +36,33 @@ class SplitList:
 
     def updateCurrent(self,currentSplit):
         self.setTopSplitIndex(currentSplit)
-        visible = []
-        group = self.findGroup(currentSplit)
+        if currentSplit == self.numSplits:
+            group = copy.deepcopy(self.groups[-1])
+        else:
+            group = self.findGroup(currentSplit)
         subs = []
         if group:
             subs = self.splits[group.start:group.end+1]
         available = self.synthesizeSplits(subs)
-        topSplitIndex = self.trueTopSplitIndex(currentSplit,len(available))
-        visible = available[topSplitIndex:topSplitIndex+self.visibleSplits-1]
-        self.currentSplits = visible + [available[-1]]
+        availableIndex = self.findSplit(available,currentSplit)
+        topSplitIndex = self.trueTopSplitIndex(availableIndex,len(available))
+        self.activeIndex = availableIndex - topSplitIndex
+        self.currentSplits = available[topSplitIndex:topSplitIndex+self.visibleSplits-1] + [available[-1]]
 
     def findGroup(self,index):
         for group in self.groups:
             if group.start <= index and group.end >= index:
                 return copy.deepcopy(group)
         return None
+
+    def findSplit(self,available,index):
+        for i in range(len(available)):
+            split = available[i]
+            if not self.typeChecker.isNormal(split):
+                continue
+            if split.index == index:
+                return i
+        return -1
 
     def synthesizeSplits(self,openSubsplits):
         topLevel = self.getTopLevelSplits()
