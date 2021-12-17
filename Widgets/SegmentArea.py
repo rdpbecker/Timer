@@ -148,13 +148,16 @@ class SegmentArea(WidgetBase.WidgetBase):
                                 self.state.currentComparison.totals[split.start]\
                             )\
                         )
-                    else:
-                        groupChange = timeh.blank()
-                    if timeh.isBlank(groupChange):
-                        diffColour = self.config["diff"]["colours"]["skipped"]
+                        if timeh.isBlank(groupChange):
+                            diffColour = self.config["diff"]["colours"]["skipped"]
+                        else:
+                            diffColour=self.getCurrentDiffColour(\
+                                groupChange,\
+                                self.state.currentComparison.totalDiffs[split.end]\
+                            )
                     else:
                         diffColour=self.getCurrentDiffColour(\
-                            groupChange,\
+                            timeh.blank(),\
                             self.state.currentComparison.totalDiffs[split.end]\
                         )
                     self.rows[i].setDiff(\
