@@ -30,6 +30,29 @@ the segment name in *splitNames.csv*. For example, to indicate that
 the timer should pause after Chapter 4 in a Celeste speedrun, the
 segment for Chapter 4 should be called `Chapter 4 [P]`.
 
+Segments can be grouped by adding `- ` at the beginning of each of
+the segment names in the group and `{<group name>}` at the end of
+the name of the segment. For example, the segment list
+
+```
+Example,Groups,- 1-1,- 1-2,- 1-3,- 1-4{Group 1},- 2-1,- 2-2,- 2-3,- 2-4{Group 2}
+```
+
+will be rendered as
+
+```
+Group 1
+  1-1
+  1-2
+  1-3
+  1-4
+Group 2
+  2-1
+  2-2
+  2-3
+  2-4
+```
+
 An example is in *splitNames.csv*.
 
 # Layout example
