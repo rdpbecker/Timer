@@ -62,6 +62,7 @@ class SegmentArea(WidgetBase.WidgetBase):
             or not timeh.greater(self.state.comparisons[0].segments[self.state.splitnum],self.state.segmentTime)):
 
             self.showCurrentSplitDiff()
+        if not self.state.runEnded:
             self.updateGroupTimer()
 
     def onSplit(self):
@@ -149,12 +150,16 @@ class SegmentArea(WidgetBase.WidgetBase):
                         )
                     else:
                         groupChange = timeh.blank()
-                    self.rows[i].setDiff(\
-                        text=self.formatDiff(self.state.currentComparison.totalDiffs[split.end]),\
-                        fg=self.getCurrentDiffColour(\
+                    if timeh.isBlank(groupChange):
+                        diffColour = self.config["diff"]["colours"]["skipped"]
+                    else:
+                        diffColour=self.getCurrentDiffColour(\
                             groupChange,\
                             self.state.currentComparison.totalDiffs[split.end]\
                         )
+                    self.rows[i].setDiff(\
+                        text=self.formatDiff(self.state.currentComparison.totalDiffs[split.end]),\
+                        fg=diffColour\
                     )
                 else:
                     self.rows[i].setDiff(text="")
@@ -205,6 +210,7 @@ class SegmentArea(WidgetBase.WidgetBase):
                     text=self.formatComparison(timeh.difference(self.state.totalTime,self.splits.groupStart)),\
                     fg="grey"
                 )
+                break
 
     def setMainComparisons(self):
         for i in range(self.numRows-1):
