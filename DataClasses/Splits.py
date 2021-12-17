@@ -6,7 +6,6 @@ class SplitList:
         self.visibleSplits = 0
         self.visuallyActive = 0
         self.numSplits = len(state.splitnames)
-        self.topSplitIndex = 0
         self.typeChecker = TypeChecker()
         self.currentSplits = []
         self.activeIndex = 0
@@ -46,7 +45,7 @@ class SplitList:
             else:
                 group = None
         else:
-            group = self.findGroup(currentSplit)
+            group = copy.deepcopy(self.findGroup(currentSplit))
         subs = []
         if group:
             subs = self.splits[group.start:group.end+1]
@@ -86,7 +85,7 @@ class SplitList:
     def findGroup(self,index):
         for group in self.groups:
             if group.start <= index and group.end >= index:
-                return copy.deepcopy(group)
+                return group
         return None
 
     def findSplit(self,available,index):
@@ -140,7 +139,7 @@ class SplitList:
         topLevel = []
         i = 0
         while i < len(self.splits):
-            group = self.findGroup(i)
+            group = copy.deepcopy(self.findGroup(i))
             if group:
                 topLevel.append(group)
                 i = group.end
