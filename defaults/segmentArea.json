@@ -2,6 +2,7 @@
     "endColour": "maroon1",
     "numSplits": 5,
     "activeSplit": 2,
+    "setOpenOnEnd": true,
     "main": {
         "precision": 2,
         "noPrecisionOnMinute": false,
