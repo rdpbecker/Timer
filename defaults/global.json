@@ -1,5 +1,5 @@
 {
-    "baseDir": "../",
+    "baseDir": "..",
     "padx": 10,
     "hotkeys": {
         "decreaseComparison": "<Left>",
@@ -12,6 +12,7 @@
         "restart": "R",
         "finish": "f",
         "save": "<Control-s>",
+        "partialSave": "<Control-S>",
         "chooseLayout": "<Control-l>",
         "chooseRun": "<Control-r>",
         "chooseSplit": "<Control-i>"

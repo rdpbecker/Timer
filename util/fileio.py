@@ -88,6 +88,8 @@ def stripEmptyStringsReturn(stringList):
     return new
 
 def readJson(filepath):
+    if not os.path.exists(filepath):
+        return {}
     with open(filepath,'r') as reader:
         data = json.load(reader)
     return data

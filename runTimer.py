@@ -19,6 +19,8 @@ def setHotkeys(app,state):
     app.root.bind(state.config["hotkeys"]["restart"], app.restart)
     app.root.bind(state.config["hotkeys"]["finish"], app.finish)
     app.root.bind(state.config["hotkeys"]["save"], app.save),
+    app.root.bind(state.config["hotkeys"]["partialSave"], app.partialSave),
+    app.root.bind("<Control-L>", app.partialLoad),
     app.root.bind(state.config["hotkeys"]["chooseLayout"], app.chooseLayout)
     app.root.bind(state.config["hotkeys"]["chooseRun"], app.chooseRun)
 

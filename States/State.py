@@ -1,3 +1,4 @@
+import os
 from util import dataManip
 from util import fileio
 from util import timeHelpers as timeh
@@ -76,9 +77,15 @@ class State(BaseState.State):
     ## 
     ## Parameters: time - the current system time
     ##########################################################
-    def completeSegment(self,time):
-        totalTime = time - self.starttime
-        splitTime = time - self.splitstarttime
+    def completeSegment(self,map):
+        if "total" in map.keys():
+            totalTime = map["total"]
+            splitTime = map["segment"]
+            splitstart = map["system"]
+        else:
+            totalTime = map["system"] - self.starttime
+            splitTime = map["system"] - self.splitstarttime
+            splitstart = map["system"]
         self.currentRun.addSegment(splitTime,totalTime)
         self.bptList.update(totalTime)
 
@@ -89,7 +96,7 @@ class State(BaseState.State):
         if timeh.isBlank(self.bestExits.totals[self.splitnum]) or not timeh.greater(totalTime,self.bestExits.totals[self.splitnum]):
             self.bestExits.update(totalTime,self.splitnum)
         self.splitnum = self.splitnum + 1
-        self.splitstarttime = time
+        self.splitstarttime = splitstart
         if self.splitnum >= len(self.splitnames):
             self.runEnded = True
             self.localSave()
@@ -99,13 +106,19 @@ class State(BaseState.State):
     ## 
     ## Parameters: time - the current system time
     ##########################################################
-    def skipSegment(self,time):
+    def skipSegment(self,map):
+        if "total" in map.keys():
+            totaltime = map["system"]
+            splitstart = map["system"]
+        else:
+            totaltime = map["system"] - self.starttime
+            splitstart = map["system"]
         self.currentRun.addSegment(timeh.blank(),timeh.blank())
-        self.bptList.update(time-self.starttime)
+        self.bptList.update(totaltime)
         for i in range(self.numComparisons):
             self.comparisons[i].updateDiffs(timeh.blank(),timeh.blank())
         self.splitnum = self.splitnum + 1
-        self.splitstarttime = time
+        self.splitstarttime = splitstart
         if self.splitnum >= len(self.splitnames):
             self.runEnded = True
             self.localSave()
@@ -190,7 +203,7 @@ class State(BaseState.State):
         self.splitstarttime = time
         self.started = True
 
-    def onSplit(self,time):
+    def onSplit(self,map):
         if not self.started or self.paused or self.runEnded:
             return 1
 
@@ -198,7 +211,7 @@ class State(BaseState.State):
         if self.splitnames[self.splitnum][-3:] == "[P]" and not self.splitnum == len(self.splitnames) and not self.paused:
             retVal = retVal + 3
 
-        self.completeSegment(time)
+        self.completeSegment(map)
         if self.splitnum == len(self.splitnames):
             retVal = retVal + 4
         elif self.splitnum == len(self.splitnames) - 1:
@@ -223,10 +236,10 @@ class State(BaseState.State):
         else:
             self.startPause(time)
 
-    def onSplitSkipped(self,time):
+    def onSplitSkipped(self,map):
         if not self.started or self.runEnded or self.paused:
             return 1
-        self.skipSegment(time)
+        self.skipSegment(map)
 
     def onReset(self):
         if not self.started or self.runEnded:
@@ -241,7 +254,7 @@ class State(BaseState.State):
         self.setComparisons()
 
     def shouldFinish(self):
-        return not self.started or self.runEnded
+        return not self.started or self.paused or self.runEnded
 
     ##########################################################
     ## Updates the local versions of the data files.
@@ -267,3 +280,40 @@ class State(BaseState.State):
         fileio.writeCSVs(self.config["baseDir"],self.game,self.category,self.completeCsv,self.comparesCsv)
         self.unSaved = False
         print("Saved data successfully.")
+
+    ##########################################################
+    ## Determines if a partial save exists for the current
+    ## run.
+    ##########################################################
+    def hasPartialSave(self):
+        return os.path.exists(self.partialSaveFile())
+
+    ##########################################################
+    ## Loads a state saved partway through a run.
+    ##########################################################
+    def partialLoad(self):
+        return fileio.readJson(self.partialSaveFile())
+
+    ##########################################################
+    ## Compute the save file name for partial saves.
+    ##########################################################
+    def partialSaveFile(self):
+        return self.config["baseDir"] + "/" + self.game + "/." + self.category + ".psave"
+
+    ##########################################################
+    ## Convert the current run's data into a dictionary. Used
+    ## for saving a partially completed run.
+    ########################################################## 
+    def dataMap(self):
+        dataMap = {}
+        dataMap["times"] = {"segment": self.segmentTime, "total": self.totalTime}
+        dataMap["splits"] = {"segments": self.currentRun.segments,
+"totals": self.currentRun.totals}
+        return dataMap
+
+    ##########################################################
+    ## Save the current state partway through a run.
+    ########################################################## 
+    def partialSave(self):
+        print("Writing partial save to", self.partialSaveFile())
+        fileio.writeJson(self.partialSaveFile(), self.dataMap())

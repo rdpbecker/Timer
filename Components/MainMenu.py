@@ -14,6 +14,7 @@ class Menu(tk.Menu):
                 "command": app.chooseLayout, \
                 "before": "normal", \
                 "during": "disabled", \
+                "paused": "disabled", \
                 "last": "disabled", \
                 "after": "disabled"\
             },\
@@ -22,6 +23,7 @@ class Menu(tk.Menu):
                 "command": app.chooseRun, \
                 "before": "normal", \
                 "during": "disabled", \
+                "paused": "disabled", \
                 "last": "disabled", \
                 "after": "disabled"\
             },\
@@ -30,6 +32,7 @@ class Menu(tk.Menu):
                 "command": app.start, \
                 "before": "normal", \
                 "during": "disabled", \
+                "paused": "disabled", \
                 "last": "disabled", \
                 "after": "disabled"\
             },\
@@ -38,6 +41,7 @@ class Menu(tk.Menu):
                 "command": app.onSplitEnd, \
                 "before": "disabled", \
                 "during": "normal", \
+                "paused": "disabled", \
                 "last": "normal", \
                 "after": "disabled"\
             },\
@@ -46,6 +50,7 @@ class Menu(tk.Menu):
                 "command": app.skip, \
                 "before": "disabled", \
                 "during": "normal", \
+                "paused": "disabled", \
                 "last": "disabled", \
                 "after": "disabled"\
             },\
@@ -54,6 +59,7 @@ class Menu(tk.Menu):
                 "command": app.reset, \
                 "before": "disabled", \
                 "during": "normal", \
+                "paused": "normal", \
                 "last": "normal", \
                 "after": "disabled"\
             },\
@@ -62,6 +68,7 @@ class Menu(tk.Menu):
                 "command": app.restart, \
                 "before": "disabled", \
                 "during": "disabled", \
+                "paused": "disabled", \
                 "last": "disabled", \
                 "after": "normal"\
             },\
@@ -70,6 +77,7 @@ class Menu(tk.Menu):
                 "command": app.guiSwitchCompareCW, \
                 "before": "normal", \
                 "during": "normal", \
+                "paused": "normal", \
                 "last": "normal", \
                 "after": "normal"\
             },\
@@ -78,6 +86,7 @@ class Menu(tk.Menu):
                 "command": app.togglePause, \
                 "before": "disabled", \
                 "during": "normal", \
+                "paused": "normal", \
                 "last": "normal", \
                 "after": "disabled"\
             },\
@@ -86,14 +95,25 @@ class Menu(tk.Menu):
                 "command": app.save, \
                 "before": "normal", \
                 "during": "disabled", \
+                "paused": "disabled", \
                 "last": "disabled", \
                 "after": "normal"\
+            },\
+            {\
+                "name": "Partial Save", \
+                "command": app.partialSave, \
+                "before": "disabled", \
+                "during": "disabled", \
+                "paused": "normal", \
+                "last": "disabled", \
+                "after": "disabled" \
             },\
             {\
                 "name": "Finish", \
                 "command": app.finish, \
                 "before": "normal", \
                 "during": "disabled", \
+                "paused": "disabled", \
                 "last": "disabled", \
                 "after": "normal"\
             },\
@@ -102,6 +122,7 @@ class Menu(tk.Menu):
                 "command": app.editSplits, \
                 "before": "active", \
                 "during": "disabled", \
+                "paused": "disabled", \
                 "last": "disabled", \
                 "after": "disabled"\
             },\
@@ -110,6 +131,7 @@ class Menu(tk.Menu):
                 "command": app.addRun, \
                 "before": "active", \
                 "during": "disabled", \
+                "paused": "disabled", \
                 "last": "disabled", \
                 "after": "disabled"\
             }\
@@ -120,6 +142,7 @@ class Menu(tk.Menu):
         self.updateMenuState("before")
 
     def updateMenuState(self,state):
+        self.state = state
         for item in self.entries:
             self.menubar.entryconfig(item["name"],state=item[state])
 
