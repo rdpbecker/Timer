@@ -289,6 +289,25 @@ class State(BaseState.State):
         return os.path.exists(self.partialSaveFile())
 
     ##########################################################
+    ## Deletes the current partial save file.
+    ##########################################################
+    def deletePartialSave(self):
+        if self.hasPartialSave():
+            os.remove(self.partialSaveFile())
+
+    ##########################################################
+    ## Determines if a partial save exists for the current
+    ## run.
+    ##########################################################
+    def saveType(self):
+        if self.paused:
+            return 1
+        elif self.unSaved:
+            return 2
+        else:
+            return 0
+
+    ##########################################################
     ## Loads a state saved partway through a run.
     ##########################################################
     def partialLoad(self):

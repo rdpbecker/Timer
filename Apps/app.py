@@ -23,6 +23,7 @@ class App(threading.Thread):
     # session = None
     retVal = None
     updated = None
+    initialLoad = True
 
     ##########################################################
     ## Initialize the app in a different thread than the state
@@ -123,6 +124,9 @@ class App(threading.Thread):
     ##########################################################
     def update(self):
         exitCode = self.state.frameUpdate(timer())
+        if self.initialLoad:
+            self.confirmPartialLoad(self.partialLoad)
+            self.initialLoad = False
         if not exitCode:
             self.updateWidgets("frame")
         elif exitCode == 1:
@@ -251,7 +255,22 @@ class App(threading.Thread):
     ##########################################################
     ## Loads previously saved partial run data.
     ##########################################################
-    def partialLoad(self,_=None):
+    def confirmPartialLoad(self, callback):
+        if self.state.hasPartialSave():
+            ConfirmPopup.ConfirmPopup(\
+                self.root,\
+                callback,\
+                "Load",\
+                "This category has an incomplete run saved. Load it (closing will load automatically)?"\
+            )
+
+    ##########################################################
+    ## Loads previously saved partial run data.
+    ##########################################################
+    def partialLoad(self,shouldLoad):
+        if not shouldLoad:
+            return
+
         partialState = self.state.partialLoad()
 
         # Start so we can split
@@ -270,6 +289,25 @@ class App(threading.Thread):
         # Update the total and segment timers so they are accurate
         self.state.starttime = self.state.pauseTime - partialState["times"]["total"]
         self.state.splitstarttime = self.state.pauseTime - partialState["times"]["segment"]
+        self.confirmDeletePartialSave(self.deletePartialSave)
+
+    ##########################################################
+    ## Show a popup for the user to delete their partial save.
+    ##########################################################
+    def confirmDeletePartialSave(self,callback):
+        ConfirmPopup.ConfirmPopup(\
+            self.root,\
+            callback,\
+            "Delete",\
+            "Delete partial save?"\
+        )
+
+    ##########################################################
+    ## Delete the partial save.
+    ##########################################################
+    def deletePartialSave(self,shouldDelete):
+        if shouldDelete:
+            self.state.deletePartialSave()
 
     ##########################################################
     ## Opens a window to change the current layout
@@ -298,14 +336,14 @@ class App(threading.Thread):
         if newSession["game"] == self.state.game\
             and newSession["category"] == self.state.category:
             return
-        if self.state.unSaved:
-            self.confirmSave(self.saveIfDesired)
+        self.confirmSave(self.saveIfDesired)
         compareNum = self.state.compareNum
         self.session.setRun(newSession["game"],newSession["category"])
         self.state = State.State(self.session)
         self.state.setComparison(compareNum)
         self.updateWidgets("runChanged",state=self.state)
         self.updateWeights()
+        self.confirmPartialLoad(self.partialLoad)
 
     ##########################################################
     ## Opens a window to change the current split (practice
@@ -320,27 +358,37 @@ class App(threading.Thread):
         if newSession["game"] == self.state.game\
             and newSession["category"] == self.state.category:
             return
-        if self.state.unSaved:
-            self.confirmSave(self.saveIfDesired)
+        self.confirmSave(self.saveIfDesired)
         self.session.setRun(newSession["game"],newSession["category"],newSession["split"])
         self.state = PracticeState.State(self.session)
         self.updateWidgets("runChanged",state=self.state)
 
     def saveIfDesired(self,desired):
         if desired:
-            self.save()
+            if self.state.saveType() == 1:
+                self.partialSave()
+            else:
+                self.save()
 
     ##########################################################
     ## Save the splits before closing the window or changing the
     ## run.
     ##########################################################
     def confirmSave(self,callback):
-        ConfirmPopup.ConfirmPopup(\
-            self.root,\
-            callback,\
-            "Save",\
-            "Save local changes (closing will save automatically)?"\
-        )
+        saveType = self.state.saveType()
+        prompt = ""
+        if saveType == 1:
+            prompt = "Save partial run (closing will save automatically)?"
+        elif saveType == 2:
+                prompt = "Save local changes (closing will save automatically)?"
+
+        if prompt:
+            ConfirmPopup.ConfirmPopup(\
+                self.root,\
+                callback,\
+                "Save",\
+                prompt\
+            )
 
     ##########################################################
     ## Finish the run by saving the splits and closing the
@@ -349,14 +397,13 @@ class App(threading.Thread):
     def finish(self,_=None):
         if not self.state.shouldFinish():
             return
-        if self.state.unSaved:
+        if self.state.saveType():
             self.confirmSave(self.close)
         else:
             self.close(False)
 
     def close(self,shouldSave):
-        if shouldSave:
-            self.save()
+        self.saveIfDesired(shouldSave)
         if self.updater:
             self.root.after_cancel(self.updater)
         self.root.destroy()
