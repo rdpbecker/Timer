@@ -26,6 +26,12 @@ class App(threading.Thread):
     initialLoad = True
 
     ##########################################################
+    ##########################################################
+    ##                      GUI SETUP                       ##
+    ##########################################################
+    ##########################################################
+
+    ##########################################################
     ## Initialize the app in a different thread than the state
     ##
     ## Parameters: state - the state of the program
@@ -120,6 +126,12 @@ class App(threading.Thread):
                 component.unbind('<Configure>')
 
     ##########################################################
+    ##########################################################
+    ##                Signal/Event Handling                 ##
+    ##########################################################
+    ##########################################################
+
+    ##########################################################
     ## Set the timer to update every time this is called
     ##########################################################
     def update(self):
@@ -142,23 +154,6 @@ class App(threading.Thread):
             self.updateWidgets("start")
             if self.menu:
                 self.menu.updateMenuState("during")
-
-    ##########################################################
-    ## If the event is really an event, replace it with a
-    ## dictionary that has a single key indicating the current
-    ## system time. This is a hacky way of detecting whether
-    ## we've called a function directly or by the user
-    ## pressing a button, and doesn't break anything because
-    ## we don't actually use event properties for anything. 
-    ##
-    ## Functions are only called directly when loading a
-    ## partially completed run.
-    ##########################################################
-    def misconstrueEvent(self,event):
-        if type(event) != dict:
-            event = {}
-        event["system"] = timer()
-        return event
         
     ##########################################################
     ## At the end of each split, record and store the times, 
@@ -190,14 +185,6 @@ class App(threading.Thread):
     ##########################################################
     def guiSwitchCompareCW(self,_=None):
         self.rotateCompare(1)
-
-    ##########################################################
-    ## The function called when the 'Switch Compare' button is
-    ## clicked
-    ##########################################################
-    def rotateCompare(self,rotation):
-        if not self.state.onComparisonChanged(rotation):
-            self.updateWidgets("comp")
 
     ##########################################################
     ## Stop the run here
@@ -253,6 +240,100 @@ class App(threading.Thread):
         self.state.partialSave()
 
     ##########################################################
+    ## Delete the partial save.
+    ##########################################################
+    def deletePartialSave(self,shouldDelete):
+        if shouldDelete:
+            self.state.deletePartialSave()
+
+    ##########################################################
+    ## Opens a window to change the current layout
+    ##########################################################
+    def chooseLayout(self,_=None):
+        if self.state.started:
+            return
+        LayoutPopup.LayoutPopup(self.root,self.setLayout,self.session).show()
+
+    ##########################################################
+    ## Opens a window to change the current run
+    ##########################################################
+    def chooseRun(self,_=None):
+        if self.state.started:
+            return
+        RunPopup.RunPopup(self.root,self.setRun,self.session).show()
+
+    ##########################################################
+    ## Opens a window to change the current split (practice
+    ## only)
+    ##########################################################
+    def chooseSplit(self,_=None):
+        if self.state.started:
+            return
+        PracticeRunSelector.SelectorP(self.root,self.setSplit,self.session).show()
+
+    ##########################################################
+    ## Finish the run by saving the splits and closing the
+    ## window.
+    ##########################################################
+    def finish(self,_=None):
+        if not self.state.shouldFinish():
+            return
+        if self.state.saveType():
+            self.confirmSave(self.close)
+        else:
+            self.close(False)
+
+    ##########################################################
+    ## Open the split editor. Used by the main menu.
+    ##########################################################
+    def editSplits(self):
+        SplitEditor.SplitEditor(self.root,self.newEditedState,self.state)
+
+    ##########################################################
+    ## Open the new run creator (a variation of the split
+    ## editor).
+    ##########################################################
+    def addRun(self):
+        AddRun.SplitEditorP(self.root,self.addRunState)
+
+    ##########################################################
+    ##########################################################
+    ##                   Helper functions                   ##
+    ##########################################################
+    ##########################################################
+
+    ##########################################################
+    ## If the event is really an event, replace it with a
+    ## dictionary that has a single key indicating the current
+    ## system time. This is a hacky way of detecting whether
+    ## we've called a function directly or by the user
+    ## pressing a button, and doesn't break anything because
+    ## we don't actually use event properties for anything. 
+    ##
+    ## Functions are only called directly when loading a
+    ## partially completed run.
+    ##########################################################
+    def misconstrueEvent(self,event):
+        if type(event) != dict:
+            event = {}
+        event["system"] = timer()
+        return event
+
+    ##########################################################
+    ## The function called when the 'Switch Compare' button is
+    ## clicked
+    ##########################################################
+    def rotateCompare(self,rotation):
+        if not self.state.onComparisonChanged(rotation):
+            self.updateWidgets("comp")
+
+    ##########################################################
+    ##########################################################
+    ##                       Dialogs                        ##
+    ##########################################################
+    ##########################################################
+
+    ##########################################################
     ## Loads previously saved partial run data.
     ##########################################################
     def confirmPartialLoad(self, callback):
@@ -263,6 +344,43 @@ class App(threading.Thread):
                 "Load",\
                 "This category has an incomplete run saved. Load it (closing will load automatically)?"\
             )
+
+    ##########################################################
+    ## Show a popup for the user to delete their partial save.
+    ##########################################################
+    def confirmDeletePartialSave(self,callback):
+        ConfirmPopup.ConfirmPopup(\
+            self.root,\
+            callback,\
+            "Delete",\
+            "Delete partial save?"\
+        )
+
+    ##########################################################
+    ## Save the splits before closing the window or changing the
+    ## run.
+    ##########################################################
+    def confirmSave(self,callback):
+        saveType = self.state.saveType()
+        prompt = ""
+        if saveType == 1:
+            prompt = "Save partial run (closing will save automatically)?"
+        elif saveType == 2:
+                prompt = "Save local changes (closing will save automatically)?"
+
+        if prompt:
+            ConfirmPopup.ConfirmPopup(\
+                self.root,\
+                callback,\
+                "Save",\
+                prompt\
+            )
+
+    ##########################################################
+    ##########################################################
+    ##                   Dialog Callbacks                   ##
+    ##########################################################
+    ##########################################################
 
     ##########################################################
     ## Loads previously saved partial run data.
@@ -292,31 +410,8 @@ class App(threading.Thread):
         self.confirmDeletePartialSave(self.deletePartialSave)
 
     ##########################################################
-    ## Show a popup for the user to delete their partial save.
+    ## Set the layout if necessary, and restart to apply.
     ##########################################################
-    def confirmDeletePartialSave(self,callback):
-        ConfirmPopup.ConfirmPopup(\
-            self.root,\
-            callback,\
-            "Delete",\
-            "Delete partial save?"\
-        )
-
-    ##########################################################
-    ## Delete the partial save.
-    ##########################################################
-    def deletePartialSave(self,shouldDelete):
-        if shouldDelete:
-            self.state.deletePartialSave()
-
-    ##########################################################
-    ## Opens a window to change the current layout
-    ##########################################################
-    def chooseLayout(self,_=None):
-        if self.state.started:
-            return
-        LayoutPopup.LayoutPopup(self.root,self.setLayout,self.session).show()
-
     def setLayout(self,retVal):
         layoutName = retVal["layoutName"]
         if not layoutName == self.session.layoutName:
@@ -325,13 +420,8 @@ class App(threading.Thread):
             self.finish()
 
     ##########################################################
-    ## Opens a window to change the current run
+    ## Set the run if necessary.
     ##########################################################
-    def chooseRun(self,_=None):
-        if self.state.started:
-            return
-        RunPopup.RunPopup(self.root,self.setRun,self.session).show()
-
     def setRun(self,newSession):
         if newSession["game"] == self.state.game\
             and newSession["category"] == self.state.category:
@@ -346,14 +436,8 @@ class App(threading.Thread):
         self.confirmPartialLoad(self.partialLoad)
 
     ##########################################################
-    ## Opens a window to change the current split (practice
-    ## only)
+    ## Set the split if necessary (practice only).
     ##########################################################
-    def chooseSplit(self,_=None):
-        if self.state.started:
-            return
-        PracticeRunSelector.SelectorP(self.root,self.setSplit,self.session).show()
-
     def setSplit(self,newSession):
         if newSession["game"] == self.state.game\
             and newSession["category"] == self.state.category:
@@ -363,6 +447,9 @@ class App(threading.Thread):
         self.state = PracticeState.State(self.session)
         self.updateWidgets("runChanged",state=self.state)
 
+    ##########################################################
+    ## Save the run.
+    ##########################################################
     def saveIfDesired(self,desired):
         if desired:
             if self.state.saveType() == 1:
@@ -371,46 +458,17 @@ class App(threading.Thread):
                 self.save()
 
     ##########################################################
-    ## Save the splits before closing the window or changing the
-    ## run.
+    ## Close the window, saving if desired.
     ##########################################################
-    def confirmSave(self,callback):
-        saveType = self.state.saveType()
-        prompt = ""
-        if saveType == 1:
-            prompt = "Save partial run (closing will save automatically)?"
-        elif saveType == 2:
-                prompt = "Save local changes (closing will save automatically)?"
-
-        if prompt:
-            ConfirmPopup.ConfirmPopup(\
-                self.root,\
-                callback,\
-                "Save",\
-                prompt\
-            )
-
-    ##########################################################
-    ## Finish the run by saving the splits and closing the
-    ## window.
-    ##########################################################
-    def finish(self,_=None):
-        if not self.state.shouldFinish():
-            return
-        if self.state.saveType():
-            self.confirmSave(self.close)
-        else:
-            self.close(False)
-
     def close(self,shouldSave):
         self.saveIfDesired(shouldSave)
         if self.updater:
             self.root.after_cancel(self.updater)
         self.root.destroy()
 
-    def editSplits(self):
-        SplitEditor.SplitEditor(self.root,self.newEditedState,self.state)
-
+    ##########################################################
+    ## Reload the current splits after editing.
+    ##########################################################
     def newEditedState(self,_):
         compareNum = self.state.compareNum
         session = Session.Session(AllSplitNames.Splits())
@@ -419,9 +477,9 @@ class App(threading.Thread):
         self.state.setComparison(compareNum)
         self.updateWidgets("runChanged",state=self.state)
 
-    def addRun(self):
-        AddRun.SplitEditorP(self.root,self.addRunState)
-
+    ##########################################################
+    ## Load the splits for a newly added run.
+    ##########################################################
     def addRunState(self,retVal):
         compareNum = self.state.compareNum
         session = Session.Session(AllSplitNames.Splits())
