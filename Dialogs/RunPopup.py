@@ -5,7 +5,7 @@ from Dialogs import Popup
 
 class RunPopup(Popup.Popup):
     def __init__(self,master,callback,session):
-        super().__init__(master,callback)
+        super().__init__(master,{"accepted": callback})
         self.session = session
 
         self.window.title("Choose Run")

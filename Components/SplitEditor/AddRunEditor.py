@@ -62,9 +62,7 @@ class SplitEditor(tk.Frame):
 
         return check1 and check2 and check3
 
-    def save(self,retVal):
-        if not retVal:
-            return
+    def save(self):
         game = self.selection.game
         category = self.selection.category
         while self.splits.validPair(game,category) and not self.hasSaved(game,category):

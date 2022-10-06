@@ -7,7 +7,7 @@ class LayoutPopup(Popup.Popup):
     session = None
 
     def __init__(self,master,callback,session):
-        super().__init__(master,callback)
+        super().__init__(master,{"accepted": callback})
         self.session = session
 
         self.window.configure(bg="black")

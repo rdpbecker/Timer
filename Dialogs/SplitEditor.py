@@ -6,7 +6,7 @@ from util import dataManip
 
 class SplitEditor(Popup.Popup):
     def __init__(self,master,callback,state):
-        super().__init__(master,callback)
+        super().__init__(master,{"accepted": callback})
         self.state = state
         self.splits = AllSplitNames.Splits()
 
@@ -28,9 +28,7 @@ class SplitEditor(Popup.Popup):
 
         return check1 and check2
 
-    def save(self,retVal):
-        if not retVal:
-            return
+    def save(self):
         csvs = self.editor.entries.generateGrid()
         csvs["complete"] = dataManip.adjustNamesMismatch(csvs["names"],self.state.completeCsv,self.editor.entries.originals)
         fileio.writeCSVs(self.state.config["baseDir"],self.state.game,self.state.category,csvs["complete"],csvs["comparisons"])

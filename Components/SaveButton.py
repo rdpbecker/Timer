@@ -31,7 +31,7 @@ class SaveButton(tk.Frame):
         self.removeWarning()
         ConfirmPopup.ConfirmPopup(\
             self.parent,\
-            self.options["save"],\
+            {"accepted": self.options["save"]},\
             "Save",\
             "Save local changes? (Closing this window will save automatically)"\
         )

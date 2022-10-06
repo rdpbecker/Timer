@@ -2,8 +2,8 @@ import tkinter as tk
 from Dialogs import Popup
 
 class ConfirmPopup(Popup.Popup):
-    def __init__(self,master,callback,title,message):
-        super().__init__(master,callback)
+    def __init__(self,master,callbacks,title,message):
+        super().__init__(master,callbacks)
         self.window.title(title)
         for i in range(12):
             self.window.columnconfigure(i,weight=1)
@@ -14,15 +14,3 @@ class ConfirmPopup(Popup.Popup):
         label.grid(row=0,column=0,columnspan=12,sticky="WE")
         button1.grid(row=1,column=0,columnspan=6,sticky="WE")
         button2.grid(row=1,column=6,columnspan=6,sticky="WE")
-
-    def accept(self,_=None):
-        self.retVal = True
-        self.finish()
-
-    def close(self,_=None):
-        self.retVal = True
-        self.finish()
-
-    def reject(self,_=None):
-        self.retVal = False
-        self.finish()

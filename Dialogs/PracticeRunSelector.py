@@ -31,7 +31,7 @@ class RunSelector(BaseDialog.Dialog):
 
 class SelectorP(Popup.Popup):
     def __init__(self,master,callback,session):
-        super().__init__(master,callback)
+        super().__init__(master,{"accepted": callback})
         self.window.title("Choose Run and Split")
 
         self.content = PracticeSelectorFrame.Frame(self.window,self.accept)

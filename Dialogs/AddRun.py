@@ -5,7 +5,7 @@ from Components.SplitEditor import AddRunEditor
 
 class SplitEditorP(Popup.Popup):
     def __init__(self,master,callback):
-        super().__init__(master,callback)
+        super().__init__(master,{"accepted": callback})
         self.editFrame = AddRunEditor.SplitEditor(self.window)
         self.editFrame.pack(fill="both")
         self.retVal = {"game": "", "category": ""}
