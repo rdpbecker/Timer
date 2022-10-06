@@ -1,3 +1,6 @@
+# Used when there is a window, for example when prompting the user
+# to save.
+
 import tkinter as tk
 
 class Popup:

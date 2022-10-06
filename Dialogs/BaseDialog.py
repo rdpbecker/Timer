@@ -1,3 +1,6 @@
+# Used when there is currently no window, for example on startup when
+# the user has no saved session.
+
 import tkinter as tk
 
 class Dialog():
