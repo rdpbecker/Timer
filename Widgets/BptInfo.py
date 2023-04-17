@@ -39,6 +39,9 @@ class BptInfo(InfoBase.InfoBase):
         self.header.configure(text="Best Possible Time:")
         self.updateTime()
 
+    def onComparisonChanged(self):
+        self.updateTime()
+
     def updateTime(self):
         if self.shouldHide():
             self.hide()

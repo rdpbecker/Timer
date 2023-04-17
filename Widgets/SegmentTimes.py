@@ -46,26 +46,26 @@ class SegmentTimes(WidgetBase.WidgetBase):
     def resetUI(self):
         if self.shouldHide():
             self.hide()
-            return
-        self.updateSegmentHeader()
-        self.updateSegmentTime()
+        else:
+            self.updateSegmentHeader()
+            self.updateSegmentTime()
         self.updateGoldHeader()
         self.updateGoldTime()
 
     def onSplit(self):
-        if self.shouldHide():
-            self.hide()
-            return
         if not self.state.runEnded:
-            self.updateSegmentTime()
+            if self.shouldHide():
+                self.hide()
+            else:
+                self.updateSegmentTime()
             self.updateGoldTime()
 
     def onSplitSkipped(self):
-        if self.shouldHide():
-            self.hide()
-            return
         if not self.state.runEnded:
-            self.updateSegmentTime()
+            if self.shouldHide():
+                self.hide()
+            else:
+                self.updateSegmentTime()
             self.updateGoldTime()
 
     def onComparisonChanged(self):
