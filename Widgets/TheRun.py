@@ -33,13 +33,14 @@ class TheRun(WidgetBase.WidgetBase):
         return int(1000 * time) if type(time) in [float, int] else None
 
     def jsonify(self):
+        is_reset = self.state.runEnded and self.state.splitnum < self.state.numSplits
         self.starttime = int(datetime.datetime.now().timestamp() * 1000)
         endtime = self.starttime
         runData = []
         for i, name in enumerate(self.state.splitnames):
             runData.append({
                 "name": name,
-                "splitTime": self.clean_time_to_therun_api(self.state.currentRun.totals[i]) if len(self.state.currentRun.totals) > i else None,
+                "splitTime": self.clean_time_to_therun_api(self.state.currentRun.totals[i]) if len(self.state.currentRun.totals) > i and not is_reset else None,
                 "pbSplitTime": self.clean_time_to_therun_api(self.state.comparisons[2].totals[i]),
                 "bestPossible": self.clean_time_to_therun_api(self.state.comparisons[0].segments[i]),
                 "comparisons": [{
@@ -53,8 +54,8 @@ class TheRun(WidgetBase.WidgetBase):
             "category": self.state.category
           },
           "currentTime": self.clean_time_to_therun_api(self.state.totalTime),
-          "currentSplitName": self.state.splitnames[self.state.splitnum],
-          "currentSplitIndex": self.state.splitnum,
+          "currentSplitName": self.state.splitnames[self.state.splitnum] if not is_reset else "",
+          "currentSplitIndex": self.state.splitnum if not is_reset else -1,
           "startTime": f"/Date({self.starttime})/",
           "endTime": f"/Date({endtime})/",
           "uploadKey": self.uploadKey,
@@ -73,8 +74,8 @@ class TheRun(WidgetBase.WidgetBase):
 #     def onSplitSkipped(self):
 #         pass
 
-#     def onReset(self):
-#         pass
+    def onReset(self):
+        self.post_run_status()
 
 #     def onRestart(self):
 #         pass
