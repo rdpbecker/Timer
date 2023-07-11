@@ -55,6 +55,10 @@
         "module_name": "Widgets.Spacer",
         "class_name": "Spacer"
     },
+    "therun": {
+        "module_name": "Widgets.TheRun",
+        "class_name": "TheRun"
+    },
     "timeSaveInfo": {
         "module_name": "Widgets.TimeSaveInfo",
         "class_name": "TimeSaveInfo"
