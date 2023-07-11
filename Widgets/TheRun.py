@@ -56,6 +56,7 @@ class TheRun(WidgetBase.WidgetBase):
           "currentTime": self.clean_time_to_therun_api(self.state.totalTime),
           "currentSplitName": self.state.splitnames[self.state.splitnum] if not is_reset else "",
           "currentSplitIndex": self.state.splitnum if not is_reset else -1,
+          "currentComparison": self.state.currentComparison.totalHeader,
           "startTime": f"/Date({self.starttime})/",
           "endTime": f"/Date({endtime})/",
           "uploadKey": self.uploadKey,
