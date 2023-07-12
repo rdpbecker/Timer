@@ -13,6 +13,7 @@ class TheRun(WidgetBase.WidgetBase):
 
         self.splitWebhook = "dspc6ekj2gjkfp44cjaffhjeue0fbswr.lambda-url.eu-west-1.on.aws"
         self.uploadKey = config["uploadKey"]
+        self.wasJustResumed = False
         self.headers = {
             "Content-Type": "application/json",
             'Content-Disposition': 'attachment',
@@ -59,6 +60,8 @@ class TheRun(WidgetBase.WidgetBase):
             "currentComparison": self.state.currentComparison.totalHeader,
             "startTime": f"/Date({self.starttime})/",
             "endTime": f"/Date({endtime})/",
+            "isPaused": self.state.paused,
+            "wasJustResumed": self.wasJustResumed,
             "uploadKey": self.uploadKey,
             "runData": runData
         }
@@ -68,9 +71,12 @@ class TheRun(WidgetBase.WidgetBase):
 
     def onSplit(self):
         self.post_run_status()
+        self.wasJustResumed = False
 
-#     def onPaused(self):
-#         pass
+    def onPaused(self):
+        if not self.state.paused:
+            self.wasJustResumed = True
+        self.post_run_status()
 
 #     def onSplitSkipped(self):
 #         pass
