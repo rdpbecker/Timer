@@ -2,6 +2,7 @@ from Widgets import WidgetBase
 import http.client
 import json
 import datetime
+import requests
 
 
 class TheRun(WidgetBase.WidgetBase):
@@ -11,7 +12,7 @@ class TheRun(WidgetBase.WidgetBase):
         super().__init__(parent, state, config)
         self.configure(bg="black")
 
-        self.splitWebhook = "dspc6ekj2gjkfp44cjaffhjeue0fbswr.lambda-url.eu-west-1.on.aws"
+        self.splitWebhook = "https://dspc6ekj2gjkfp44cjaffhjeue0fbswr.lambda-url.eu-west-1.on.aws/"
         self.uploadKey = config["uploadKey"]
         self.wasJustResumed = False
         self.headers = {
@@ -21,14 +22,7 @@ class TheRun(WidgetBase.WidgetBase):
         }
 
     def post_run_status(self):
-        connection = http.client.HTTPSConnection(self.splitWebhook)
-        http.client.HTTPSConnection.debuglevel = 1
-
-        connection.request('POST', '/', json.dumps(self.jsonify()), self.headers)
-
-        # response = connection.getresponse()
-        # print(response.status, response.reason)
-        # print(response.headers)
+        requests.post(self.splitWebhook, json=self.jsonify(), headers=self.headers)
 
     def clean_time_to_therun_api(self, time):
         return int(1000 * time) if type(time) in [float, int] else None
