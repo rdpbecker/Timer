@@ -1,6 +1,7 @@
 from Widgets import WidgetBase
 import datetime
 import requests
+import threading
 
 
 class TheRun(WidgetBase.WidgetBase):
@@ -19,8 +20,12 @@ class TheRun(WidgetBase.WidgetBase):
             'Accept': "*/*",
         }
 
-    def post_run_status(self):
+    def _post_run_status(self):
         requests.post(self.splitWebhook, json=self.jsonify(), headers=self.headers)
+
+    def post_run_status(self):
+        thread = threading.Thread(target=self._post_run_status)
+        thread.start()
 
     def clean_time_to_therun_api(self, time):
         return int(1000 * time) if type(time) in [float, int] else None
