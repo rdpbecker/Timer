@@ -1,6 +1,4 @@
 from Widgets import WidgetBase
-import http.client
-import json
 import datetime
 import requests
 
