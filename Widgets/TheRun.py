@@ -27,8 +27,7 @@ class TheRun(WidgetBase.WidgetBase):
 
     def jsonify(self):
         is_reset = self.state.runEnded and self.state.splitnum < self.state.numSplits
-        self.starttime = int(datetime.datetime.now().timestamp() * 1000)
-        endtime = self.starttime
+        endtime = int(datetime.datetime.now().timestamp() * 1000)
         runData = []
         for i, name in enumerate(self.state.splitnames):
             runData.append({
@@ -59,6 +58,7 @@ class TheRun(WidgetBase.WidgetBase):
         }
 
     def onStarted(self):
+        self.starttime = int(datetime.datetime.now().timestamp() * 1000)
         self.post_run_status()
 
     def onSplit(self):
