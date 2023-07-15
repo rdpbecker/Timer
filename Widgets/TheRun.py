@@ -9,6 +9,7 @@ class TheRun(WidgetBase.WidgetBase):
 
     def __init__(self, parent, state, config):
         super().__init__(parent, state, config)
+        self.enabled = config["enabled"]
         self.configure(bg="black")
 
         self.splitWebhook = "https://dspc6ekj2gjkfp44cjaffhjeue0fbswr.lambda-url.eu-west-1.on.aws/"
@@ -24,6 +25,8 @@ class TheRun(WidgetBase.WidgetBase):
         requests.post(self.splitWebhook, json=self.jsonify(), headers=self.headers)
 
     def post_run_status(self):
+        if not self.enabled:
+            return
         thread = threading.Thread(target=self._post_run_status)
         thread.start()
 
