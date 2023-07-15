@@ -75,11 +75,9 @@ class TheRun(WidgetBase.WidgetBase):
             self.wasJustResumed = True
         self.post_run_status()
 
-#     def onSplitSkipped(self):
-#         pass
+    def onSplitSkipped(self):
+        self.post_run_status()
+        self.wasJustResumed = False
 
     def onReset(self):
         self.post_run_status()
-
-#     def onRestart(self):
-#         pass
