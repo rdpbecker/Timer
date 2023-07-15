@@ -9,11 +9,13 @@ class TheRun(WidgetBase.WidgetBase):
 
     def __init__(self, parent, state, config):
         super().__init__(parent, state, config)
-        self.enabled = config["enabled"]
         self.configure(bg="black")
 
         self.splitWebhook = "https://dspc6ekj2gjkfp44cjaffhjeue0fbswr.lambda-url.eu-west-1.on.aws/"
         self.uploadKey = config["uploadKey"]
+        if not self.uploadKey and self.enabled:
+            print("therun.gg plugin is enabled, but no upload key is provided.")
+        self.enabled = config["enabled"] and self.uploadKey != ""
         self.wasJustResumed = False
         self.headers = {
             "Content-Type": "application/json",
